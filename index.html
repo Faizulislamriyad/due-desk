@@ -20,18 +20,15 @@
 <style>
   /* ============ DESIGN TOKENS ============ */
   :root {
-    /* Brand */
     --emerald: #10B981;
     --emerald-hover: #059669;
     --emerald-soft: #D1FAE5;
     --emerald-deep: #047857;
 
-    /* Slate scale */
     --s-900:#0F172A; --s-800:#1E293B; --s-700:#334155; --s-600:#475569;
     --s-500:#64748B; --s-400:#94A3B8; --s-300:#CBD5E1; --s-200:#E2E8F0;
     --s-100:#F1F5F9; --s-50:#F8FAFC;
 
-    /* Semantic — Light */
     --bg: #F8FAFC;
     --surface: #FFFFFF;
     --surface-2: #F8FAFC;
@@ -46,7 +43,6 @@
     --shadow: 0 4px 16px rgba(15,23,42,0.06), 0 1px 4px rgba(15,23,42,0.04);
     --shadow-lg: 0 16px 40px rgba(15,23,42,0.10), 0 4px 12px rgba(15,23,42,0.06);
 
-    /* Financial */
     --paid: #059669;
     --paid-bg: #D1FAE5;
     --paid-text: #065F46;
@@ -60,7 +56,6 @@
     --pending-bg: #F1F5F9;
     --pending-text: #334155;
 
-    /* Radii */
     --r-sm: 10px;
     --r: 14px;
     --r-lg: 20px;
@@ -117,7 +112,6 @@
   button { font-family: inherit; }
   a { color: inherit; }
 
-  /* ---------- Generic transitions ---------- */
   .btn, .card, .topbar, .modal, input, select, textarea,
   .file-card, .project-card, .tx-row, .recycle-card, .badge, .stat {
     transition: background-color .22s ease, border-color .22s ease,
@@ -178,7 +172,29 @@
   }
   .btn-google:hover { border-color: var(--border-strong); background: var(--surface-2); }
 
-  /* Icon buttons */
+  /* Round icon buttons */
+  .btn-round {
+    width: 40px;
+    height: 40px;
+    padding: 0;
+    border-radius: 50%;
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    color: var(--text-2);
+    font-size: 14px;
+    flex: 0 0 auto;
+  }
+  .btn-round:hover {
+    background: var(--surface-3);
+    color: var(--text);
+    border-color: var(--border-strong);
+  }
+  .btn-round.danger:hover {
+    background: var(--overdue-bg);
+    color: var(--overdue-text);
+    border-color: transparent;
+  }
+
   .icon-btn {
     border: none;
     background: transparent;
@@ -195,7 +211,6 @@
   .icon-btn:hover { background: var(--surface-3); color: var(--text); }
   .icon-btn.danger:hover { background: var(--overdue-bg); color: var(--overdue-text); }
 
-  /* Theme toggle */
   .theme-toggle {
     width: 36px; height: 36px;
     border-radius: 50%;
@@ -360,7 +375,7 @@
   main {
     max-width: 1200px;
     margin: 0 auto;
-    padding: 26px 22px 90px;
+    padding: 26px 22px 120px;
   }
   .view:not(.hidden) { animation: fadeUp .32s ease; }
   @keyframes fadeUp {
@@ -479,7 +494,7 @@
   .file-card:hover .file-del { opacity: 1; transform: scale(1); }
   .file-del:hover { background: var(--overdue-bg); color: var(--overdue-text); }
 
-  /* --- Hero (File & Project) --- */
+  /* --- Hero --- */
   .hero {
     display: flex;
     align-items: center;
@@ -773,6 +788,13 @@
   .form-card {
     max-width: 600px;
     padding: 26px;
+    position: relative;
+  }
+  .form-close {
+    position: absolute;
+    top: 14px;
+    right: 14px;
+    z-index: 2;
   }
   .form-header {
     display: flex;
@@ -781,6 +803,7 @@
     padding-bottom: 22px;
     margin-bottom: 22px;
     border-bottom: 1px solid var(--border);
+    padding-right: 44px;
   }
   .form-header-icon {
     width: 46px; height: 46px;
@@ -891,7 +914,7 @@
     bottom: 24px;
     left: 50%;
     transform: translateX(-50%) translateY(140px);
-    background: var(--slate-900, #0F172A);
+    background: var(--s-900, #0F172A);
     color: #fff;
     padding: 12px 20px;
     border-radius: 12px;
@@ -912,11 +935,163 @@
   #toast.error { background: #B91C1C; }
   #toast.error i { color: #FECACA; }
 
-  /* --- Report styles (used only inside hidden node, not visible) --- */
-  .report-wrap {
-    font-family: 'Inter', Arial, sans-serif;
-    color: #0F172A;
+  /* ============ SITE FOOTER ============ */
+  .site-footer {
+    position: fixed;
+    left: 18px;
+    bottom: 18px;
+    z-index: 90;
+    font-family: inherit;
   }
+
+  .footer-toggle {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    border: 1px solid transparent;
+    background: linear-gradient(135deg, var(--emerald) 0%, var(--emerald-deep) 100%);
+    color: #fff;
+    font-size: 18px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 8px 24px rgba(16,185,129,.35);
+    transition: transform .2s ease, box-shadow .2s ease, filter .2s ease;
+  }
+  .footer-toggle:hover {
+    transform: translateY(-2px) scale(1.05);
+    box-shadow: 0 12px 30px rgba(16,185,129,.45);
+    filter: brightness(1.05);
+  }
+  .footer-toggle:active { transform: scale(.95); }
+
+  .site-footer.open .footer-toggle {
+    transform: rotate(90deg);
+    filter: brightness(.95);
+  }
+
+  .footer-body {
+    position: absolute;
+    left: 0;
+    bottom: calc(100% + 14px);
+    width: 332px;
+    max-height: min(66vh, 560px);
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--r-lg);
+    box-shadow: var(--shadow-lg);
+    padding: 16px;
+    opacity: 0;
+    transform: translateY(12px) scale(.96);
+    transform-origin: bottom left;
+    pointer-events: none;
+    transition: opacity .22s ease, transform .24s cubic-bezier(.2,.9,.3,1.15);
+    scrollbar-width: thin;
+  }
+  .footer-body::-webkit-scrollbar { width: 6px; }
+  .footer-body::-webkit-scrollbar-thumb {
+    background: var(--border-strong);
+    border-radius: 99px;
+  }
+  .site-footer.open .footer-body {
+    opacity: 1;
+    transform: none;
+    pointer-events: auto;
+  }
+
+  .footer-heading {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 11.5px;
+    font-weight: 700;
+    color: var(--text-2);
+    text-transform: uppercase;
+    letter-spacing: .5px;
+    padding-bottom: 12px;
+    margin-bottom: 12px;
+    border-bottom: 1px solid var(--border);
+  }
+  .footer-heading i { color: var(--emerald); font-size: 13px; }
+
+  .footer-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+  }
+
+  .footer-card {
+    display: flex;
+    align-items: center;
+    gap: 11px;
+    padding: 9px 10px;
+    border-radius: 12px;
+    background: var(--surface-2);
+    border: 1px solid transparent;
+    text-decoration: none;
+    color: var(--text);
+    transition: background-color .16s, border-color .16s, transform .16s;
+  }
+  .footer-card:hover {
+    background: var(--surface-3);
+    border-color: var(--border);
+    transform: translateX(2px);
+  }
+
+  .fc-icon {
+    width: 34px;
+    height: 34px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 13px;
+    flex: 0 0 auto;
+    color: var(--fc, #10B981);
+    background: color-mix(in srgb, var(--fc, #10B981) 15%, transparent);
+  }
+
+  .fc-body { flex: 1; min-width: 0; }
+  .fc-title {
+    font-size: 13px;
+    font-weight: 700;
+    line-height: 1.3;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .fc-sub {
+    font-size: 11px;
+    color: var(--text-2);
+    margin-top: 1px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .fc-arrow {
+    font-size: 10px;
+    color: var(--text-3);
+    opacity: 0;
+    transition: opacity .16s ease;
+    flex: 0 0 auto;
+  }
+  .footer-card:hover .fc-arrow { opacity: 1; }
+
+  .footer-note {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    margin-top: 14px;
+    padding-top: 12px;
+    border-top: 1px solid var(--border);
+    font-size: 11.5px;
+    color: var(--text-3);
+  }
+  .footer-note i { color: #f472b6; font-size: 10px; }
 
   /* --- Responsive --- */
   @media (max-width: 720px) {
@@ -924,7 +1099,7 @@
     .topbar-right .btn span { display: none; }
     .topbar-right .btn { padding: 9px 11px; }
     .brand span { display: none; }
-    main { padding: 18px 14px 90px; }
+    main { padding: 18px 14px 130px; }
     .grid { grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 12px; }
     .file-thumb { height: 100px; font-size: 28px; }
     .hero { flex-direction: column; text-align: center; padding: 18px; }
@@ -935,11 +1110,15 @@
     .row2 { grid-template-columns: 1fr; }
     .login-card { padding: 36px 26px 30px; }
     .login-card h1 { font-size: 26px; }
+    .site-footer { left: 12px; bottom: 12px; }
+    .footer-toggle { width: 44px; height: 44px; font-size: 16px; }
+    .footer-body { width: calc(100vw - 24px); max-height: 62vh; }
   }
   @media (max-width: 420px) {
     .view-head { align-items: stretch; }
     .view-head > div:last-child { width: 100%; }
     .view-head > div:last-child .btn { flex: 1; justify-content: center; }
+    .view-head > div:last-child .btn-round { flex: 0 0 auto; }
   }
 </style>
 </head>
@@ -1065,6 +1244,11 @@
           <h1>New Payment Record</h1>
           <p>Record a payment against a project</p>
         </div>
+        <div>
+          <button class="btn btn-round danger" id="closePaymentBtn" title="Close" aria-label="Close payment form">
+            <i class="fas fa-xmark"></i>
+          </button>
+        </div>
       </div>
       <div class="card form-card">
         <div class="form-header">
@@ -1108,6 +1292,90 @@
       <div id="recycleList" class="tx-list"></div>
     </section>
   </main>
+
+  <!-- ============ SITE FOOTER ============ -->
+  <footer class="site-footer" id="siteFooter">
+    <button id="footerToggle" class="footer-toggle" aria-label="Show more websites" title="More websites">
+      <i class="fa-solid fa-circle-nodes"></i>
+    </button>
+
+    <div class="footer-body">
+      <div class="footer-heading">
+        <i class="fa-solid fa-circle-nodes"></i>
+        <span>More websites by Faizul Islam Riyad</span>
+      </div>
+
+      <div class="footer-grid">
+        <a class="footer-card" href="https://fixup-invoice.vercel.app/faizul.html" target="_blank" rel="noopener">
+          <span class="fc-icon" style="--fc:#7c5cff"><i class="fa-solid fa-file-invoice-dollar"></i></span>
+          <div class="fc-body">
+            <div class="fc-title">Fixup Invoice</div>
+            <div class="fc-sub">Invoicing tool</div>
+          </div>
+          <i class="fa-solid fa-arrow-up-right-from-square fc-arrow"></i>
+        </a>
+
+        <a class="footer-card" href="https://saveclientinfo.vercel.app/" target="_blank" rel="noopener">
+          <span class="fc-icon" style="--fc:#4ade80"><i class="fa-solid fa-address-book"></i></span>
+          <div class="fc-body">
+            <div class="fc-title">Client Info Saver</div>
+            <div class="fc-sub">Save client details</div>
+          </div>
+          <i class="fa-solid fa-arrow-up-right-from-square fc-arrow"></i>
+        </a>
+
+        <a class="footer-card" href="https://waveey.vercel.app/" target="_blank" rel="noopener">
+          <span class="fc-icon" style="--fc:#22d3ee"><i class="fa-solid fa-music"></i></span>
+          <div class="fc-body">
+            <div class="fc-title">Waveey</div>
+            <div class="fc-sub">Free sound SFX</div>
+          </div>
+          <i class="fa-solid fa-arrow-up-right-from-square fc-arrow"></i>
+        </a>
+
+        <a class="footer-card" href="https://javeda.vercel.app/" target="_blank" rel="noopener">
+          <span class="fc-icon" style="--fc:#fbbf24"><i class="fa-solid fa-graduation-cap"></i></span>
+          <div class="fc-body">
+            <div class="fc-title">Javeda Learner</div>
+            <div class="fc-sub">Learning platform</div>
+          </div>
+          <i class="fa-solid fa-arrow-up-right-from-square fc-arrow"></i>
+        </a>
+
+        <a class="footer-card" href="https://mysmartpoll.vercel.app/" target="_blank" rel="noopener">
+          <span class="fc-icon" style="--fc:#f472b6"><i class="fa-solid fa-square-poll-vertical"></i></span>
+          <div class="fc-body">
+            <div class="fc-title">Smart Poll</div>
+            <div class="fc-sub">Create polls easily</div>
+          </div>
+          <i class="fa-solid fa-arrow-up-right-from-square fc-arrow"></i>
+        </a>
+
+        <a class="footer-card" href="https://passbox-nine.vercel.app/" target="_blank" rel="noopener">
+          <span class="fc-icon" style="--fc:#a78bfa"><i class="fa-solid fa-shield-halved"></i></span>
+          <div class="fc-body">
+            <div class="fc-title">PassBox</div>
+            <div class="fc-sub">Password saver</div>
+          </div>
+          <i class="fa-solid fa-arrow-up-right-from-square fc-arrow"></i>
+        </a>
+
+        <a class="footer-card" href="https://pftracker-iota.vercel.app/" target="_blank" rel="noopener">
+          <span class="fc-icon" style="--fc:#fb923c"><i class="fa-solid fa-chart-line"></i></span>
+          <div class="fc-body">
+            <div class="fc-title">PF Tracker</div>
+            <div class="fc-sub">Finance tracker</div>
+          </div>
+          <i class="fa-solid fa-arrow-up-right-from-square fc-arrow"></i>
+        </a>
+      </div>
+
+      <div class="footer-note">
+        <i class="fa-solid fa-heart"></i>
+        <span>Made with care</span>
+      </div>
+    </div>
+  </footer>
 </div>
 
 <div id="modalRoot"></div>
@@ -1177,7 +1445,7 @@ function toggleTheme(){
   const current = document.documentElement.getAttribute('data-theme') || 'light';
   applyTheme(current === 'light' ? 'dark' : 'light');
 }
-const initTheme = (() => {
+(function initTheme(){
   const t = document.documentElement.getAttribute('data-theme') || 'light';
   updateThemeIcons(t);
   const t1 = $('#themeToggle');
@@ -1295,6 +1563,7 @@ onAuthStateChanged(auth, async user => {
     uid = null; files = []; projects = []; activeFile = null; activeProject = null;
     $('#app').classList.add('hidden');
     $('#loginScreen').classList.remove('hidden');
+    closeFooter();
   }
 });
 
@@ -1774,6 +2043,12 @@ async function openPaymentView(){
   showView('payment');
 }
 
+/* Close (X) button → back to Files */
+$('#closePaymentBtn').onclick = async () => {
+  await loadFiles();
+  showView('files');
+};
+
 $('#payFileSelect').onchange = async e => {
   const fid = e.target.value;
   const pSel = $('#payProjectSelect');
@@ -2072,8 +2347,29 @@ $('#downloadProjectBtn').onclick = async () => {
   finally { btn.disabled = false; }
 };
 
-/* Esc key closes modal */
-document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+/* ================= FOOTER (collapsible) ================= */
+const siteFooter  = $('#siteFooter');
+const footerToggle = $('#footerToggle');
+
+function closeFooter(){ siteFooter.classList.remove('open'); }
+function toggleFooter(){ siteFooter.classList.toggle('open'); }
+
+footerToggle.addEventListener('click', e => {
+  e.stopPropagation();
+  toggleFooter();
+});
+
+/* Close footer when clicking outside */
+document.addEventListener('click', e => {
+  if (siteFooter.classList.contains('open') && !siteFooter.contains(e.target)){
+    closeFooter();
+  }
+});
+
+/* Esc closes modal AND footer */
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape'){ closeModal(); closeFooter(); }
+});
 </script>
 </body>
 </html>
