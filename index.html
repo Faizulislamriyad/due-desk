@@ -6,229 +6,940 @@
 <title>Due Desk — Files, Projects & Dues</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script>
+  (function() {
+    try {
+      const saved = localStorage.getItem('duedesk-theme') || 'light';
+      document.documentElement.setAttribute('data-theme', saved);
+    } catch(e) { document.documentElement.setAttribute('data-theme', 'light'); }
+  })();
+</script>
 <style>
-  :root{
-    --bg:#f4f6fb;
-    --card:#ffffff;
-    --text:#1b2133;
-    --muted:#6b7590;
-    --primary:#6c5ce7;
-    --primary-dark:#5a4bd4;
-    --secondary:#00b894;
-    --danger:#e74c3c;
-    --border:#e4e8f3;
-    --radius:16px;
-    --shadow:0 6px 28px rgba(27,33,51,.08);
-  }
-  *{box-sizing:border-box;margin:0;padding:0;}
-  body{
-    font-family:'Inter',system-ui,-apple-system,sans-serif;
-    background:var(--bg);color:var(--text);min-height:100vh;
-    -webkit-font-smoothing:antialiased;
-  }
-  .hidden{display:none !important;}
-  .muted{color:var(--muted);font-size:13px;}
+  /* ============ DESIGN TOKENS ============ */
+  :root {
+    /* Brand */
+    --emerald: #10B981;
+    --emerald-hover: #059669;
+    --emerald-soft: #D1FAE5;
+    --emerald-deep: #047857;
 
-  /* ---------- Buttons ---------- */
-  .btn{
-    border:none;cursor:pointer;font-family:inherit;font-size:14px;font-weight:600;
-    padding:10px 18px;border-radius:12px;transition:.18s ease;display:inline-flex;
-    align-items:center;gap:8px;white-space:nowrap;
-  }
-  .btn:active{transform:scale(.97);}
-  .btn-primary{background:var(--primary);color:#fff;box-shadow:0 6px 16px rgba(108,92,231,.28);}
-  .btn-primary:hover{background:var(--primary-dark);}
-  .btn-secondary{background:#e9f9f3;color:#008f72;}
-  .btn-secondary:hover{background:#d8f5eb;}
-  .btn-ghost{background:transparent;color:var(--muted);}
-  .btn-ghost:hover{background:#eef1f9;color:var(--text);}
-  .btn-danger{background:#fdecea;color:var(--danger);}
-  .btn-danger:hover{background:#fbdcd8;}
-  .btn-google{
-    background:#fff;color:#333;border:1.5px solid var(--border);
-    padding:13px 26px;border-radius:14px;font-size:15px;
-    box-shadow:0 2px 10px rgba(0,0,0,.05);
-  }
-  .btn-google:hover{background:#f8f9fe;border-color:#cfd6ea;}
-  .btn:disabled{opacity:.6;cursor:not-allowed;}
+    /* Slate scale */
+    --s-900:#0F172A; --s-800:#1E293B; --s-700:#334155; --s-600:#475569;
+    --s-500:#64748B; --s-400:#94A3B8; --s-300:#CBD5E1; --s-200:#E2E8F0;
+    --s-100:#F1F5F9; --s-50:#F8FAFC;
 
-  /* ---------- Login ---------- */
-  .login-screen{
-    min-height:100vh;display:flex;align-items:center;justify-content:center;
-    background:radial-gradient(circle at 20% 20%,#e9e5ff 0%,transparent 50%),
-               radial-gradient(circle at 80% 80%,#dff7ef 0%,transparent 50%),
-               var(--bg);
-    padding:24px;
-  }
-  .login-card{
-    background:var(--card);border-radius:24px;padding:48px 40px;text-align:center;
-    box-shadow:var(--shadow);max-width:400px;width:100%;
-  }
-  .login-card .logo{font-size:52px;margin-bottom:8px;}
-  .login-card h1{font-size:30px;font-weight:800;letter-spacing:-.5px;}
-  .login-card p{color:var(--muted);margin:10px 0 28px;font-size:14px;line-height:1.6;}
+    /* Semantic — Light */
+    --bg: #F8FAFC;
+    --surface: #FFFFFF;
+    --surface-2: #F8FAFC;
+    --surface-3: #F1F5F9;
+    --text: #0F172A;
+    --text-2: #64748B;
+    --text-3: #94A3B8;
+    --border: #E2E8F0;
+    --border-strong: #CBD5E1;
+    --ring: rgba(16, 185, 129, 0.16);
+    --shadow-sm: 0 1px 3px rgba(15,23,42,0.06), 0 1px 2px rgba(15,23,42,0.04);
+    --shadow: 0 4px 16px rgba(15,23,42,0.06), 0 1px 4px rgba(15,23,42,0.04);
+    --shadow-lg: 0 16px 40px rgba(15,23,42,0.10), 0 4px 12px rgba(15,23,42,0.06);
 
-  /* ---------- Topbar ---------- */
-  .topbar{
-    position:sticky;top:0;z-index:50;background:rgba(255,255,255,.85);
-    backdrop-filter:blur(14px);border-bottom:1px solid var(--border);
-    display:flex;align-items:center;justify-content:space-between;
-    padding:12px 22px;gap:12px;
-  }
-  .brand{font-weight:800;font-size:18px;cursor:pointer;display:flex;align-items:center;gap:8px;letter-spacing:-.3px;}
-  .topbar-right{display:flex;align-items:center;gap:6px;flex-wrap:wrap;}
-  .avatar{width:34px;height:34px;border-radius:50%;object-fit:cover;border:2px solid #fff;box-shadow:0 2px 8px rgba(0,0,0,.12);}
+    /* Financial */
+    --paid: #059669;
+    --paid-bg: #D1FAE5;
+    --paid-text: #065F46;
+    --partial: #D97706;
+    --partial-bg: #FEF3C7;
+    --partial-text: #92400E;
+    --overdue: #DC2626;
+    --overdue-bg: #FEE2E2;
+    --overdue-text: #991B1B;
+    --pending: #64748B;
+    --pending-bg: #F1F5F9;
+    --pending-text: #334155;
 
-  /* ---------- Layout ---------- */
-  main{max-width:1180px;margin:0 auto;padding:26px 22px 80px;}
-  .view-head{
-    display:flex;align-items:center;justify-content:space-between;
-    gap:14px;margin:18px 0;flex-wrap:wrap;
-  }
-  .view-head h2{font-size:22px;font-weight:800;letter-spacing:-.4px;}
-  .view-head > div{display:flex;gap:8px;flex-wrap:wrap;}
-  .back-btn{margin-bottom:6px;padding-left:0;}
-
-  .grid{
-    display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:16px;
-  }
-  .card{
-    background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);
-    border:1px solid rgba(228,232,243,.7);overflow:hidden;
+    /* Radii */
+    --r-sm: 10px;
+    --r: 14px;
+    --r-lg: 20px;
+    --r-full: 999px;
   }
 
-  /* File card */
-  .file-card{cursor:pointer;transition:.2s ease;position:relative;}
-  .file-card:hover{transform:translateY(-4px);box-shadow:0 14px 34px rgba(27,33,51,.13);}
-  .file-thumb{
-    height:120px;background:linear-gradient(135deg,#efeaff,#e3f8f1);
-    display:flex;align-items:center;justify-content:center;font-size:40px;overflow:hidden;
-  }
-  .file-thumb img{width:100%;height:100%;object-fit:cover;}
-  .file-card-body{padding:14px 16px 16px;}
-  .file-card-body h3{font-size:16px;font-weight:700;margin-bottom:4px;word-break:break-word;}
-  .file-del{
-    position:absolute;top:10px;right:10px;width:32px;height:32px;border-radius:10px;
-    border:none;background:rgba(255,255,255,.92);cursor:pointer;font-size:15px;
-    display:flex;align-items:center;justify-content:center;box-shadow:0 2px 8px rgba(0,0,0,.12);
-  }
-  .file-del:hover{background:#fdecea;}
+  [data-theme="dark"] {
+    --bg: #0F172A;
+    --surface: #1E293B;
+    --surface-2: #172033;
+    --surface-3: #243248;
+    --text: #F1F5F9;
+    --text-2: #94A3B8;
+    --text-3: #64748B;
+    --border: #334155;
+    --border-strong: #475569;
+    --ring: rgba(16, 185, 129, 0.28);
+    --shadow-sm: 0 1px 3px rgba(0,0,0,0.3);
+    --shadow: 0 4px 20px rgba(0,0,0,0.35);
+    --shadow-lg: 0 20px 50px rgba(0,0,0,0.55);
 
-  /* Hero */
-  .hero{
-    display:flex;align-items:center;gap:16px;background:var(--card);
-    padding:18px;border-radius:var(--radius);box-shadow:var(--shadow);margin-bottom:6px;
-  }
-  .hero-img{
-    width:74px;height:74px;border-radius:16px;overflow:hidden;flex:0 0 auto;
-    background:linear-gradient(135deg,#efeaff,#e3f8f1);display:flex;
-    align-items:center;justify-content:center;font-size:30px;
-  }
-  .hero-img img{width:100%;height:100%;object-fit:cover;}
-  .hero h2{font-size:21px;font-weight:800;letter-spacing:-.4px;word-break:break-word;}
-  .hero-meta{display:flex;gap:16px;margin-top:8px;flex-wrap:wrap;font-size:13px;}
-  .hero-meta b{font-weight:700;}
-  .green{color:#00a884;}
-  .red{color:var(--danger);}
-
-  /* Project card */
-  .project-card{padding:16px;cursor:pointer;transition:.2s ease;}
-  .project-card:hover{transform:translateY(-3px);box-shadow:0 14px 34px rgba(27,33,51,.12);}
-  .pc-head{display:flex;justify-content:space-between;align-items:flex-start;gap:10px;}
-  .pc-head h3{font-size:15.5px;font-weight:700;word-break:break-word;line-height:1.35;}
-  .badge{
-    font-size:11px;font-weight:700;padding:4px 9px;border-radius:20px;white-space:nowrap;
-  }
-  .badge.due{background:#fdecea;color:var(--danger);}
-  .badge.ok{background:#e9f9f3;color:#008f72;}
-  .pc-info{font-size:12.5px;color:var(--muted);margin:8px 0 12px;line-height:1.5;
-    display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;}
-  .pc-stats{display:flex;gap:10px;margin-bottom:12px;}
-  .pc-stats > div{flex:1;background:#f8f9fe;border-radius:11px;padding:8px 10px;}
-  .pc-stats span{display:block;font-size:10.5px;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:.4px;}
-  .pc-stats strong{font-size:14.5px;font-weight:700;}
-  .pc-foot{display:flex;justify-content:space-between;align-items:center;
-    border-top:1px solid var(--border);padding-top:10px;}
-  .icon-btn{
-    border:none;background:transparent;cursor:pointer;font-size:14px;padding:5px 7px;
-    border-radius:8px;line-height:1;
-  }
-  .icon-btn:hover{background:#eef1f9;}
-
-  /* Transaction list */
-  .tx-list{display:flex;flex-direction:column;gap:10px;}
-  .tx-row{
-    background:var(--card);border-radius:14px;padding:13px 16px;box-shadow:0 2px 12px rgba(27,33,51,.05);
-    display:flex;align-items:center;justify-content:space-between;gap:12px;
-    border:1px solid rgba(228,232,243,.7);
-  }
-  .tx-left{display:flex;align-items:center;gap:12px;min-width:0;}
-  .tx-dot{
-    width:36px;height:36px;border-radius:11px;background:#e9f9f3;color:#008f72;
-    display:flex;align-items:center;justify-content:center;font-size:15px;flex:0 0 auto;
-  }
-  .tx-note{font-size:13.5px;font-weight:600;word-break:break-word;}
-  .tx-date{font-size:11.5px;color:var(--muted);margin-top:2px;}
-  .tx-amt{font-weight:800;color:#00a884;font-size:15px;white-space:nowrap;}
-
-  /* Forms */
-  .form-card{max-width:560px;padding:22px;}
-  .field{display:block;margin-bottom:14px;}
-  .field > span{display:block;font-size:12.5px;font-weight:700;color:var(--muted);margin-bottom:6px;}
-  input,select,textarea{
-    width:100%;font-family:inherit;font-size:14px;color:var(--text);
-    padding:11px 13px;border:1.5px solid var(--border);border-radius:11px;
-    background:#fbfcff;outline:none;transition:.15s;resize:vertical;
-  }
-  input:focus,select:focus,textarea:focus{border-color:var(--primary);background:#fff;box-shadow:0 0 0 4px rgba(108,92,231,.1);}
-  .row2{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
-
-  /* Empty */
-  .empty{
-    grid-column:1/-1;text-align:center;padding:56px 20px;color:var(--muted);
-    background:var(--card);border-radius:var(--radius);border:2px dashed var(--border);font-size:14px;
+    --emerald-soft: rgba(16, 185, 129, 0.15);
+    --paid: #34D399;
+    --paid-bg: rgba(52, 211, 153, 0.14);
+    --paid-text: #6EE7B7;
+    --partial: #FBBF24;
+    --partial-bg: rgba(251, 191, 36, 0.14);
+    --partial-text: #FCD34D;
+    --overdue: #F87171;
+    --overdue-bg: rgba(248, 113, 113, 0.14);
+    --overdue-text: #FCA5A5;
+    --pending: #94A3B8;
+    --pending-bg: rgba(148, 163, 184, 0.14);
+    --pending-text: #CBD5E1;
   }
 
-  /* Modal */
-  .modal-backdrop{
-    position:fixed;inset:0;background:rgba(20,24,40,.5);backdrop-filter:blur(3px);
-    display:flex;align-items:center;justify-content:center;padding:18px;z-index:200;
-    animation:fade .18s ease;
+  /* ============ RESET ============ */
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { -webkit-text-size-adjust: 100%; }
+  body {
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    font-size: 14px;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    transition: background-color .25s ease, color .25s ease;
   }
-  @keyframes fade{from{opacity:0}to{opacity:1}}
-  .modal{
-    background:var(--card);border-radius:20px;padding:24px;width:100%;max-width:460px;
-    box-shadow:0 24px 60px rgba(0,0,0,.25);max-height:90vh;overflow-y:auto;
-    animation:pop .2s ease;
+  .hidden { display: none !important; }
+  .muted { color: var(--text-2); font-size: 13px; }
+  h1, h2, h3 { letter-spacing: -0.02em; }
+  button { font-family: inherit; }
+  a { color: inherit; }
+
+  /* ---------- Generic transitions ---------- */
+  .btn, .card, .topbar, .modal, input, select, textarea,
+  .file-card, .project-card, .tx-row, .recycle-card, .badge, .stat {
+    transition: background-color .22s ease, border-color .22s ease,
+                color .22s ease, box-shadow .22s ease, transform .18s ease;
   }
-  @keyframes pop{from{transform:scale(.95);opacity:0}to{transform:scale(1);opacity:1}}
-  .modal h3{font-size:18px;font-weight:800;margin-bottom:16px;}
-  .modal-actions{display:flex;justify-content:flex-end;gap:8px;margin-top:6px;}
 
-  /* Toast */
-  #toast{
-    position:fixed;bottom:22px;left:50%;transform:translateX(-50%) translateY(120px);
-    background:#1b2133;color:#fff;padding:12px 22px;border-radius:12px;font-size:13.5px;
-    font-weight:600;z-index:999;opacity:0;transition:.3s cubic-bezier(.2,.9,.3,1.2);
-    box-shadow:0 10px 30px rgba(0,0,0,.3);max-width:90vw;text-align:center;
+  /* ============ BUTTONS ============ */
+  .btn {
+    border: none;
+    cursor: pointer;
+    font-size: 13.5px;
+    font-weight: 600;
+    padding: 10px 16px;
+    border-radius: var(--r-sm);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    white-space: nowrap;
+    background: transparent;
+    color: var(--text);
+    line-height: 1.2;
   }
-  #toast.show{transform:translateX(-50%) translateY(0);opacity:1;}
-  #toast.error{background:var(--danger);}
+  .btn:active { transform: scale(.97); }
+  .btn:disabled { opacity: .55; cursor: not-allowed; transform: none; }
 
-  /* Recycle */
-  .recycle-card{padding:14px 16px;display:flex;justify-content:space-between;align-items:center;gap:12px;}
-  .recycle-card h3{font-size:15px;font-weight:700;}
-  .recycle-actions{display:flex;gap:6px;flex-wrap:wrap;}
+  .btn-primary {
+    background: linear-gradient(135deg, var(--emerald) 0%, var(--emerald-hover) 100%);
+    color: #fff;
+    box-shadow: 0 4px 14px rgba(16,185,129,.28);
+  }
+  .btn-primary:hover { box-shadow: 0 6px 20px rgba(16,185,129,.4); filter: brightness(1.04); }
 
-  @media(max-width:640px){
-    .topbar{padding:10px 14px;}
-    .topbar-right .btn span{display:none;}
-    main{padding:16px 14px 90px;}
-    .brand span{display:none;}
-    .row2{grid-template-columns:1fr;}
-    .view-head h2{font-size:19px;}
+  .btn-secondary {
+    background: var(--emerald-soft);
+    color: var(--emerald-hover);
+    border: 1px solid transparent;
+  }
+  [data-theme="dark"] .btn-secondary { color: var(--paid-text); }
+  .btn-secondary:hover { filter: brightness(.97); border-color: rgba(16,185,129,.3); }
+
+  .btn-ghost { color: var(--text-2); }
+  .btn-ghost:hover { background: var(--surface-3); color: var(--text); }
+
+  .btn-danger { background: var(--overdue-bg); color: var(--overdue-text); }
+  .btn-danger:hover { filter: brightness(.95); }
+
+  .btn-google {
+    background: var(--surface);
+    color: var(--text);
+    border: 1.5px solid var(--border);
+    padding: 13px 26px;
+    border-radius: var(--r);
+    font-size: 15px;
+    font-weight: 600;
+    box-shadow: var(--shadow-sm);
+    width: 100%;
+  }
+  .btn-google:hover { border-color: var(--border-strong); background: var(--surface-2); }
+
+  /* Icon buttons */
+  .icon-btn {
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    color: var(--text-2);
+    width: 32px;
+    height: 32px;
+    border-radius: 9px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 13px;
+  }
+  .icon-btn:hover { background: var(--surface-3); color: var(--text); }
+  .icon-btn.danger:hover { background: var(--overdue-bg); color: var(--overdue-text); }
+
+  /* Theme toggle */
+  .theme-toggle {
+    width: 36px; height: 36px;
+    border-radius: 50%;
+    border: none;
+    background: transparent;
+    color: var(--text-2);
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+  }
+  .theme-toggle:hover { background: var(--surface-3); color: var(--text); }
+
+  /* ============ LOGIN ============ */
+  .login-screen {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+    position: relative;
+    overflow: hidden;
+    background:
+      radial-gradient(circle at 15% 20%, rgba(16,185,129,.10) 0%, transparent 45%),
+      radial-gradient(circle at 85% 80%, rgba(5,150,105,.08) 0%, transparent 50%),
+      var(--bg);
+  }
+  .login-screen::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(var(--border) 1px, transparent 1px),
+      linear-gradient(90deg, var(--border) 1px, transparent 1px);
+    background-size: 44px 44px;
+    mask-image: radial-gradient(circle at center, black 30%, transparent 75%);
+    -webkit-mask-image: radial-gradient(circle at center, black 30%, transparent 75%);
+    opacity: .35;
+    pointer-events: none;
+  }
+  .login-theme {
+    position: absolute;
+    top: 22px; right: 22px;
+    z-index: 3;
+    width: 40px; height: 40px;
+    border-radius: 50%;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    box-shadow: var(--shadow-sm);
+  }
+  .login-card {
+    position: relative;
+    z-index: 2;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 26px;
+    padding: 48px 40px 40px;
+    text-align: center;
+    box-shadow: var(--shadow-lg);
+    max-width: 420px;
+    width: 100%;
+    animation: cardIn .5s cubic-bezier(.2,.9,.3,1.2);
+  }
+  @keyframes cardIn {
+    from { opacity: 0; transform: translateY(16px) scale(.97); }
+    to { opacity: 1; transform: none; }
+  }
+  .login-logo {
+    width: 76px; height: 76px;
+    margin: 0 auto 20px;
+    border-radius: 22px;
+    background: linear-gradient(135deg, var(--emerald) 0%, var(--emerald-deep) 100%);
+    color: #fff;
+    font-size: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 12px 30px rgba(16,185,129,.32);
+  }
+  .login-card h1 {
+    font-size: 30px;
+    font-weight: 800;
+    letter-spacing: -.03em;
+    color: var(--text);
+  }
+  .login-card p.sub {
+    color: var(--text-2);
+    margin: 10px 0 28px;
+    font-size: 14.5px;
+    line-height: 1.6;
+  }
+  .login-features {
+    display: flex;
+    justify-content: center;
+    gap: 6px;
+    flex-wrap: wrap;
+    margin-top: 22px;
+    padding-top: 22px;
+    border-top: 1px solid var(--border);
+    font-size: 12px;
+    color: var(--text-2);
+  }
+  .login-features span {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 5px 10px;
+    background: var(--surface-2);
+    border-radius: var(--r-full);
+    font-weight: 500;
+  }
+  .login-features i { color: var(--emerald); font-size: 10px; }
+
+  /* ============ TOPBAR ============ */
+  .topbar {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    background: color-mix(in srgb, var(--surface) 82%, transparent);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 22px;
+    gap: 12px;
+  }
+  .brand {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+    user-select: none;
+    font-weight: 800;
+    font-size: 17px;
+    letter-spacing: -.02em;
+  }
+  .brand-logo {
+    width: 34px; height: 34px;
+    border-radius: 10px;
+    background: linear-gradient(135deg, var(--emerald) 0%, var(--emerald-deep) 100%);
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 15px;
+    box-shadow: 0 4px 12px rgba(16,185,129,.3);
+  }
+  .topbar-right { display: flex; align-items: center; gap: 4px; }
+  .avatar {
+    width: 34px; height: 34px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid var(--surface);
+    box-shadow: 0 0 0 1px var(--border);
+    margin: 0 4px;
+  }
+
+  /* ============ LAYOUT ============ */
+  main {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 26px 22px 90px;
+  }
+  .view:not(.hidden) { animation: fadeUp .32s ease; }
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: none; }
+  }
+
+  .view-head {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 14px;
+    margin: 14px 0 22px;
+    flex-wrap: wrap;
+  }
+  .view-title h1, .view-title h2 {
+    font-size: 22px;
+    font-weight: 800;
+    letter-spacing: -.025em;
+    line-height: 1.2;
+  }
+  .view-title p {
+    margin-top: 4px;
+    font-size: 13px;
+    color: var(--text-2);
+  }
+  .view-head > div:last-child {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+  .back-btn {
+    color: var(--text-2);
+    padding-left: 0;
+    margin-bottom: 4px;
+    font-weight: 600;
+  }
+  .back-btn:hover { color: var(--text); background: transparent; }
+
+  /* ============ GRID + CARDS ============ */
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 18px;
+  }
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--r-lg);
+    box-shadow: var(--shadow-sm);
+  }
+
+  /* --- File cards --- */
+  .file-card {
+    position: relative;
+    cursor: pointer;
+    overflow: hidden;
+  }
+  .file-card:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-lg);
+    border-color: var(--border-strong);
+  }
+  .file-thumb {
+    height: 128px;
+    background:
+      linear-gradient(135deg, var(--emerald-soft) 0%, color-mix(in srgb, var(--emerald-soft) 50%, var(--surface)) 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 34px;
+    color: var(--emerald-hover);
+    overflow: hidden;
+    position: relative;
+  }
+  [data-theme="dark"] .file-thumb { color: var(--paid-text); }
+  .file-thumb img {
+    width: 100%; height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+  .file-card-body { padding: 14px 16px 16px; }
+  .file-card-body h3 {
+    font-size: 15.5px;
+    font-weight: 700;
+    line-height: 1.35;
+    word-break: break-word;
+    margin-bottom: 6px;
+    color: var(--text);
+  }
+  .file-card-body .muted {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12px;
+  }
+  .file-del {
+    position: absolute;
+    top: 10px; right: 10px;
+    width: 32px; height: 32px;
+    border-radius: 10px;
+    border: none;
+    cursor: pointer;
+    background: var(--surface);
+    color: var(--text-2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 13px;
+    box-shadow: var(--shadow-sm);
+    opacity: 0;
+    transform: scale(.85);
+    transition: opacity .18s, transform .18s, background-color .18s, color .18s;
+  }
+  .file-card:hover .file-del { opacity: 1; transform: scale(1); }
+  .file-del:hover { background: var(--overdue-bg); color: var(--overdue-text); }
+
+  /* --- Hero (File & Project) --- */
+  .hero {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--r-lg);
+    padding: 20px;
+    box-shadow: var(--shadow-sm);
+    margin-bottom: 4px;
+  }
+  .hero-img {
+    width: 80px; height: 80px;
+    border-radius: 18px;
+    overflow: hidden;
+    flex: 0 0 auto;
+    background: linear-gradient(135deg, var(--emerald) 0%, var(--emerald-deep) 100%);
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 30px;
+    box-shadow: 0 8px 22px rgba(16,185,129,.28);
+  }
+  .hero-img img { width: 100%; height: 100%; object-fit: cover; }
+  .hero-info { min-width: 0; flex: 1; }
+  .hero-info h2 {
+    font-size: 20px;
+    font-weight: 800;
+    letter-spacing: -.025em;
+    word-break: break-word;
+    margin-bottom: 12px;
+    line-height: 1.25;
+  }
+  .hero-info p.hero-info-text {
+    color: var(--text-2);
+    font-size: 13px;
+    line-height: 1.55;
+    margin-bottom: 14px;
+    word-break: break-word;
+  }
+  .hero-stats {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+  .stat {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 9px 14px;
+    min-width: 120px;
+  }
+  .stat-icon {
+    width: 32px; height: 32px;
+    border-radius: 9px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 13px;
+    flex: 0 0 auto;
+  }
+  .stat-icon.brand { background: var(--emerald-soft); color: var(--emerald-hover); }
+  .stat-icon.paid { background: var(--paid-bg); color: var(--paid-text); }
+  .stat-icon.due { background: var(--partial-bg); color: var(--partial-text); }
+  .stat-label {
+    font-size: 10.5px;
+    font-weight: 600;
+    color: var(--text-2);
+    text-transform: uppercase;
+    letter-spacing: .5px;
+  }
+  .stat-value {
+    font-size: 15px;
+    font-weight: 800;
+    color: var(--text);
+    font-variant-numeric: tabular-nums;
+    letter-spacing: -.01em;
+  }
+  .stat-value.paid { color: var(--paid); }
+  .stat-value.due { color: var(--partial); }
+
+  /* --- Badges --- */
+  .badge {
+    font-size: 11px;
+    font-weight: 700;
+    padding: 4px 10px;
+    border-radius: var(--r-full);
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    white-space: nowrap;
+    letter-spacing: .2px;
+    line-height: 1.4;
+  }
+  .badge i { font-size: 9.5px; }
+  .badge.paid { background: var(--paid-bg); color: var(--paid-text); }
+  .badge.partial { background: var(--partial-bg); color: var(--partial-text); }
+  .badge.overdue { background: var(--overdue-bg); color: var(--overdue-text); }
+  .badge.pending { background: var(--pending-bg); color: var(--pending-text); }
+
+  /* --- Project cards --- */
+  .project-card {
+    padding: 16px;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  .project-card:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-lg);
+    border-color: var(--border-strong);
+  }
+  .project-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 10px;
+  }
+  .project-head-left { min-width: 0; flex: 1; }
+  .project-head h3 {
+    font-size: 15.5px;
+    font-weight: 700;
+    line-height: 1.35;
+    word-break: break-word;
+    margin-bottom: 6px;
+  }
+  .project-actions { display: flex; gap: 2px; flex-shrink: 0; }
+  .project-actions .icon-btn { width: 28px; height: 28px; font-size: 12px; }
+  .project-info {
+    font-size: 12.5px;
+    color: var(--text-2);
+    line-height: 1.55;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    word-break: break-word;
+  }
+  .project-stats {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    padding-top: 12px;
+    border-top: 1px solid var(--border);
+  }
+  .pstat {
+    background: var(--surface-2);
+    border-radius: 10px;
+    padding: 8px 11px;
+  }
+  .pstat-label {
+    font-size: 10.5px;
+    font-weight: 600;
+    color: var(--text-2);
+    text-transform: uppercase;
+    letter-spacing: .5px;
+    display: block;
+    margin-bottom: 2px;
+  }
+  .pstat-value {
+    font-size: 14px;
+    font-weight: 800;
+    font-variant-numeric: tabular-nums;
+  }
+  .pstat-value.paid { color: var(--paid); }
+  .pstat-value.due { color: var(--partial); }
+  .project-foot {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 11.5px;
+    color: var(--text-2);
+    padding-top: 2px;
+  }
+  .project-foot i { margin-right: 4px; opacity: .8; }
+
+  /* --- Transaction rows --- */
+  .tx-list { display: flex; flex-direction: column; gap: 10px; }
+  .tx-row {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--r);
+    padding: 13px 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    box-shadow: var(--shadow-sm);
+  }
+  .tx-row:hover { border-color: var(--border-strong); }
+  .tx-left {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    min-width: 0;
+  }
+  .tx-dot {
+    width: 38px; height: 38px;
+    border-radius: 11px;
+    background: var(--paid-bg);
+    color: var(--paid-text);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    flex: 0 0 auto;
+  }
+  .tx-note {
+    font-size: 13.5px;
+    font-weight: 600;
+    word-break: break-word;
+    color: var(--text);
+  }
+  .tx-date {
+    font-size: 11.5px;
+    color: var(--text-2);
+    margin-top: 2px;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+  }
+  .tx-amt {
+    font-weight: 800;
+    color: var(--paid);
+    font-size: 15px;
+    white-space: nowrap;
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* --- Recycle cards --- */
+  .recycle-card {
+    padding: 14px 16px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+  .recycle-card h3 {
+    font-size: 14.5px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    word-break: break-word;
+  }
+  .recycle-card h3 i { color: var(--text-2); font-size: 13px; }
+  .recycle-actions { display: flex; gap: 6px; flex-wrap: wrap; }
+  .recycle-actions .btn { padding: 7px 12px; font-size: 12.5px; }
+
+  /* --- Empty states --- */
+  .empty {
+    grid-column: 1/-1;
+    text-align: center;
+    padding: 64px 24px;
+    background: var(--surface);
+    border-radius: var(--r-lg);
+    border: 2px dashed var(--border);
+  }
+  .empty-icon {
+    width: 64px; height: 64px;
+    margin: 0 auto 14px;
+    border-radius: 18px;
+    background: var(--surface-2);
+    color: var(--text-3);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 26px;
+  }
+  .empty h3 {
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 4px;
+  }
+  .empty p {
+    font-size: 13px;
+    color: var(--text-2);
+    max-width: 320px;
+    margin: 0 auto;
+    line-height: 1.55;
+  }
+
+  /* --- Forms --- */
+  .form-card {
+    max-width: 600px;
+    padding: 26px;
+  }
+  .form-header {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding-bottom: 22px;
+    margin-bottom: 22px;
+    border-bottom: 1px solid var(--border);
+  }
+  .form-header-icon {
+    width: 46px; height: 46px;
+    border-radius: 14px;
+    background: var(--emerald-soft);
+    color: var(--emerald-hover);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    flex: 0 0 auto;
+  }
+  .form-header h3 { font-size: 16px; font-weight: 700; }
+  .form-header p { font-size: 12.5px; color: var(--text-2); margin-top: 2px; }
+
+  .field { display: block; margin-bottom: 16px; }
+  .field > span {
+    display: block;
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--text-2);
+    margin-bottom: 7px;
+    letter-spacing: .2px;
+    text-transform: uppercase;
+  }
+  input, select, textarea {
+    width: 100%;
+    font-family: inherit;
+    font-size: 14px;
+    color: var(--text);
+    padding: 11px 14px;
+    border: 1.5px solid var(--border);
+    border-radius: var(--r-sm);
+    background: var(--surface);
+    outline: none;
+  }
+  input::placeholder, textarea::placeholder { color: var(--text-3); }
+  input:focus, select:focus, textarea:focus {
+    border-color: var(--emerald);
+    box-shadow: 0 0 0 4px var(--ring);
+  }
+  select {
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath fill='%2364748B' d='M6 8L0 0h12z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 14px center;
+    padding-right: 36px;
+    cursor: pointer;
+  }
+  textarea { resize: vertical; min-height: 68px; }
+  .row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+
+  /* --- Modal --- */
+  .modal-backdrop {
+    position: fixed;
+    inset: 0;
+    background: rgba(15,23,42,.55);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    z-index: 200;
+    animation: fadeIn .18s ease;
+  }
+  @keyframes fadeIn { from { opacity: 0 } to { opacity: 1 } }
+  .modal {
+    background: var(--surface);
+    border-radius: var(--r-lg);
+    padding: 24px;
+    width: 100%;
+    max-width: 480px;
+    box-shadow: var(--shadow-lg);
+    max-height: 90vh;
+    overflow-y: auto;
+    animation: popIn .22s cubic-bezier(.2,.9,.3,1.15);
+    border: 1px solid var(--border);
+  }
+  @keyframes popIn {
+    from { transform: scale(.94); opacity: 0; }
+    to { transform: scale(1); opacity: 1; }
+  }
+  .modal-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    gap: 10px;
+  }
+  .modal-head h3 {
+    font-size: 17px;
+    font-weight: 800;
+    letter-spacing: -.02em;
+  }
+  .modal-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 8px;
+    margin-top: 8px;
+    padding-top: 18px;
+    border-top: 1px solid var(--border);
+  }
+
+  /* --- Toast --- */
+  #toast {
+    position: fixed;
+    bottom: 24px;
+    left: 50%;
+    transform: translateX(-50%) translateY(140px);
+    background: var(--slate-900, #0F172A);
+    color: #fff;
+    padding: 12px 20px;
+    border-radius: 12px;
+    font-size: 13.5px;
+    font-weight: 600;
+    z-index: 999;
+    opacity: 0;
+    transition: transform .35s cubic-bezier(.2,.9,.3,1.2), opacity .25s ease;
+    box-shadow: 0 12px 32px rgba(0,0,0,.28);
+    max-width: calc(100vw - 32px);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    pointer-events: none;
+  }
+  #toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
+  #toast i { color: #34D399; font-size: 15px; }
+  #toast.error { background: #B91C1C; }
+  #toast.error i { color: #FECACA; }
+
+  /* --- Report styles (used only inside hidden node, not visible) --- */
+  .report-wrap {
+    font-family: 'Inter', Arial, sans-serif;
+    color: #0F172A;
+  }
+
+  /* --- Responsive --- */
+  @media (max-width: 720px) {
+    .topbar { padding: 9px 14px; }
+    .topbar-right .btn span { display: none; }
+    .topbar-right .btn { padding: 9px 11px; }
+    .brand span { display: none; }
+    main { padding: 18px 14px 90px; }
+    .grid { grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 12px; }
+    .file-thumb { height: 100px; font-size: 28px; }
+    .hero { flex-direction: column; text-align: center; padding: 18px; }
+    .hero-img { width: 64px; height: 64px; font-size: 24px; }
+    .hero-stats { justify-content: center; width: 100%; }
+    .stat { min-width: 0; flex: 1; }
+    .stat-label { font-size: 10px; }
+    .row2 { grid-template-columns: 1fr; }
+    .login-card { padding: 36px 26px 30px; }
+    .login-card h1 { font-size: 26px; }
+  }
+  @media (max-width: 420px) {
+    .view-head { align-items: stretch; }
+    .view-head > div:last-child { width: 100%; }
+    .view-head > div:last-child .btn { flex: 1; justify-content: center; }
   }
 </style>
 </head>
@@ -236,26 +947,51 @@
 
 <!-- ================= LOGIN ================= -->
 <div id="loginScreen" class="login-screen">
+  <button class="theme-toggle login-theme" id="themeToggleLogin" title="Toggle theme" aria-label="Toggle theme">
+    <i class="fas fa-moon theme-icon"></i>
+  </button>
   <div class="login-card">
-    <div class="logo">📁</div>
+    <div class="login-logo"><i class="fas fa-folder-open"></i></div>
     <h1>Due Desk</h1>
-    <p>Manage your files, projects, payments &amp; dues — all in one place.</p>
+    <p class="sub">Manage your files, projects,<br>payments &amp; dues — all in one place.</p>
     <button id="googleLoginBtn" class="btn btn-google">
-      <svg width="19" height="19" viewBox="0 0 48 48"><path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/><path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/><path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/><path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/></svg>
+      <svg width="18" height="18" viewBox="0 0 48 48" aria-hidden="true">
+        <path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/>
+        <path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/>
+        <path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/>
+        <path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/>
+      </svg>
       Continue with Google
     </button>
+    <div class="login-features">
+      <span><i class="fas fa-check"></i> Track payments</span>
+      <span><i class="fas fa-check"></i> Export reports</span>
+      <span><i class="fas fa-check"></i> Manage dues</span>
+    </div>
   </div>
 </div>
 
 <!-- ================= APP ================= -->
 <div id="app" class="hidden">
   <header class="topbar">
-    <div class="brand" id="brandHome">📁 <span>Due Desk</span></div>
+    <div class="brand" id="brandHome">
+      <div class="brand-logo"><i class="fas fa-folder-open"></i></div>
+      <span>Due Desk</span>
+    </div>
     <div class="topbar-right">
-      <button class="btn btn-ghost" id="navPayment">💰<span>New Payment</span></button>
-      <button class="btn btn-ghost" id="navRecycle">🗑<span>Recycle Bin</span></button>
+      <button class="btn btn-ghost" id="navPayment" title="New Payment">
+        <i class="fas fa-credit-card"></i><span>New Payment</span>
+      </button>
+      <button class="btn btn-ghost" id="navRecycle" title="Recycle Bin">
+        <i class="fas fa-recycle"></i><span>Recycle</span>
+      </button>
+      <button class="theme-toggle" id="themeToggle" title="Toggle theme" aria-label="Toggle theme">
+        <i class="fas fa-moon theme-icon"></i>
+      </button>
       <img id="userPhoto" class="avatar" alt="user" />
-      <button class="btn btn-ghost" id="logoutBtn">Logout</button>
+      <button class="btn btn-ghost" id="logoutBtn" title="Logout">
+        <i class="fas fa-right-from-bracket"></i><span>Logout</span>
+      </button>
     </div>
   </header>
 
@@ -263,21 +999,37 @@
     <!-- FILES -->
     <section id="view-files" class="view">
       <div class="view-head">
-        <h2>My Files</h2>
-        <div><button class="btn btn-primary" id="createFileBtn">+ New File</button></div>
+        <div class="view-title">
+          <h1>My Files</h1>
+          <p id="filesCount">0 files</p>
+        </div>
+        <div>
+          <button class="btn btn-primary" id="createFileBtn">
+            <i class="fas fa-plus"></i> New File
+          </button>
+        </div>
       </div>
       <div id="filesGrid" class="grid"></div>
     </section>
 
     <!-- FILE DETAIL -->
     <section id="view-file" class="view hidden">
-      <button class="btn btn-ghost back-btn" data-back="files">← Back to Files</button>
+      <button class="btn btn-ghost back-btn" data-back="files">
+        <i class="fas fa-arrow-left"></i> Back to Files
+      </button>
       <div id="fileHero"></div>
       <div class="view-head">
-        <h2>Projects</h2>
+        <div class="view-title">
+          <h2>Projects</h2>
+          <p id="projectsCount">0 projects</p>
+        </div>
         <div>
-          <button class="btn btn-secondary" id="downloadFileBtn">⬇ Summary JPG</button>
-          <button class="btn btn-primary" id="addProjectBtn">+ New Project</button>
+          <button class="btn btn-secondary" id="downloadFileBtn">
+            <i class="fas fa-file-arrow-down"></i> Summary JPG
+          </button>
+          <button class="btn btn-primary" id="addProjectBtn">
+            <i class="fas fa-plus"></i> New Project
+          </button>
         </div>
       </div>
       <div id="projectsGrid" class="grid"></div>
@@ -285,13 +1037,22 @@
 
     <!-- PROJECT DETAIL -->
     <section id="view-project" class="view hidden">
-      <button class="btn btn-ghost back-btn" data-back="file">← Back to Projects</button>
+      <button class="btn btn-ghost back-btn" data-back="file">
+        <i class="fas fa-arrow-left"></i> Back to Projects
+      </button>
       <div id="projectHero"></div>
       <div class="view-head">
-        <h2>Transaction History</h2>
+        <div class="view-title">
+          <h2>Transaction History</h2>
+          <p id="txCount">0 payments</p>
+        </div>
         <div>
-          <button class="btn btn-secondary" id="downloadProjectBtn">⬇ History JPG</button>
-          <button class="btn btn-primary" id="addTxBtn">+ Add Payment</button>
+          <button class="btn btn-secondary" id="downloadProjectBtn">
+            <i class="fas fa-file-arrow-down"></i> History JPG
+          </button>
+          <button class="btn btn-primary" id="addTxBtn">
+            <i class="fas fa-plus"></i> Add Payment
+          </button>
         </div>
       </div>
       <div id="txList" class="tx-list"></div>
@@ -299,8 +1060,20 @@
 
     <!-- NEW PAYMENT -->
     <section id="view-payment" class="view hidden">
-      <div class="view-head"><h2>New Payment Record</h2></div>
+      <div class="view-head">
+        <div class="view-title">
+          <h1>New Payment Record</h1>
+          <p>Record a payment against a project</p>
+        </div>
+      </div>
       <div class="card form-card">
+        <div class="form-header">
+          <div class="form-header-icon"><i class="fas fa-credit-card"></i></div>
+          <div>
+            <h3>Record a Payment</h3>
+            <p>Select a file and project, then enter the amount</p>
+          </div>
+        </div>
         <label class="field"><span>Select File</span>
           <select id="payFileSelect"></select>
         </label>
@@ -309,7 +1082,7 @@
         </label>
         <div class="row2">
           <label class="field"><span>Amount</span>
-            <input type="number" id="payAmount" step="0.01" min="0" placeholder="0.00" />
+            <input type="number" id="payAmount" step="0.01" min="0" placeholder="0.00" inputmode="decimal" />
           </label>
           <label class="field"><span>Date</span>
             <input type="date" id="payDate" />
@@ -318,15 +1091,20 @@
         <label class="field"><span>Note (optional)</span>
           <input type="text" id="payNote" placeholder="e.g. Cash / bKash / Bank" />
         </label>
-        <button class="btn btn-primary" id="savePaymentBtn" style="width:100%;justify-content:center;">
-          Save Payment
+        <button class="btn btn-primary" id="savePaymentBtn" style="width:100%;justify-content:center;padding:13px;font-size:14.5px;">
+          <i class="fas fa-check"></i> Save Payment
         </button>
       </div>
     </section>
 
     <!-- RECYCLE BIN -->
     <section id="view-recycle" class="view hidden">
-      <div class="view-head"><h2>🗑 Recycle Bin</h2></div>
+      <div class="view-head">
+        <div class="view-title">
+          <h1><i class="fas fa-recycle" style="color:var(--emerald);margin-right:6px;"></i>Recycle Bin</h1>
+          <p>Deleted files and projects can be restored or permanently removed</p>
+        </div>
+      </div>
       <div id="recycleList" class="tx-list"></div>
     </section>
   </main>
@@ -385,15 +1163,41 @@ const projectsCol= fid => collection(db,'users',uid,'files',fid,'projects');
 const txCol      = (fid,pid) => collection(db,'users',uid,'files',fid,'projects',pid,'transactions');
 const recycleCol = () => collection(db,'users',uid,'recycle');
 
+/* ---------------- THEME ---------------- */
+function applyTheme(theme){
+  document.documentElement.setAttribute('data-theme', theme);
+  try { localStorage.setItem('duedesk-theme', theme); } catch(e) {}
+  updateThemeIcons(theme);
+}
+function updateThemeIcons(theme){
+  const cls = theme === 'dark' ? 'fas fa-sun theme-icon' : 'fas fa-moon theme-icon';
+  $$('.theme-icon').forEach(el => el.className = cls);
+}
+function toggleTheme(){
+  const current = document.documentElement.getAttribute('data-theme') || 'light';
+  applyTheme(current === 'light' ? 'dark' : 'light');
+}
+const initTheme = (() => {
+  const t = document.documentElement.getAttribute('data-theme') || 'light';
+  updateThemeIcons(t);
+  const t1 = $('#themeToggle');
+  const t2 = $('#themeToggleLogin');
+  if (t1) t1.onclick = toggleTheme;
+  if (t2) t2.onclick = toggleTheme;
+})();
+
+/* ---------------- TOAST ---------------- */
 let toastTimer;
-function toast(msg, type='ok'){
+function toast(msg, type='success'){
   const el = $('#toast');
-  el.textContent = msg;
+  const icon = type === 'error' ? 'fa-circle-exclamation' : 'fa-circle-check';
+  el.innerHTML = `<i class="fas ${icon}"></i><span>${esc(msg)}</span>`;
   el.className = 'show' + (type === 'error' ? ' error' : '');
   clearTimeout(toastTimer);
   toastTimer = setTimeout(()=>{ el.className = ''; }, 2800);
 }
 
+/* ---------------- VIEW SWITCHING ---------------- */
 function showView(name){
   $$('.view').forEach(v => v.classList.add('hidden'));
   const v = document.getElementById('view-' + name);
@@ -401,7 +1205,7 @@ function showView(name){
   window.scrollTo({ top:0, behavior:'smooth' });
 }
 
-/* Image compression → base64 (keeps Firestore doc small) */
+/* ---------------- IMAGE COMPRESSION ---------------- */
 function compressImage(file, maxSize = 700, quality = 0.78){
   return new Promise((resolve, reject) => {
     const reader = new FileReader();
@@ -427,24 +1231,33 @@ function compressImage(file, maxSize = 700, quality = 0.78){
 /* ---------------- MODAL ---------------- */
 function closeModal(){ $('#modalRoot').innerHTML = ''; }
 
-function showModal({ title, body, submitText = 'Save', onSubmit }){
+function showModal({ title, body, submitText = 'Save', submitIcon = 'fa-check', onSubmit }){
   $('#modalRoot').innerHTML = `
     <div class="modal-backdrop">
       <div class="modal">
-        <h3>${esc(title)}</h3>
+        <div class="modal-head">
+          <h3>${esc(title)}</h3>
+          <button class="icon-btn" type="button" id="modalClose" aria-label="Close">
+            <i class="fas fa-times"></i>
+          </button>
+        </div>
         <form id="modalForm">
           ${body}
           <div class="modal-actions">
             <button type="button" class="btn btn-ghost" id="modalCancel">Cancel</button>
-            <button type="submit" class="btn btn-primary">${esc(submitText)}</button>
+            <button type="submit" class="btn btn-primary">
+              <i class="fas ${submitIcon}"></i> ${esc(submitText)}
+            </button>
           </div>
         </form>
       </div>
     </div>`;
 
-  $('#modalCancel').onclick = closeModal;
+  const close = () => closeModal();
+  $('#modalClose').onclick = close;
+  $('#modalCancel').onclick = close;
   $('#modalRoot .modal-backdrop').onclick = e => {
-    if (e.target.classList.contains('modal-backdrop')) closeModal();
+    if (e.target.classList.contains('modal-backdrop')) close();
   };
   $('#modalForm').onsubmit = async e => {
     e.preventDefault();
@@ -452,11 +1265,12 @@ function showModal({ title, body, submitText = 'Save', onSubmit }){
     btn.disabled = true;
     try {
       await onSubmit(new FormData(e.target), e.target);
-      closeModal();
-    } catch (err) {
+      close();
+    } catch (err){
       console.error(err);
       toast(err.message || 'Something went wrong', 'error');
-    } finally { btn.disabled = false; }
+      btn.disabled = false;
+    }
   };
 }
 
@@ -503,18 +1317,28 @@ async function loadFiles(){
 
 function renderFiles(){
   const grid = $('#filesGrid');
+  const countEl = $('#filesCount');
+  if (countEl) countEl.textContent = files.length + ' file' + (files.length === 1 ? '' : 's');
+
   if (!files.length){
-    grid.innerHTML = `<div class="empty">📁 No files yet.<br>Click <b>“+ New File”</b> to create your first file.</div>`;
+    grid.innerHTML = `
+      <div class="empty">
+        <div class="empty-icon"><i class="fas fa-folder-open"></i></div>
+        <h3>No files yet</h3>
+        <p>Click <b>“New File”</b> to create your first file and start organizing your projects.</p>
+      </div>`;
     return;
   }
   grid.innerHTML = files.map(f => `
     <div class="card file-card" data-file="${f.id}">
-      <button class="file-del" data-del="${f.id}" title="Move to recycle bin">🗑</button>
-      <div class="file-thumb">${f.image ? `<img src="${f.image}" alt="">` : `<span>📁</span>`}</div>
+      <div class="file-thumb">${f.image ? `<img src="${f.image}" alt="">` : `<i class="fas fa-folder"></i>`}</div>
       <div class="file-card-body">
         <h3>${esc(f.name)}</h3>
-        <p class="muted">${f.createdAt ? new Date(tsSeconds(f.createdAt)*1000).toLocaleDateString() : ''}</p>
+        <span class="muted"><i class="fas fa-calendar"></i> ${f.createdAt ? new Date(tsSeconds(f.createdAt)*1000).toLocaleDateString() : '—'}</span>
       </div>
+      <button class="file-del" data-del="${f.id}" title="Move to recycle bin" aria-label="Delete file">
+        <i class="fas fa-trash"></i>
+      </button>
     </div>`).join('');
 
   grid.querySelectorAll('[data-file]').forEach(el => {
@@ -536,9 +1360,10 @@ $('#createFileBtn').onclick = () => {
   showModal({
     title: 'Create New File',
     submitText: 'Create File',
+    submitIcon: 'fa-folder-plus',
     body: `
       <label class="field"><span>File Name</span>
-        <input name="name" required placeholder="e.g. Client A / Office 2024" />
+        <input name="name" required placeholder="e.g. Client A / Office 2024" autofocus />
       </label>
       <label class="field"><span>Image (optional)</span>
         <input type="file" name="image" accept="image/*" />
@@ -551,7 +1376,7 @@ $('#createFileBtn').onclick = () => {
       if (imgFile && imgFile.size > 0) image = await compressImage(imgFile);
       await addDoc(filesCol(), { name, image, createdAt: serverTimestamp() });
       await loadFiles();
-      toast('File created ✅');
+      toast('File created');
     }
   });
 };
@@ -571,13 +1396,31 @@ function renderFileHero(){
   const totalDue = projects.reduce((s,p) => s + num(p.due), 0);
   $('#fileHero').innerHTML = `
     <div class="hero">
-      <div class="hero-img">${activeFile.image ? `<img src="${activeFile.image}" alt="">` : '📁'}</div>
-      <div style="min-width:0;">
+      <div class="hero-img">${activeFile.image ? `<img src="${activeFile.image}" alt="">` : '<i class="fas fa-folder"></i>'}</div>
+      <div class="hero-info">
         <h2>${esc(activeFile.name)}</h2>
-        <div class="hero-meta">
-          <span class="muted">${projects.length} project${projects.length !== 1 ? 's' : ''}</span>
-          <span class="muted">Paid: <b class="green">৳${fmt(totalPay)}</b></span>
-          <span class="muted">Due: <b class="red">৳${fmt(totalDue)}</b></span>
+        <div class="hero-stats">
+          <div class="stat">
+            <div class="stat-icon brand"><i class="fas fa-layer-group"></i></div>
+            <div>
+              <div class="stat-label">Projects</div>
+              <div class="stat-value">${projects.length}</div>
+            </div>
+          </div>
+          <div class="stat">
+            <div class="stat-icon paid"><i class="fas fa-arrow-trend-up"></i></div>
+            <div>
+              <div class="stat-label">Total Paid</div>
+              <div class="stat-value paid">৳${fmt(totalPay)}</div>
+            </div>
+          </div>
+          <div class="stat">
+            <div class="stat-icon due"><i class="fas fa-hourglass-half"></i></div>
+            <div>
+              <div class="stat-label">Total Due</div>
+              <div class="stat-value due">৳${fmt(totalDue)}</div>
+            </div>
+          </div>
         </div>
       </div>
     </div>`;
@@ -590,33 +1433,62 @@ async function loadProjects(fid){
   projects.sort((a,b) => tsSeconds(b.createdAt) - tsSeconds(a.createdAt));
 }
 
+function statusOf(p){
+  const due = num(p.due);
+  const paid = num(p.payment);
+  if (due <= 0) return { cls: 'paid', icon: 'fa-circle-check', label: 'Paid' };
+  if (paid > 0)  return { cls: 'partial', icon: 'fa-circle-half-stroke', label: 'Partial ৳' + fmt(due) };
+  return { cls: 'partial', icon: 'fa-hourglass-half', label: 'Due ৳' + fmt(due) };
+}
+
 function renderProjects(){
   const grid = $('#projectsGrid');
+  const countEl = $('#projectsCount');
+  if (countEl) countEl.textContent = projects.length + ' project' + (projects.length === 1 ? '' : 's');
+
   if (!projects.length){
-    grid.innerHTML = `<div class="empty">📋 No projects in this file yet.<br>Click <b>“+ New Project”</b> to add one.</div>`;
+    grid.innerHTML = `
+      <div class="empty">
+        <div class="empty-icon"><i class="fas fa-clipboard-list"></i></div>
+        <h3>No projects yet</h3>
+        <p>Click <b>“+ New Project”</b> to add your first project to this file.</p>
+      </div>`;
     return;
   }
-  grid.innerHTML = projects.map(p => `
+  grid.innerHTML = projects.map(p => {
+    const st = statusOf(p);
+    return `
     <div class="card project-card" data-project="${p.id}">
-      <div class="pc-head">
-        <h3>${esc(p.name)}</h3>
-        <span class="badge ${num(p.due) > 0 ? 'due' : 'ok'}">
-          ${num(p.due) > 0 ? 'Due ৳' + fmt(p.due) : 'Clear'}
-        </span>
-      </div>
-      ${p.info ? `<p class="pc-info">${esc(p.info)}</p>` : '<div style="height:8px"></div>'}
-      <div class="pc-stats">
-        <div><span>Payment</span><strong class="green">৳${fmt(p.payment)}</strong></div>
-        <div><span>Due</span><strong class="red">৳${fmt(p.due)}</strong></div>
-      </div>
-      <div class="pc-foot">
-        <span class="muted">${esc(p.date || '')}</span>
-        <div>
-          <button class="icon-btn" data-edit="${p.id}" title="Edit">✏️</button>
-          <button class="icon-btn" data-del="${p.id}" title="Delete">🗑</button>
+      <div class="project-head">
+        <div class="project-head-left">
+          <h3>${esc(p.name)}</h3>
+          <span class="badge ${st.cls}"><i class="fas ${st.icon}"></i>${st.label}</span>
+        </div>
+        <div class="project-actions">
+          <button class="icon-btn" data-edit="${p.id}" title="Edit" aria-label="Edit">
+            <i class="fas fa-pen"></i>
+          </button>
+          <button class="icon-btn danger" data-del="${p.id}" title="Delete" aria-label="Delete">
+            <i class="fas fa-trash"></i>
+          </button>
         </div>
       </div>
-    </div>`).join('');
+      ${p.info ? `<p class="project-info">${esc(p.info)}</p>` : ''}
+      <div class="project-stats">
+        <div class="pstat">
+          <span class="pstat-label">Payment</span>
+          <span class="pstat-value paid">৳${fmt(p.payment)}</span>
+        </div>
+        <div class="pstat">
+          <span class="pstat-label">Due</span>
+          <span class="pstat-value due">৳${fmt(p.due)}</span>
+        </div>
+      </div>
+      <div class="project-foot">
+        <span><i class="fas fa-calendar"></i>${esc(p.date || '—')}</span>
+      </div>
+    </div>`;
+  }).join('');
 
   grid.querySelectorAll('[data-project]').forEach(el => {
     el.onclick = e => {
@@ -643,9 +1515,10 @@ function openProjectModal(fid, project){
   showModal({
     title: project ? 'Edit Project' : 'New Project',
     submitText: project ? 'Update Project' : 'Create Project',
+    submitIcon: project ? 'fa-check' : 'fa-plus',
     body: `
       <label class="field"><span>Project Name</span>
-        <input name="name" required value="${esc(p.name || '')}" placeholder="e.g. Website Redesign" />
+        <input name="name" required value="${esc(p.name || '')}" placeholder="e.g. Website Redesign" autofocus />
       </label>
       <label class="field"><span>Info</span>
         <textarea name="info" rows="2" placeholder="Short description...">${esc(p.info || '')}</textarea>
@@ -673,10 +1546,10 @@ function openProjectModal(fid, project){
 
       if (project){
         await updateDoc(doc(db,'users',uid,'files',fid,'projects',project.id), data);
-        toast('Project updated ✅');
+        toast('Project updated');
       } else {
         await addDoc(projectsCol(fid), { ...data, createdAt: serverTimestamp() });
-        toast('Project created ✅');
+        toast('Project created');
       }
       await loadProjects(fid);
       renderFileHero();
@@ -690,7 +1563,6 @@ async function deleteProjectToRecycle(pid){
   const pSnap = await getDoc(pRef);
   if (!pSnap.exists()) return;
 
-  // backup transactions too
   const txSnap = await getDocs(txCol(activeFile.id, pid));
   const txs = txSnap.docs.map(d => ({ id: d.id, data: d.data() }));
 
@@ -710,7 +1582,7 @@ async function deleteProjectToRecycle(pid){
   await loadProjects(activeFile.id);
   renderFileHero();
   renderProjects();
-  toast('Project moved to Recycle Bin 🗑');
+  toast('Project moved to Recycle Bin');
 }
 
 async function deleteFileToRecycle(fid){
@@ -746,7 +1618,7 @@ async function deleteFileToRecycle(fid){
   await deleteDoc(doc(db,'users',uid,'files',fid));
 
   await loadFiles();
-  toast('File moved to Recycle Bin 🗑');
+  toast('File moved to Recycle Bin');
 }
 
 /* ================= PROJECT DETAIL ================= */
@@ -771,16 +1643,40 @@ async function loadTransactions(fid, pid){
 
 function renderProjectHero(){
   const p = activeProject;
+  const st = statusOf(p);
   $('#projectHero').innerHTML = `
-    <div class="hero" style="align-items:flex-start;">
-      <div class="hero-img" style="font-size:26px;">📋</div>
-      <div style="min-width:0;flex:1;">
-        <h2>${esc(p.name)}</h2>
-        ${p.info ? `<p class="muted" style="margin-top:6px;line-height:1.55;">${esc(p.info)}</p>` : ''}
-        <div class="hero-meta">
-          <span class="muted">Date: <b>${esc(p.date || '—')}</b></span>
-          <span class="muted">Payment: <b class="green">৳${fmt(p.payment)}</b></span>
-          <span class="muted">Due: <b class="red">৳${fmt(p.due)}</b></span>
+    <div class="hero">
+      <div class="hero-img" style="background:linear-gradient(135deg,var(--emerald) 0%,var(--emerald-deep) 100%);">
+        <i class="fas fa-clipboard-list"></i>
+      </div>
+      <div class="hero-info">
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:10px;flex-wrap:wrap;margin-bottom:10px;">
+          <h2 style="margin-bottom:0;">${esc(p.name)}</h2>
+          <span class="badge ${st.cls}"><i class="fas ${st.icon}"></i>${st.label}</span>
+        </div>
+        ${p.info ? `<p class="hero-info-text">${esc(p.info)}</p>` : ''}
+        <div class="hero-stats">
+          <div class="stat">
+            <div class="stat-icon brand"><i class="fas fa-calendar"></i></div>
+            <div>
+              <div class="stat-label">Date</div>
+              <div class="stat-value" style="font-size:13.5px;">${esc(p.date || '—')}</div>
+            </div>
+          </div>
+          <div class="stat">
+            <div class="stat-icon paid"><i class="fas fa-arrow-trend-up"></i></div>
+            <div>
+              <div class="stat-label">Payment</div>
+              <div class="stat-value paid">৳${fmt(p.payment)}</div>
+            </div>
+          </div>
+          <div class="stat">
+            <div class="stat-icon due"><i class="fas fa-hourglass-half"></i></div>
+            <div>
+              <div class="stat-label">Due</div>
+              <div class="stat-value due">৳${fmt(p.due)}</div>
+            </div>
+          </div>
         </div>
       </div>
     </div>`;
@@ -788,17 +1684,25 @@ function renderProjectHero(){
 
 function renderTransactions(){
   const wrap = $('#txList');
+  const countEl = $('#txCount');
+  if (countEl) countEl.textContent = transactions.length + ' payment' + (transactions.length === 1 ? '' : 's');
+
   if (!transactions.length){
-    wrap.innerHTML = `<div class="empty">💳 No transactions yet.<br>Click <b>“+ Add Payment”</b> to record one.</div>`;
+    wrap.innerHTML = `
+      <div class="empty">
+        <div class="empty-icon"><i class="fas fa-receipt"></i></div>
+        <h3>No transactions yet</h3>
+        <p>Click <b>“+ Add Payment”</b> to record the first payment for this project.</p>
+      </div>`;
     return;
   }
   wrap.innerHTML = transactions.map(t => `
     <div class="tx-row">
       <div class="tx-left">
-        <div class="tx-dot">💵</div>
+        <div class="tx-dot"><i class="fas fa-receipt"></i></div>
         <div style="min-width:0;">
           <div class="tx-note">${esc(t.note || 'Payment received')}</div>
-          <div class="tx-date">${esc(t.date || '—')}</div>
+          <div class="tx-date"><i class="fas fa-calendar" style="font-size:10px;"></i>${esc(t.date || '—')}</div>
         </div>
       </div>
       <div class="tx-amt">+ ৳${fmt(t.amount)}</div>
@@ -807,11 +1711,15 @@ function renderTransactions(){
 
 $('#addTxBtn').onclick = () => {
   showModal({
-    title: 'Add Payment — ' + activeProject.name,
+    title: 'Add Payment',
     submitText: 'Add Payment',
+    submitIcon: 'fa-check',
     body: `
+      <p class="muted" style="margin-bottom:16px;padding:10px 12px;background:var(--surface-2);border-radius:10px;">
+        <i class="fas fa-info-circle"></i> Recording against <b>${esc(activeProject.name)}</b>
+      </p>
       <label class="field"><span>Amount</span>
-        <input type="number" name="amount" step="0.01" min="0.01" required placeholder="0.00" />
+        <input type="number" name="amount" step="0.01" min="0.01" required placeholder="0.00" autofocus />
       </label>
       <label class="field"><span>Date</span>
         <input type="date" name="date" value="${today()}" />
@@ -823,8 +1731,8 @@ $('#addTxBtn').onclick = () => {
       const amount = num(fd.get('amount'));
       if (amount <= 0) throw new Error('Enter a valid amount');
       await addPayment(activeFile.id, activeProject.id, amount, fd.get('note'), fd.get('date'));
-      await openProject(activeProject.id); // refresh
-      toast('Payment recorded ✅');
+      await openProject(activeProject.id);
+      toast('Payment recorded');
     }
   });
 };
@@ -892,14 +1800,14 @@ $('#savePaymentBtn').onclick = async () => {
   btn.disabled = true;
   try {
     await addPayment(fid, pid, amt, note, date);
-    toast('Payment recorded ✅ Due updated');
+    toast('Payment recorded — due updated');
     $('#payAmount').value = '';
     $('#payNote').value = '';
-    // refresh project dropdown (due changed)
     $('#payFileSelect').dispatchEvent(new Event('change'));
+
     if (activeFile && activeFile.id === fid){
       await loadProjects(fid);
-      if (document.getElementById('view-file').classList.contains('hidden') === false){
+      if (!document.getElementById('view-file').classList.contains('hidden')){
         renderFileHero(); renderProjects();
       }
     }
@@ -912,39 +1820,48 @@ $('#savePaymentBtn').onclick = async () => {
 /* ================= RECYCLE BIN ================= */
 async function openRecycleView(){
   const list = $('#recycleList');
-  list.innerHTML = `<div class="empty">Loading…</div>`;
+  list.innerHTML = `<div class="empty"><div class="empty-icon"><i class="fas fa-spinner fa-spin"></i></div><p>Loading…</p></div>`;
+  showView('recycle');
+
   const snap = await getDocs(recycleCol());
   const items = snap.docs.map(d => ({ id: d.id, ...d.data() }));
   items.sort((a,b) => tsSeconds(b.deletedAt) - tsSeconds(a.deletedAt));
 
   if (!items.length){
-    list.innerHTML = `<div class="empty">🗑 Recycle Bin is empty.</div>`;
-    showView('recycle');
+    list.innerHTML = `
+      <div class="empty">
+        <div class="empty-icon"><i class="fas fa-recycle"></i></div>
+        <h3>Recycle Bin is empty</h3>
+        <p>Deleted files and projects will appear here.</p>
+      </div>`;
     return;
   }
 
-  list.innerHTML = items.map(it => `
-    <div class="card recycle-card">
-      <div style="min-width:0;">
-        <h3>${it.type === 'file' ? '📁' : '📋'} ${esc(it.type === 'file' ? it.name : (it.project?.name || 'Project'))}</h3>
-        <p class="muted" style="margin-top:3px;">
-          ${it.type === 'file'
-            ? `File • ${(it.projects || []).length} projects`
-            : `Project • from “${esc(it.fileName || '—')}”`}
-          • deleted ${it.deletedAt ? new Date(tsSeconds(it.deletedAt)*1000).toLocaleDateString() : ''}
-        </p>
-      </div>
-      <div class="recycle-actions">
-        <button class="btn btn-secondary" data-restore="${it.id}">Restore</button>
-        <button class="btn btn-danger" data-purge="${it.id}">Delete</button>
-      </div>
-    </div>`).join('');
+  list.innerHTML = items.map(it => {
+    const title = it.type === 'file' ? (it.name || 'File') : (it.project?.name || 'Project');
+    const icon  = it.type === 'file' ? 'fa-folder' : 'fa-clipboard-list';
+    const sub = it.type === 'file'
+      ? `File · ${(it.projects || []).length} project${(it.projects||[]).length===1?'':'s'}`
+      : `Project · from “${esc(it.fileName || '—')}”`;
+    const when = it.deletedAt ? new Date(tsSeconds(it.deletedAt)*1000).toLocaleDateString() : '';
+    return `
+      <div class="card recycle-card">
+        <div style="min-width:0;">
+          <h3><i class="fas ${icon}"></i> ${esc(title)}</h3>
+          <p class="muted" style="margin-top:3px;">${sub} · deleted ${when}</p>
+        </div>
+        <div class="recycle-actions">
+          <button class="btn btn-secondary" data-restore="${it.id}"><i class="fas fa-rotate-left"></i> Restore</button>
+          <button class="btn btn-danger" data-purge="${it.id}"><i class="fas fa-trash"></i> Delete</button>
+        </div>
+      </div>`;
+  }).join('');
 
   list.querySelectorAll('[data-restore]').forEach(b => {
     b.onclick = async () => {
       const item = items.find(x => x.id === b.dataset.restore);
       b.disabled = true;
-      try { await restoreItem(item); toast('Restored ✅'); await openRecycleView(); }
+      try { await restoreItem(item); toast('Restored'); await openRecycleView(); }
       catch (err){ console.error(err); toast(err.message, 'error'); b.disabled = false; }
     };
   });
@@ -956,8 +1873,6 @@ async function openRecycleView(){
       await openRecycleView();
     };
   });
-
-  showView('recycle');
 }
 
 async function restoreItem(item){
@@ -1007,38 +1922,49 @@ async function downloadNodeAsJPG(node, filename){
 function reportShell(title, subtitle, bodyHtml){
   const el = document.createElement('div');
   el.style.cssText = 'width:900px;padding:40px;background:#fff;box-sizing:border-box;' +
-    'font-family:Inter,Arial,Helvetica,sans-serif;color:#1b2133;';
+    'font-family:Inter,Arial,Helvetica,sans-serif;color:#0F172A;';
   el.innerHTML = `
     <div style="display:flex;justify-content:space-between;align-items:flex-start;
-                border-bottom:3px solid #6c5ce7;padding-bottom:16px;margin-bottom:26px;">
+                border-bottom:3px solid #10B981;padding-bottom:16px;margin-bottom:26px;">
       <div>
-        <div style="font-size:24px;font-weight:800;letter-spacing:.4px;">📁 Due Desk</div>
-        <div style="font-size:13px;color:#6b7590;margin-top:5px;">${esc(subtitle)}</div>
+        <div style="font-size:24px;font-weight:800;letter-spacing:.3px;color:#0F172A;">
+          <span style="display:inline-block;width:36px;height:36px;background:linear-gradient(135deg,#10B981,#047857);
+                       border-radius:10px;color:#fff;text-align:center;line-height:36px;font-size:16px;
+                       margin-right:10px;vertical-align:middle;">&#128193;</span>
+          Due Desk
+        </div>
+        <div style="font-size:13px;color:#64748B;margin-top:8px;">${esc(subtitle)}</div>
       </div>
-      <div style="text-align:right;font-size:12px;color:#6b7590;line-height:1.6;">
+      <div style="text-align:right;font-size:12px;color:#64748B;line-height:1.6;">
         <div>${new Date().toLocaleDateString()}</div>
         <div>${new Date().toLocaleTimeString()}</div>
       </div>
     </div>
-    <h1 style="font-size:21px;margin:0 0 18px;font-weight:800;">${esc(title)}</h1>
+    <h1 style="font-size:21px;margin:0 0 18px;font-weight:800;color:#0F172A;">${esc(title)}</h1>
     ${bodyHtml}
-    <div style="margin-top:30px;padding-top:14px;border-top:1px solid #e4e8f3;
-                font-size:11px;color:#9aa3bb;text-align:center;">
+    <div style="margin-top:30px;padding-top:14px;border-top:1px solid #E2E8F0;
+                font-size:11px;color:#94A3B8;text-align:center;">
       Generated by Due Desk
     </div>`;
   return el;
 }
 
 function fileReportNode(file, projs){
-  const rows = projs.map((p,i) => `
-    <tr>
-      <td style="padding:10px 8px;border-bottom:1px solid #eef1f8;">${i+1}</td>
-      <td style="padding:10px 8px;border-bottom:1px solid #eef1f8;font-weight:600;">${esc(p.name)}</td>
-      <td style="padding:10px 8px;border-bottom:1px solid #eef1f8;color:#6b7590;font-size:12px;">${esc(p.info || '—')}</td>
-      <td style="padding:10px 8px;border-bottom:1px solid #eef1f8;">${esc(p.date || '—')}</td>
-      <td style="padding:10px 8px;border-bottom:1px solid #eef1f8;text-align:right;color:#00a884;font-weight:700;">৳${fmt(p.payment)}</td>
-      <td style="padding:10px 8px;border-bottom:1px solid #eef1f8;text-align:right;color:#e74c3c;font-weight:700;">৳${fmt(p.due)}</td>
-    </tr>`).join('');
+  const rows = projs.map((p,i) => {
+    const st = statusOf(p);
+    return `
+      <tr>
+        <td style="padding:11px 10px;border-bottom:1px solid #F1F5F9;color:#64748B;font-size:12px;">${i+1}</td>
+        <td style="padding:11px 10px;border-bottom:1px solid #F1F5F9;font-weight:700;color:#0F172A;">${esc(p.name)}</td>
+        <td style="padding:11px 10px;border-bottom:1px solid #F1F5F9;color:#64748B;font-size:12px;">${esc(p.info || '—')}</td>
+        <td style="padding:11px 10px;border-bottom:1px solid #F1F5F9;color:#64748B;font-size:12px;">${esc(p.date || '—')}</td>
+        <td style="padding:11px 10px;border-bottom:1px solid #F1F5F9;text-align:right;color:#059669;font-weight:700;font-variant-numeric:tabular-nums;">৳${fmt(p.payment)}</td>
+        <td style="padding:11px 10px;border-bottom:1px solid #F1F5F9;text-align:right;color:${num(p.due)>0?'#D97706':'#059669'};font-weight:700;font-variant-numeric:tabular-nums;">৳${fmt(p.due)}</td>
+        <td style="padding:11px 10px;border-bottom:1px solid #F1F5F9;text-align:center;font-size:11px;font-weight:700;
+                   color:${st.cls==='paid'?'#059669':'#D97706'};background:${st.cls==='paid'?'#D1FAE5':'#FEF3C7'};
+                   border-radius:6px;">${st.label}</td>
+      </tr>`;
+  }).join('');
 
   const tp = projs.reduce((s,p) => s + num(p.payment), 0);
   const td = projs.reduce((s,p) => s + num(p.due), 0);
@@ -1046,21 +1972,23 @@ function fileReportNode(file, projs){
   const body = `
     <table style="width:100%;border-collapse:collapse;font-size:13px;">
       <thead>
-        <tr style="background:#f4f6fb;text-align:left;">
-          <th style="padding:11px 8px;font-size:12px;color:#6b7590;">#</th>
-          <th style="padding:11px 8px;font-size:12px;color:#6b7590;">PROJECT</th>
-          <th style="padding:11px 8px;font-size:12px;color:#6b7590;">INFO</th>
-          <th style="padding:11px 8px;font-size:12px;color:#6b7590;">DATE</th>
-          <th style="padding:11px 8px;font-size:12px;color:#6b7590;text-align:right;">PAYMENT</th>
-          <th style="padding:11px 8px;font-size:12px;color:#6b7590;text-align:right;">DUE</th>
+        <tr style="background:#F8FAFC;text-align:left;">
+          <th style="padding:12px 10px;font-size:11px;color:#64748B;font-weight:700;letter-spacing:.5px;">#</th>
+          <th style="padding:12px 10px;font-size:11px;color:#64748B;font-weight:700;letter-spacing:.5px;">PROJECT</th>
+          <th style="padding:12px 10px;font-size:11px;color:#64748B;font-weight:700;letter-spacing:.5px;">INFO</th>
+          <th style="padding:12px 10px;font-size:11px;color:#64748B;font-weight:700;letter-spacing:.5px;">DATE</th>
+          <th style="padding:12px 10px;font-size:11px;color:#64748B;font-weight:700;letter-spacing:.5px;text-align:right;">PAYMENT</th>
+          <th style="padding:12px 10px;font-size:11px;color:#64748B;font-weight:700;letter-spacing:.5px;text-align:right;">DUE</th>
+          <th style="padding:12px 10px;font-size:11px;color:#64748B;font-weight:700;letter-spacing:.5px;text-align:center;">STATUS</th>
         </tr>
       </thead>
-      <tbody>${rows || `<tr><td colspan="6" style="padding:24px;text-align:center;color:#9aa3bb;">No projects</td></tr>`}</tbody>
+      <tbody>${rows || `<tr><td colspan="7" style="padding:28px;text-align:center;color:#94A3B8;">No projects</td></tr>`}</tbody>
       <tfoot>
-        <tr style="background:#f4f6fb;font-weight:800;">
-          <td colspan="4" style="padding:13px 8px;">TOTAL</td>
-          <td style="padding:13px 8px;text-align:right;color:#00a884;">৳${fmt(tp)}</td>
-          <td style="padding:13px 8px;text-align:right;color:#e74c3c;">৳${fmt(td)}</td>
+        <tr style="background:#F8FAFC;font-weight:800;">
+          <td colspan="4" style="padding:14px 10px;color:#0F172A;">TOTAL</td>
+          <td style="padding:14px 10px;text-align:right;color:#059669;font-variant-numeric:tabular-nums;">৳${fmt(tp)}</td>
+          <td style="padding:14px 10px;text-align:right;color:${td>0?'#D97706':'#059669'};font-variant-numeric:tabular-nums;">৳${fmt(td)}</td>
+          <td></td>
         </tr>
       </tfoot>
     </table>`;
@@ -1071,44 +1999,44 @@ function fileReportNode(file, projs){
 function projectReportNode(file, project, txs){
   const rows = txs.map((t,i) => `
     <tr>
-      <td style="padding:10px 8px;border-bottom:1px solid #eef1f8;">${i+1}</td>
-      <td style="padding:10px 8px;border-bottom:1px solid #eef1f8;">${esc(t.date || '—')}</td>
-      <td style="padding:10px 8px;border-bottom:1px solid #eef1f8;color:#6b7590;">${esc(t.note || 'Payment received')}</td>
-      <td style="padding:10px 8px;border-bottom:1px solid #eef1f8;text-align:right;color:#00a884;font-weight:700;">৳${fmt(t.amount)}</td>
+      <td style="padding:11px 10px;border-bottom:1px solid #F1F5F9;color:#64748B;font-size:12px;">${i+1}</td>
+      <td style="padding:11px 10px;border-bottom:1px solid #F1F5F9;color:#64748B;font-size:12px;">${esc(t.date || '—')}</td>
+      <td style="padding:11px 10px;border-bottom:1px solid #F1F5F9;color:#64748B;font-size:12px;">${esc(t.note || 'Payment received')}</td>
+      <td style="padding:11px 10px;border-bottom:1px solid #F1F5F9;text-align:right;color:#059669;font-weight:700;font-variant-numeric:tabular-nums;">৳${fmt(t.amount)}</td>
     </tr>`).join('');
 
   const totalTx = txs.reduce((s,t) => s + num(t.amount), 0);
 
   const body = `
     <div style="display:flex;gap:12px;margin-bottom:22px;">
-      <div style="flex:1;background:#f8f9fe;border-radius:12px;padding:14px 16px;">
-        <div style="font-size:11px;color:#6b7590;font-weight:700;letter-spacing:.5px;">PAYMENT</div>
-        <div style="font-size:19px;font-weight:800;color:#00a884;margin-top:4px;">৳${fmt(project.payment)}</div>
+      <div style="flex:1;background:#F0FDF4;border:1px solid #D1FAE5;border-radius:12px;padding:14px 16px;">
+        <div style="font-size:11px;color:#64748B;font-weight:700;letter-spacing:.5px;">PAYMENT</div>
+        <div style="font-size:19px;font-weight:800;color:#059669;margin-top:4px;font-variant-numeric:tabular-nums;">৳${fmt(project.payment)}</div>
       </div>
-      <div style="flex:1;background:#fdf2f1;border-radius:12px;padding:14px 16px;">
-        <div style="font-size:11px;color:#6b7590;font-weight:700;letter-spacing:.5px;">DUE</div>
-        <div style="font-size:19px;font-weight:800;color:#e74c3c;margin-top:4px;">৳${fmt(project.due)}</div>
+      <div style="flex:1;background:${num(project.due)>0?'#FFFBEB':'#F0FDF4'};border:1px solid ${num(project.due)>0?'#FEF3C7':'#D1FAE5'};border-radius:12px;padding:14px 16px;">
+        <div style="font-size:11px;color:#64748B;font-weight:700;letter-spacing:.5px;">DUE</div>
+        <div style="font-size:19px;font-weight:800;color:${num(project.due)>0?'#D97706':'#059669'};margin-top:4px;font-variant-numeric:tabular-nums;">৳${fmt(project.due)}</div>
       </div>
-      <div style="flex:1;background:#f8f9fe;border-radius:12px;padding:14px 16px;">
-        <div style="font-size:11px;color:#6b7590;font-weight:700;letter-spacing:.5px;">DATE</div>
-        <div style="font-size:15px;font-weight:800;margin-top:7px;">${esc(project.date || '—')}</div>
+      <div style="flex:1;background:#F8FAFC;border:1px solid #E2E8F0;border-radius:12px;padding:14px 16px;">
+        <div style="font-size:11px;color:#64748B;font-weight:700;letter-spacing:.5px;">DATE</div>
+        <div style="font-size:15px;font-weight:800;color:#0F172A;margin-top:6px;">${esc(project.date || '—')}</div>
       </div>
     </div>
-    ${project.info ? `<div style="background:#fbfcff;border-left:4px solid #6c5ce7;padding:12px 16px;border-radius:8px;font-size:13px;color:#4a5268;margin-bottom:22px;line-height:1.6;">${esc(project.info)}</div>` : ''}
+    ${project.info ? `<div style="background:#F8FAFC;border-left:4px solid #10B981;padding:12px 16px;border-radius:8px;font-size:13px;color:#334155;margin-bottom:22px;line-height:1.6;">${esc(project.info)}</div>` : ''}
     <table style="width:100%;border-collapse:collapse;font-size:13px;">
       <thead>
-        <tr style="background:#f4f6fb;text-align:left;">
-          <th style="padding:11px 8px;font-size:12px;color:#6b7590;">#</th>
-          <th style="padding:11px 8px;font-size:12px;color:#6b7590;">DATE</th>
-          <th style="padding:11px 8px;font-size:12px;color:#6b7590;">NOTE</th>
-          <th style="padding:11px 8px;font-size:12px;color:#6b7590;text-align:right;">AMOUNT</th>
+        <tr style="background:#F8FAFC;text-align:left;">
+          <th style="padding:12px 10px;font-size:11px;color:#64748B;font-weight:700;letter-spacing:.5px;">#</th>
+          <th style="padding:12px 10px;font-size:11px;color:#64748B;font-weight:700;letter-spacing:.5px;">DATE</th>
+          <th style="padding:12px 10px;font-size:11px;color:#64748B;font-weight:700;letter-spacing:.5px;">NOTE</th>
+          <th style="padding:12px 10px;font-size:11px;color:#64748B;font-weight:700;letter-spacing:.5px;text-align:right;">AMOUNT</th>
         </tr>
       </thead>
-      <tbody>${rows || `<tr><td colspan="4" style="padding:24px;text-align:center;color:#9aa3bb;">No transactions</td></tr>`}</tbody>
+      <tbody>${rows || `<tr><td colspan="4" style="padding:28px;text-align:center;color:#94A3B8;">No transactions</td></tr>`}</tbody>
       <tfoot>
-        <tr style="background:#f4f6fb;font-weight:800;">
-          <td colspan="3" style="padding:13px 8px;">TOTAL RECEIVED (${txs.length} payments)</td>
-          <td style="padding:13px 8px;text-align:right;color:#00a884;">৳${fmt(totalTx)}</td>
+        <tr style="background:#F8FAFC;font-weight:800;">
+          <td colspan="3" style="padding:14px 10px;color:#0F172A;">TOTAL RECEIVED (${txs.length} payment${txs.length===1?'':'s'})</td>
+          <td style="padding:14px 10px;text-align:right;color:#059669;font-variant-numeric:tabular-nums;">৳${fmt(totalTx)}</td>
         </tr>
       </tfoot>
     </table>`;
@@ -1126,7 +2054,7 @@ $('#downloadFileBtn').onclick = async () => {
     const node = fileReportNode(activeFile, projects);
     const safe = (activeFile.name || 'file').replace(/[^\w\-]+/g, '_');
     await downloadNodeAsJPG(node, `DueDesk_${safe}_summary.jpg`);
-    toast('Summary downloaded ✅');
+    toast('Summary downloaded');
   } catch (err){ console.error(err); toast('Download failed', 'error'); }
   finally { btn.disabled = false; }
 };
@@ -1139,7 +2067,7 @@ $('#downloadProjectBtn').onclick = async () => {
     const node = projectReportNode(activeFile, activeProject, transactions);
     const safe = (activeProject.name || 'project').replace(/[^\w\-]+/g, '_');
     await downloadNodeAsJPG(node, `DueDesk_${safe}_history.jpg`);
-    toast('History downloaded ✅');
+    toast('History downloaded');
   } catch (err){ console.error(err); toast('Download failed', 'error'); }
   finally { btn.disabled = false; }
 };
