@@ -172,7 +172,6 @@
   }
   .btn-google:hover { border-color: var(--border-strong); background: var(--surface-2); }
 
-  /* Round icon buttons */
   .btn-round {
     width: 40px;
     height: 40px;
@@ -362,20 +361,106 @@
     box-shadow: 0 4px 12px rgba(16,185,129,.3);
   }
   .topbar-right { display: flex; align-items: center; gap: 4px; }
+
+  /* Avatar + dropdown */
+  .avatar-wrap {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    margin: 0 4px;
+  }
   .avatar {
     width: 34px; height: 34px;
     border-radius: 50%;
     object-fit: cover;
     border: 2px solid var(--surface);
     box-shadow: 0 0 0 1px var(--border);
-    margin: 0 4px;
+    cursor: pointer;
+    transition: box-shadow .2s ease;
   }
+  .avatar:hover { box-shadow: 0 0 0 2px var(--emerald); }
+  .avatar-wrap.open .avatar { box-shadow: 0 0 0 2px var(--emerald); }
+
+  .avatar-menu {
+    position: absolute;
+    top: calc(100% + 10px);
+    right: 0;
+    width: 248px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--r);
+    box-shadow: var(--shadow-lg);
+    padding: 8px;
+    opacity: 0;
+    transform: translateY(-6px) scale(.97);
+    transform-origin: top right;
+    pointer-events: none;
+    transition: opacity .18s ease, transform .18s ease;
+    z-index: 60;
+  }
+  .avatar-wrap.open .avatar-menu {
+    opacity: 1;
+    transform: none;
+    pointer-events: auto;
+  }
+  .avatar-menu-head {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 6px;
+  }
+  .avatar-menu-head .avatar {
+    width: 38px; height: 38px;
+    margin: 0;
+    cursor: default;
+    box-shadow: none;
+    border: none;
+  }
+  .avatar-menu-head .avatar:hover { box-shadow: none; }
+  .avatar-menu-name {
+    font-weight: 700;
+    font-size: 13.5px;
+    color: var(--text);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 160px;
+  }
+  .avatar-menu-email {
+    font-size: 11.5px;
+    color: var(--text-2);
+    word-break: break-all;
+    max-width: 160px;
+  }
+  .avatar-menu-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+    padding: 10px 12px;
+    border-radius: 9px;
+    border: none;
+    background: transparent;
+    color: var(--text);
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    text-align: left;
+    font-family: inherit;
+    transition: background-color .15s ease, color .15s ease;
+  }
+  .avatar-menu-item:hover { background: var(--surface-3); }
+  .avatar-menu-item.danger { color: var(--overdue-text); }
+  .avatar-menu-item.danger:hover { background: var(--overdue-bg); }
+  .avatar-menu-item i { width: 16px; text-align: center; font-size: 12px; }
 
   /* ============ LAYOUT ============ */
   main {
     max-width: 1200px;
     margin: 0 auto;
-    padding: 26px 22px 120px;
+    padding: 26px 22px 130px;
   }
   .view:not(.hidden) { animation: fadeUp .32s ease; }
   @keyframes fadeUp {
@@ -441,23 +526,67 @@
     border-color: var(--border-strong);
   }
   .file-thumb {
-    height: 128px;
-    background:
-      linear-gradient(135deg, var(--emerald-soft) 0%, color-mix(in srgb, var(--emerald-soft) 50%, var(--surface)) 100%);
+    height: 132px;
+    position: relative;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 34px;
-    color: var(--emerald-hover);
     overflow: hidden;
-    position: relative;
+    background:
+      radial-gradient(circle at 20% 20%, rgba(16,185,129,.16), transparent 55%),
+      radial-gradient(circle at 80% 80%, rgba(5,150,105,.12), transparent 55%),
+      linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%);
   }
-  [data-theme="dark"] .file-thumb { color: var(--paid-text); }
+  [data-theme="dark"] .file-thumb {
+    background:
+      radial-gradient(circle at 20% 20%, rgba(16,185,129,.14), transparent 55%),
+      radial-gradient(circle at 80% 80%, rgba(5,150,105,.1), transparent 55%),
+      linear-gradient(135deg, #172033 0%, #1a3a2e 100%);
+  }
+  /* Diagonal stripe pattern (only when no image) */
+  .file-thumb::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(45deg, rgba(16,185,129,.09) 25%, transparent 25%, transparent 75%, rgba(16,185,129,.09) 75%),
+      linear-gradient(45deg, rgba(16,185,129,.09) 25%, transparent 25%, transparent 75%, rgba(16,185,129,.09) 75%);
+    background-size: 22px 22px;
+    background-position: 0 0, 11px 11px;
+    pointer-events: none;
+  }
+  .file-thumb.has-image::before { display: none; }
+
   .file-thumb img {
-    width: 100%; height: 100%;
+    width: 100%;
+    height: 100%;
     object-fit: cover;
     display: block;
+    position: relative;
+    z-index: 1;
   }
+
+  .folder-badge {
+    position: relative;
+    z-index: 1;
+    width: 64px;
+    height: 64px;
+    border-radius: 18px;
+    background: linear-gradient(135deg, var(--emerald) 0%, var(--emerald-deep) 100%);
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 26px;
+    box-shadow: 0 8px 24px rgba(16,185,129,.35);
+    transform: rotate(-3deg);
+    transition: transform .28s cubic-bezier(.2,.9,.3,1.15), box-shadow .28s ease;
+  }
+  .file-card:hover .folder-badge {
+    transform: rotate(0deg) scale(1.07);
+    box-shadow: 0 12px 30px rgba(16,185,129,.5);
+  }
+
   .file-card-body { padding: 14px 16px 16px; }
   .file-card-body h3 {
     font-size: 15.5px;
@@ -490,6 +619,7 @@
     opacity: 0;
     transform: scale(.85);
     transition: opacity .18s, transform .18s, background-color .18s, color .18s;
+    z-index: 2;
   }
   .file-card:hover .file-del { opacity: 1; transform: scale(1); }
   .file-del:hover { background: var(--overdue-bg); color: var(--overdue-text); }
@@ -721,6 +851,12 @@
     align-items: center;
     gap: 5px;
   }
+  .tx-right {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex: 0 0 auto;
+  }
   .tx-amt {
     font-weight: 800;
     color: var(--paid);
@@ -728,6 +864,7 @@
     white-space: nowrap;
     font-variant-numeric: tabular-nums;
   }
+  .tx-right .icon-btn { width: 30px; height: 30px; font-size: 12px; }
 
   /* --- Recycle cards --- */
   .recycle-card {
@@ -911,7 +1048,7 @@
   /* --- Toast --- */
   #toast {
     position: fixed;
-    bottom: 24px;
+    bottom: 84px;
     left: 50%;
     transform: translateX(-50%) translateY(140px);
     background: var(--s-900, #0F172A);
@@ -935,11 +1072,12 @@
   #toast.error { background: #B91C1C; }
   #toast.error i { color: #FECACA; }
 
-  /* ============ SITE FOOTER ============ */
+  /* ============ SITE FOOTER (bottom center) ============ */
   .site-footer {
     position: fixed;
-    left: 18px;
+    left: 50%;
     bottom: 18px;
+    transform: translateX(-50%);
     z-index: 90;
     font-family: inherit;
   }
@@ -965,7 +1103,6 @@
     filter: brightness(1.05);
   }
   .footer-toggle:active { transform: scale(.95); }
-
   .site-footer.open .footer-toggle {
     transform: rotate(90deg);
     filter: brightness(.95);
@@ -973,10 +1110,10 @@
 
   .footer-body {
     position: absolute;
-    left: 0;
+    left: 50%;
     bottom: calc(100% + 14px);
-    width: 332px;
-    max-height: min(66vh, 560px);
+    width: 340px;
+    max-height: min(66vh, 580px);
     overflow-y: auto;
     overscroll-behavior: contain;
     background: var(--surface);
@@ -985,8 +1122,8 @@
     box-shadow: var(--shadow-lg);
     padding: 16px;
     opacity: 0;
-    transform: translateY(12px) scale(.96);
-    transform-origin: bottom left;
+    transform: translateX(-50%) translateY(12px) scale(.96);
+    transform-origin: bottom center;
     pointer-events: none;
     transition: opacity .22s ease, transform .24s cubic-bezier(.2,.9,.3,1.15);
     scrollbar-width: thin;
@@ -998,7 +1135,7 @@
   }
   .site-footer.open .footer-body {
     opacity: 1;
-    transform: none;
+    transform: translateX(-50%) translateY(0) scale(1);
     pointer-events: auto;
   }
 
@@ -1020,7 +1157,7 @@
   .footer-grid {
     display: flex;
     flex-direction: column;
-    gap: 7px;
+    gap: 6px;
   }
 
   .footer-card {
@@ -1099,9 +1236,10 @@
     .topbar-right .btn span { display: none; }
     .topbar-right .btn { padding: 9px 11px; }
     .brand span { display: none; }
-    main { padding: 18px 14px 130px; }
+    main { padding: 18px 14px 140px; }
     .grid { grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 12px; }
-    .file-thumb { height: 100px; font-size: 28px; }
+    .file-thumb { height: 104px; }
+    .folder-badge { width: 52px; height: 52px; font-size: 22px; border-radius: 15px; }
     .hero { flex-direction: column; text-align: center; padding: 18px; }
     .hero-img { width: 64px; height: 64px; font-size: 24px; }
     .hero-stats { justify-content: center; width: 100%; }
@@ -1110,15 +1248,17 @@
     .row2 { grid-template-columns: 1fr; }
     .login-card { padding: 36px 26px 30px; }
     .login-card h1 { font-size: 26px; }
-    .site-footer { left: 12px; bottom: 12px; }
-    .footer-toggle { width: 44px; height: 44px; font-size: 16px; }
+    .site-footer { bottom: 12px; }
+    .footer-toggle { width: 46px; height: 46px; font-size: 17px; }
     .footer-body { width: calc(100vw - 24px); max-height: 62vh; }
+    .avatar-menu { width: 230px; }
   }
   @media (max-width: 420px) {
     .view-head { align-items: stretch; }
     .view-head > div:last-child { width: 100%; }
     .view-head > div:last-child .btn { flex: 1; justify-content: center; }
     .view-head > div:last-child .btn-round { flex: 0 0 auto; }
+    #toast { bottom: 78px; }
   }
 </style>
 </head>
@@ -1167,10 +1307,25 @@
       <button class="theme-toggle" id="themeToggle" title="Toggle theme" aria-label="Toggle theme">
         <i class="fas fa-moon theme-icon"></i>
       </button>
-      <img id="userPhoto" class="avatar" alt="user" />
-      <button class="btn btn-ghost" id="logoutBtn" title="Logout">
-        <i class="fas fa-right-from-bracket"></i><span>Logout</span>
-      </button>
+
+      <div class="avatar-wrap" id="avatarWrap">
+        <img id="userPhoto" class="avatar" alt="user" />
+        <div class="avatar-menu" id="avatarMenu">
+          <div class="avatar-menu-head">
+            <img id="userPhotoMenu" class="avatar" alt="" />
+            <div style="min-width:0;">
+              <div class="avatar-menu-name" id="menuName">User</div>
+              <div class="avatar-menu-email" id="menuEmail"></div>
+            </div>
+          </div>
+          <button class="avatar-menu-item" id="switchAccountBtn">
+            <i class="fas fa-arrow-right-arrow-left"></i> Switch Account
+          </button>
+          <button class="avatar-menu-item danger" id="logoutBtn">
+            <i class="fas fa-right-from-bracket"></i> Logout
+          </button>
+        </div>
+      </div>
     </div>
   </header>
 
@@ -1293,7 +1448,7 @@
     </section>
   </main>
 
-  <!-- ============ SITE FOOTER ============ -->
+  <!-- ============ SITE FOOTER (bottom center) ============ -->
   <footer class="site-footer" id="siteFooter">
     <button id="footerToggle" class="footer-toggle" aria-label="Show more websites" title="More websites">
       <i class="fa-solid fa-circle-nodes"></i>
@@ -1365,6 +1520,33 @@
           <div class="fc-body">
             <div class="fc-title">PF Tracker</div>
             <div class="fc-sub">Finance tracker</div>
+          </div>
+          <i class="fa-solid fa-arrow-up-right-from-square fc-arrow"></i>
+        </a>
+
+        <a class="footer-card" href="https://fixnote.netlify.app/" target="_blank" rel="noopener">
+          <span class="fc-icon" style="--fc:#f59e0b"><i class="fa-solid fa-pen-nib"></i></span>
+          <div class="fc-body">
+            <div class="fc-title">Fixnote</div>
+            <div class="fc-sub">Correction manager</div>
+          </div>
+          <i class="fa-solid fa-arrow-up-right-from-square fc-arrow"></i>
+        </a>
+
+        <a class="footer-card" href="https://wishees.vercel.app/" target="_blank" rel="noopener">
+          <span class="fc-icon" style="--fc:#d946ef"><i class="fa-solid fa-gift"></i></span>
+          <div class="fc-body">
+            <div class="fc-title">Wishees</div>
+            <div class="fc-sub">Write your wish</div>
+          </div>
+          <i class="fa-solid fa-arrow-up-right-from-square fc-arrow"></i>
+        </a>
+
+        <a class="footer-card" href="https://analysisyt.netlify.app/" target="_blank" rel="noopener">
+          <span class="fc-icon" style="--fc:#ef4444"><i class="fa-solid fa-chart-simple"></i></span>
+          <div class="fc-body">
+            <div class="fc-title">TubeScope</div>
+            <div class="fc-sub">YouTube channel analysis</div>
           </div>
           <i class="fa-solid fa-arrow-up-right-from-square fc-arrow"></i>
         </a>
@@ -1542,6 +1724,34 @@ function showModal({ title, body, submitText = 'Save', submitIcon = 'fa-check', 
   };
 }
 
+/* ---------------- AVATAR MENU ---------------- */
+const avatarWrap = $('#avatarWrap');
+function closeAvatarMenu(){ avatarWrap.classList.remove('open'); }
+
+$('#userPhoto').addEventListener('click', e => {
+  e.stopPropagation();
+  avatarWrap.classList.toggle('open');
+});
+
+$('#switchAccountBtn').onclick = async () => {
+  closeAvatarMenu();
+  try {
+    const provider = new GoogleAuthProvider();
+    provider.setCustomParameters({ prompt: 'select_account' });
+    await signInWithPopup(auth, provider);
+  } catch (err){
+    if (err.code !== 'auth/popup-closed-by-user') toast(err.message, 'error');
+  }
+};
+
+$('#logoutBtn').onclick = () => { closeAvatarMenu(); signOut(auth); };
+
+document.addEventListener('click', e => {
+  if (avatarWrap.classList.contains('open') && !avatarWrap.contains(e.target)) {
+    closeAvatarMenu();
+  }
+});
+
 /* ================= AUTH ================= */
 $('#googleLoginBtn').onclick = async () => {
   try { await signInWithPopup(auth, new GoogleAuthProvider()); }
@@ -1549,14 +1759,18 @@ $('#googleLoginBtn').onclick = async () => {
     if (err.code !== 'auth/popup-closed-by-user') toast(err.message, 'error');
   }
 };
-$('#logoutBtn').onclick = () => signOut(auth);
 
 onAuthStateChanged(auth, async user => {
   if (user){
     uid = user.uid;
     $('#loginScreen').classList.add('hidden');
     $('#app').classList.remove('hidden');
-    $('#userPhoto').src = user.photoURL || 'https://ui-avatars.com/api/?name=' + encodeURIComponent(user.displayName || 'U');
+    const photo = user.photoURL || 'https://ui-avatars.com/api/?name=' + encodeURIComponent(user.displayName || 'U');
+    $('#userPhoto').src = photo;
+    $('#userPhotoMenu').src = photo;
+    $('#menuName').textContent = user.displayName || 'User';
+    $('#menuEmail').textContent = user.email || '';
+    closeAvatarMenu();
     await loadFiles();
     showView('files');
   } else {
@@ -1564,6 +1778,7 @@ onAuthStateChanged(auth, async user => {
     $('#app').classList.add('hidden');
     $('#loginScreen').classList.remove('hidden');
     closeFooter();
+    closeAvatarMenu();
   }
 });
 
@@ -1600,7 +1815,11 @@ function renderFiles(){
   }
   grid.innerHTML = files.map(f => `
     <div class="card file-card" data-file="${f.id}">
-      <div class="file-thumb">${f.image ? `<img src="${f.image}" alt="">` : `<i class="fas fa-folder"></i>`}</div>
+      <div class="file-thumb${f.image ? ' has-image' : ''}">
+        ${f.image
+          ? `<img src="${f.image}" alt="">`
+          : `<div class="folder-badge"><i class="fas fa-folder"></i></div>`}
+      </div>
       <div class="file-card-body">
         <h3>${esc(f.name)}</h3>
         <span class="muted"><i class="fas fa-calendar"></i> ${f.createdAt ? new Date(tsSeconds(f.createdAt)*1000).toLocaleDateString() : '—'}</span>
@@ -1974,8 +2193,52 @@ function renderTransactions(){
           <div class="tx-date"><i class="fas fa-calendar" style="font-size:10px;"></i>${esc(t.date || '—')}</div>
         </div>
       </div>
-      <div class="tx-amt">+ ৳${fmt(t.amount)}</div>
+      <div class="tx-right">
+        <div class="tx-amt">+ ৳${fmt(t.amount)}</div>
+        <button class="icon-btn danger" data-deltx="${t.id}" title="Delete payment" aria-label="Delete payment">
+          <i class="fas fa-trash"></i>
+        </button>
+      </div>
     </div>`).join('');
+
+  wrap.querySelectorAll('[data-deltx]').forEach(b => {
+    b.onclick = async e => {
+      e.stopPropagation();
+      const tx = transactions.find(x => x.id === b.dataset.deltx);
+      if (!tx) return;
+      if (!confirm(`Delete this payment of ৳${fmt(tx.amount)}?\nDue will increase by ৳${fmt(tx.amount)}.`)) return;
+      b.disabled = true;
+      const pid = activeProject.id;
+      try {
+        await deleteTransaction(activeFile.id, pid, tx.id, tx.amount);
+        // Reload project data with fresh payment/due
+        await loadProjects(activeFile.id);
+        activeProject = projects.find(p => p.id === pid);
+        await loadTransactions(activeFile.id, pid);
+        renderProjectHero();
+        renderTransactions();
+        toast('Payment deleted — due updated');
+      } catch (err){
+        console.error(err);
+        toast(err.message, 'error');
+        b.disabled = false;
+      }
+    };
+  });
+}
+
+async function deleteTransaction(fid, pid, txId, amount){
+  const pRef  = doc(db,'users',uid,'files',fid,'projects',pid);
+  const pSnap = await getDoc(pRef);
+  if (!pSnap.exists()) throw new Error('Project not found');
+  const p = pSnap.data();
+  const amt = num(amount);
+  const newPayment = Math.max(0, num(p.payment) - amt);
+  const newDue = num(p.due) + amt;
+  const batch = writeBatch(db);
+  batch.delete(doc(db,'users',uid,'files',fid,'projects',pid,'transactions',txId));
+  batch.update(pRef, { payment: newPayment, due: newDue });
+  await batch.commit();
 }
 
 $('#addTxBtn').onclick = () => {
@@ -2043,7 +2306,6 @@ async function openPaymentView(){
   showView('payment');
 }
 
-/* Close (X) button → back to Files */
 $('#closePaymentBtn').onclick = async () => {
   await loadFiles();
   showView('files');
@@ -2347,7 +2609,7 @@ $('#downloadProjectBtn').onclick = async () => {
   finally { btn.disabled = false; }
 };
 
-/* ================= FOOTER (collapsible) ================= */
+/* ================= FOOTER (collapsible, bottom center) ================= */
 const siteFooter  = $('#siteFooter');
 const footerToggle = $('#footerToggle');
 
@@ -2359,16 +2621,15 @@ footerToggle.addEventListener('click', e => {
   toggleFooter();
 });
 
-/* Close footer when clicking outside */
 document.addEventListener('click', e => {
   if (siteFooter.classList.contains('open') && !siteFooter.contains(e.target)){
     closeFooter();
   }
 });
 
-/* Esc closes modal AND footer */
+/* Esc closes modal, footer, avatar menu */
 document.addEventListener('keydown', e => {
-  if (e.key === 'Escape'){ closeModal(); closeFooter(); }
+  if (e.key === 'Escape'){ closeModal(); closeFooter(); closeAvatarMenu(); }
 });
 </script>
 </body>
