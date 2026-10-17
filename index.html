@@ -20,18 +20,15 @@
 <style>
   /* ============ DESIGN TOKENS ============ */
   :root {
-    /* Brand */
     --emerald: #10B981;
     --emerald-hover: #059669;
     --emerald-soft: #D1FAE5;
     --emerald-deep: #047857;
 
-    /* Slate scale */
     --s-900:#0F172A; --s-800:#1E293B; --s-700:#334155; --s-600:#475569;
     --s-500:#64748B; --s-400:#94A3B8; --s-300:#CBD5E1; --s-200:#E2E8F0;
     --s-100:#F1F5F9; --s-50:#F8FAFC;
 
-    /* Semantic — Light */
     --bg: #F8FAFC;
     --surface: #FFFFFF;
     --surface-2: #F8FAFC;
@@ -46,7 +43,6 @@
     --shadow: 0 4px 16px rgba(15,23,42,0.06), 0 1px 4px rgba(15,23,42,0.04);
     --shadow-lg: 0 16px 40px rgba(15,23,42,0.10), 0 4px 12px rgba(15,23,42,0.06);
 
-    /* Financial */
     --paid: #059669;
     --paid-bg: #D1FAE5;
     --paid-text: #065F46;
@@ -60,7 +56,6 @@
     --pending-bg: #F1F5F9;
     --pending-text: #334155;
 
-    /* Radii */
     --r-sm: 10px;
     --r: 14px;
     --r-lg: 20px;
@@ -105,19 +100,18 @@
     background: var(--bg);
     color: var(--text);
     min-height: 100vh;
-    font-size: 14px;
+    font-size: 16px;
     line-height: 1.5;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     transition: background-color .25s ease, color .25s ease;
   }
   .hidden { display: none !important; }
-  .muted { color: var(--text-2); font-size: 13px; }
+  .muted { color: var(--text-2); font-size: 16px; }
   h1, h2, h3 { letter-spacing: -0.02em; }
   button { font-family: inherit; }
   a { color: inherit; }
 
-  /* ---------- Generic transitions ---------- */
   .btn, .card, .topbar, .modal, input, select, textarea,
   .file-card, .project-card, .tx-row, .recycle-card, .badge, .stat {
     transition: background-color .22s ease, border-color .22s ease,
@@ -128,14 +122,14 @@
   .btn {
     border: none;
     cursor: pointer;
-    font-size: 13.5px;
+    font-size: 16px;
     font-weight: 600;
-    padding: 10px 16px;
+    padding: 12px 18px;
     border-radius: var(--r-sm);
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    gap: 8px;
+    gap: 9px;
     white-space: nowrap;
     background: transparent;
     color: var(--text);
@@ -169,35 +163,65 @@
     background: var(--surface);
     color: var(--text);
     border: 1.5px solid var(--border);
-    padding: 13px 26px;
+    padding: 14px 26px;
     border-radius: var(--r);
-    font-size: 15px;
+    font-size: 16px;
     font-weight: 600;
     box-shadow: var(--shadow-sm);
     width: 100%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    cursor: pointer;
+    font-family: inherit;
   }
   .btn-google:hover { border-color: var(--border-strong); background: var(--surface-2); }
 
-  /* Icon buttons */
+  .btn-round {
+    width: 44px;
+    height: 44px;
+    padding: 0;
+    border-radius: 50%;
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    color: var(--text-2);
+    font-size: 16px;
+    flex: 0 0 auto;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+  }
+  .btn-round:hover {
+    background: var(--surface-3);
+    color: var(--text);
+    border-color: var(--border-strong);
+  }
+  .btn-round.danger:hover {
+    background: var(--overdue-bg);
+    color: var(--overdue-text);
+    border-color: transparent;
+  }
+
   .icon-btn {
     border: none;
     background: transparent;
     cursor: pointer;
     color: var(--text-2);
-    width: 32px;
-    height: 32px;
+    width: 36px;
+    height: 36px;
     border-radius: 9px;
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    font-size: 13px;
+    font-size: 15px;
   }
   .icon-btn:hover { background: var(--surface-3); color: var(--text); }
   .icon-btn.danger:hover { background: var(--overdue-bg); color: var(--overdue-text); }
 
-  /* Theme toggle */
   .theme-toggle {
-    width: 36px; height: 36px;
+    width: 40px; height: 40px;
     border-radius: 50%;
     border: none;
     background: transparent;
@@ -206,7 +230,7 @@
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    font-size: 14px;
+    font-size: 16px;
   }
   .theme-toggle:hover { background: var(--surface-3); color: var(--text); }
 
@@ -241,7 +265,7 @@
     position: absolute;
     top: 22px; right: 22px;
     z-index: 3;
-    width: 40px; height: 40px;
+    width: 44px; height: 44px;
     border-radius: 50%;
     background: var(--surface);
     border: 1px solid var(--border);
@@ -256,7 +280,7 @@
     padding: 48px 40px 40px;
     text-align: center;
     box-shadow: var(--shadow-lg);
-    max-width: 420px;
+    max-width: 440px;
     width: 100%;
     animation: cardIn .5s cubic-bezier(.2,.9,.3,1.2);
   }
@@ -265,19 +289,19 @@
     to { opacity: 1; transform: none; }
   }
   .login-logo {
-    width: 76px; height: 76px;
+    width: 80px; height: 80px;
     margin: 0 auto 20px;
     border-radius: 22px;
     background: linear-gradient(135deg, var(--emerald) 0%, var(--emerald-deep) 100%);
     color: #fff;
-    font-size: 32px;
+    font-size: 34px;
     display: flex;
     align-items: center;
     justify-content: center;
     box-shadow: 0 12px 30px rgba(16,185,129,.32);
   }
   .login-card h1 {
-    font-size: 30px;
+    font-size: 32px;
     font-weight: 800;
     letter-spacing: -.03em;
     color: var(--text);
@@ -285,37 +309,37 @@
   .login-card p.sub {
     color: var(--text-2);
     margin: 10px 0 28px;
-    font-size: 14.5px;
+    font-size: 16px;
     line-height: 1.6;
   }
   .login-features {
     display: flex;
     justify-content: center;
-    gap: 6px;
+    gap: 8px;
     flex-wrap: wrap;
     margin-top: 22px;
     padding-top: 22px;
     border-top: 1px solid var(--border);
-    font-size: 12px;
+    font-size: 16px;
     color: var(--text-2);
   }
   .login-features span {
     display: inline-flex;
     align-items: center;
-    gap: 5px;
-    padding: 5px 10px;
+    gap: 6px;
+    padding: 6px 12px;
     background: var(--surface-2);
     border-radius: var(--r-full);
     font-weight: 500;
   }
-  .login-features i { color: var(--emerald); font-size: 10px; }
+  .login-features i { color: var(--emerald); font-size: 13px; }
 
   /* ============ TOPBAR ============ */
   .topbar {
     position: sticky;
     top: 0;
     z-index: 50;
-    background: color-mix(in srgb, var(--surface) 82%, transparent);
+    background: color-mix(in srgb, var(--surface) 88%, transparent);
     backdrop-filter: blur(16px);
     -webkit-backdrop-filter: blur(16px);
     border-bottom: 1px solid var(--border);
@@ -332,35 +356,121 @@
     cursor: pointer;
     user-select: none;
     font-weight: 800;
-    font-size: 17px;
+    font-size: 20px;
     letter-spacing: -.02em;
   }
   .brand-logo {
-    width: 34px; height: 34px;
-    border-radius: 10px;
+    width: 38px; height: 38px;
+    border-radius: 11px;
     background: linear-gradient(135deg, var(--emerald) 0%, var(--emerald-deep) 100%);
     color: #fff;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 15px;
+    font-size: 16px;
     box-shadow: 0 4px 12px rgba(16,185,129,.3);
   }
   .topbar-right { display: flex; align-items: center; gap: 4px; }
+
+  /* Avatar + dropdown */
+  .avatar-wrap {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    margin: 0 4px;
+  }
   .avatar {
-    width: 34px; height: 34px;
+    width: 36px; height: 36px;
     border-radius: 50%;
     object-fit: cover;
     border: 2px solid var(--surface);
     box-shadow: 0 0 0 1px var(--border);
-    margin: 0 4px;
+    cursor: pointer;
+    transition: box-shadow .2s ease;
   }
+  .avatar:hover { box-shadow: 0 0 0 2px var(--emerald); }
+  .avatar-wrap.open .avatar { box-shadow: 0 0 0 2px var(--emerald); }
+
+  .avatar-menu {
+    position: absolute;
+    top: calc(100% + 10px);
+    right: 0;
+    width: 268px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--r);
+    box-shadow: var(--shadow-lg);
+    padding: 8px;
+    opacity: 0;
+    transform: translateY(-6px) scale(.97);
+    transform-origin: top right;
+    pointer-events: none;
+    transition: opacity .18s ease, transform .18s ease;
+    z-index: 60;
+  }
+  .avatar-wrap.open .avatar-menu {
+    opacity: 1;
+    transform: none;
+    pointer-events: auto;
+  }
+  .avatar-menu-head {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 6px;
+  }
+  .avatar-menu-head .avatar {
+    width: 40px; height: 40px;
+    margin: 0;
+    cursor: default;
+    box-shadow: none;
+    border: none;
+  }
+  .avatar-menu-head .avatar:hover { box-shadow: none; }
+  .avatar-menu-name {
+    font-weight: 700;
+    font-size: 16px;
+    color: var(--text);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 170px;
+  }
+  .avatar-menu-email {
+    font-size: 16px;
+    color: var(--text-2);
+    word-break: break-all;
+    max-width: 170px;
+  }
+  .avatar-menu-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+    padding: 12px;
+    border-radius: 9px;
+    border: none;
+    background: transparent;
+    color: var(--text);
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    text-align: left;
+    font-family: inherit;
+    transition: background-color .15s ease, color .15s ease;
+  }
+  .avatar-menu-item:hover { background: var(--surface-3); }
+  .avatar-menu-item.danger { color: var(--overdue-text); }
+  .avatar-menu-item.danger:hover { background: var(--overdue-bg); }
+  .avatar-menu-item i { width: 18px; text-align: center; font-size: 14px; }
 
   /* ============ LAYOUT ============ */
   main {
     max-width: 1200px;
     margin: 0 auto;
-    padding: 26px 22px 90px;
+    padding: 26px 22px 140px;
   }
   .view:not(.hidden) { animation: fadeUp .32s ease; }
   @keyframes fadeUp {
@@ -377,14 +487,14 @@
     flex-wrap: wrap;
   }
   .view-title h1, .view-title h2 {
-    font-size: 22px;
+    font-size: 24px;
     font-weight: 800;
     letter-spacing: -.025em;
     line-height: 1.2;
   }
   .view-title p {
     margin-top: 4px;
-    font-size: 13px;
+    font-size: 16px;
     color: var(--text-2);
   }
   .view-head > div:last-child {
@@ -404,7 +514,7 @@
   /* ============ GRID + CARDS ============ */
   .grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
     gap: 18px;
   }
   .card {
@@ -414,7 +524,7 @@
     box-shadow: var(--shadow-sm);
   }
 
-  /* --- File cards --- */
+  /* --- File cards (1:1 logo) --- */
   .file-card {
     position: relative;
     cursor: pointer;
@@ -426,26 +536,71 @@
     border-color: var(--border-strong);
   }
   .file-thumb {
-    height: 128px;
-    background:
-      linear-gradient(135deg, var(--emerald-soft) 0%, color-mix(in srgb, var(--emerald-soft) 50%, var(--surface)) 100%);
+    aspect-ratio: 1 / 1;
+    height: auto;
+    width: 100%;
+    position: relative;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 34px;
-    color: var(--emerald-hover);
     overflow: hidden;
-    position: relative;
+    background:
+      radial-gradient(circle at 20% 20%, rgba(16,185,129,.16), transparent 55%),
+      radial-gradient(circle at 80% 80%, rgba(5,150,105,.12), transparent 55%),
+      linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%);
   }
-  [data-theme="dark"] .file-thumb { color: var(--paid-text); }
+  [data-theme="dark"] .file-thumb {
+    background:
+      radial-gradient(circle at 20% 20%, rgba(16,185,129,.14), transparent 55%),
+      radial-gradient(circle at 80% 80%, rgba(5,150,105,.1), transparent 55%),
+      linear-gradient(135deg, #172033 0%, #1a3a2e 100%);
+  }
+  .file-thumb::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(45deg, rgba(16,185,129,.09) 25%, transparent 25%, transparent 75%, rgba(16,185,129,.09) 75%),
+      linear-gradient(45deg, rgba(16,185,129,.09) 25%, transparent 25%, transparent 75%, rgba(16,185,129,.09) 75%);
+    background-size: 24px 24px;
+    background-position: 0 0, 12px 12px;
+    pointer-events: none;
+  }
+  .file-thumb.has-image::before { display: none; }
+
   .file-thumb img {
-    width: 100%; height: 100%;
+    width: 100%;
+    height: 100%;
     object-fit: cover;
     display: block;
+    position: relative;
+    z-index: 1;
   }
-  .file-card-body { padding: 14px 16px 16px; }
+
+  .folder-badge {
+    position: relative;
+    z-index: 1;
+    width: 76px;
+    height: 76px;
+    border-radius: 20px;
+    background: linear-gradient(135deg, var(--emerald) 0%, var(--emerald-deep) 100%);
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 30px;
+    box-shadow: 0 10px 28px rgba(16,185,129,.42);
+    transform: rotate(-3deg);
+    transition: transform .28s cubic-bezier(.2,.9,.3,1.15), box-shadow .28s ease;
+  }
+  .file-card:hover .folder-badge {
+    transform: rotate(0deg) scale(1.08);
+    box-shadow: 0 14px 34px rgba(16,185,129,.55);
+  }
+
+  .file-card-body { padding: 16px 18px 18px; }
   .file-card-body h3 {
-    font-size: 15.5px;
+    font-size: 18px;
     font-weight: 700;
     line-height: 1.35;
     word-break: break-word;
@@ -456,12 +611,13 @@
     display: inline-flex;
     align-items: center;
     gap: 6px;
-    font-size: 12px;
+    font-size: 16px;
   }
+  .file-card-body .muted i { font-size: 15px; }
   .file-del {
     position: absolute;
-    top: 10px; right: 10px;
-    width: 32px; height: 32px;
+    top: 12px; right: 12px;
+    width: 36px; height: 36px;
     border-radius: 10px;
     border: none;
     cursor: pointer;
@@ -470,16 +626,17 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 13px;
+    font-size: 15px;
     box-shadow: var(--shadow-sm);
     opacity: 0;
     transform: scale(.85);
     transition: opacity .18s, transform .18s, background-color .18s, color .18s;
+    z-index: 2;
   }
   .file-card:hover .file-del { opacity: 1; transform: scale(1); }
   .file-del:hover { background: var(--overdue-bg); color: var(--overdue-text); }
 
-  /* --- Hero (File & Project) --- */
+  /* --- Hero --- */
   .hero {
     display: flex;
     align-items: center;
@@ -492,8 +649,8 @@
     margin-bottom: 4px;
   }
   .hero-img {
-    width: 80px; height: 80px;
-    border-radius: 18px;
+    width: 84px; height: 84px;
+    border-radius: 20px;
     overflow: hidden;
     flex: 0 0 auto;
     background: linear-gradient(135deg, var(--emerald) 0%, var(--emerald-deep) 100%);
@@ -501,13 +658,13 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 30px;
+    font-size: 32px;
     box-shadow: 0 8px 22px rgba(16,185,129,.28);
   }
   .hero-img img { width: 100%; height: 100%; object-fit: cover; }
   .hero-info { min-width: 0; flex: 1; }
   .hero-info h2 {
-    font-size: 20px;
+    font-size: 24px;
     font-weight: 800;
     letter-spacing: -.025em;
     word-break: break-word;
@@ -516,7 +673,7 @@
   }
   .hero-info p.hero-info-text {
     color: var(--text-2);
-    font-size: 13px;
+    font-size: 16px;
     line-height: 1.55;
     margin-bottom: 14px;
     word-break: break-word;
@@ -533,30 +690,29 @@
     background: var(--surface-2);
     border: 1px solid var(--border);
     border-radius: 12px;
-    padding: 9px 14px;
-    min-width: 120px;
+    padding: 10px 14px;
+    min-width: 140px;
   }
   .stat-icon {
-    width: 32px; height: 32px;
-    border-radius: 9px;
+    width: 36px; height: 36px;
+    border-radius: 10px;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 13px;
+    font-size: 15px;
     flex: 0 0 auto;
   }
   .stat-icon.brand { background: var(--emerald-soft); color: var(--emerald-hover); }
   .stat-icon.paid { background: var(--paid-bg); color: var(--paid-text); }
   .stat-icon.due { background: var(--partial-bg); color: var(--partial-text); }
   .stat-label {
-    font-size: 10.5px;
+    font-size: 16px;
     font-weight: 600;
     color: var(--text-2);
-    text-transform: uppercase;
-    letter-spacing: .5px;
+    line-height: 1.2;
   }
   .stat-value {
-    font-size: 15px;
+    font-size: 18px;
     font-weight: 800;
     color: var(--text);
     font-variant-numeric: tabular-nums;
@@ -564,21 +720,22 @@
   }
   .stat-value.paid { color: var(--paid); }
   .stat-value.due { color: var(--partial); }
+  .stat-value.date-stat { font-size: 16px; }
 
   /* --- Badges --- */
   .badge {
-    font-size: 11px;
+    font-size: 16px;
     font-weight: 700;
-    padding: 4px 10px;
+    padding: 6px 12px;
     border-radius: var(--r-full);
     display: inline-flex;
     align-items: center;
-    gap: 5px;
-    white-space: nowrap;
-    letter-spacing: .2px;
-    line-height: 1.4;
+    gap: 6px;
+    letter-spacing: .1px;
+    line-height: 1.35;
+    max-width: 100%;
   }
-  .badge i { font-size: 9.5px; }
+  .badge i { font-size: 13px; flex: 0 0 auto; }
   .badge.paid { background: var(--paid-bg); color: var(--paid-text); }
   .badge.partial { background: var(--partial-bg); color: var(--partial-text); }
   .badge.overdue { background: var(--overdue-bg); color: var(--overdue-text); }
@@ -586,7 +743,7 @@
 
   /* --- Project cards --- */
   .project-card {
-    padding: 16px;
+    padding: 18px;
     cursor: pointer;
     display: flex;
     flex-direction: column;
@@ -602,19 +759,20 @@
     justify-content: space-between;
     align-items: flex-start;
     gap: 10px;
+    flex-wrap: wrap;
   }
-  .project-head-left { min-width: 0; flex: 1; }
+  .project-head-left { min-width: 0; flex: 1 1 60%; }
   .project-head h3 {
-    font-size: 15.5px;
+    font-size: 18px;
     font-weight: 700;
     line-height: 1.35;
     word-break: break-word;
-    margin-bottom: 6px;
+    margin-bottom: 8px;
   }
   .project-actions { display: flex; gap: 2px; flex-shrink: 0; }
-  .project-actions .icon-btn { width: 28px; height: 28px; font-size: 12px; }
+  .project-actions .icon-btn { width: 32px; height: 32px; font-size: 14px; }
   .project-info {
-    font-size: 12.5px;
+    font-size: 16px;
     color: var(--text-2);
     line-height: 1.55;
     display: -webkit-box;
@@ -633,19 +791,18 @@
   .pstat {
     background: var(--surface-2);
     border-radius: 10px;
-    padding: 8px 11px;
+    padding: 10px 12px;
   }
   .pstat-label {
-    font-size: 10.5px;
+    font-size: 16px;
     font-weight: 600;
     color: var(--text-2);
-    text-transform: uppercase;
-    letter-spacing: .5px;
     display: block;
-    margin-bottom: 2px;
+    margin-bottom: 3px;
+    line-height: 1.2;
   }
   .pstat-value {
-    font-size: 14px;
+    font-size: 18px;
     font-weight: 800;
     font-variant-numeric: tabular-nums;
   }
@@ -655,11 +812,11 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    font-size: 11.5px;
+    font-size: 16px;
     color: var(--text-2);
     padding-top: 2px;
   }
-  .project-foot i { margin-right: 4px; opacity: .8; }
+  .project-foot i { margin-right: 6px; opacity: .8; font-size: 14px; }
 
   /* --- Transaction rows --- */
   .tx-list { display: flex; flex-direction: column; gap: 10px; }
@@ -667,12 +824,13 @@
     background: var(--surface);
     border: 1px solid var(--border);
     border-radius: var(--r);
-    padding: 13px 16px;
+    padding: 14px 16px;
     display: flex;
     align-items: center;
     justify-content: space-between;
     gap: 12px;
     box-shadow: var(--shadow-sm);
+    flex-wrap: wrap;
   }
   .tx-row:hover { border-color: var(--border-strong); }
   .tx-left {
@@ -680,43 +838,52 @@
     align-items: center;
     gap: 12px;
     min-width: 0;
+    flex: 1 1 200px;
   }
   .tx-dot {
-    width: 38px; height: 38px;
-    border-radius: 11px;
+    width: 42px; height: 42px;
+    border-radius: 12px;
     background: var(--paid-bg);
     color: var(--paid-text);
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 14px;
+    font-size: 16px;
     flex: 0 0 auto;
   }
   .tx-note {
-    font-size: 13.5px;
+    font-size: 16px;
     font-weight: 600;
     word-break: break-word;
     color: var(--text);
   }
   .tx-date {
-    font-size: 11.5px;
+    font-size: 16px;
     color: var(--text-2);
     margin-top: 2px;
     display: flex;
     align-items: center;
     gap: 5px;
   }
+  .tx-date i { font-size: 13px; }
+  .tx-right {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex: 0 0 auto;
+  }
   .tx-amt {
     font-weight: 800;
     color: var(--paid);
-    font-size: 15px;
+    font-size: 18px;
     white-space: nowrap;
     font-variant-numeric: tabular-nums;
   }
+  .tx-right .icon-btn { width: 36px; height: 36px; font-size: 14px; }
 
   /* --- Recycle cards --- */
   .recycle-card {
-    padding: 14px 16px;
+    padding: 16px 18px;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -724,16 +891,16 @@
     flex-wrap: wrap;
   }
   .recycle-card h3 {
-    font-size: 14.5px;
+    font-size: 18px;
     font-weight: 700;
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: 10px;
     word-break: break-word;
   }
-  .recycle-card h3 i { color: var(--text-2); font-size: 13px; }
+  .recycle-card h3 i { color: var(--text-2); font-size: 16px; }
   .recycle-actions { display: flex; gap: 6px; flex-wrap: wrap; }
-  .recycle-actions .btn { padding: 7px 12px; font-size: 12.5px; }
+  .recycle-actions .btn { padding: 9px 14px; font-size: 16px; }
 
   /* --- Empty states --- */
   .empty {
@@ -745,34 +912,35 @@
     border: 2px dashed var(--border);
   }
   .empty-icon {
-    width: 64px; height: 64px;
-    margin: 0 auto 14px;
-    border-radius: 18px;
+    width: 72px; height: 72px;
+    margin: 0 auto 16px;
+    border-radius: 20px;
     background: var(--surface-2);
     color: var(--text-3);
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 26px;
+    font-size: 30px;
   }
   .empty h3 {
-    font-size: 15px;
+    font-size: 18px;
     font-weight: 700;
     color: var(--text);
-    margin-bottom: 4px;
+    margin-bottom: 6px;
   }
   .empty p {
-    font-size: 13px;
+    font-size: 16px;
     color: var(--text-2);
-    max-width: 320px;
+    max-width: 340px;
     margin: 0 auto;
     line-height: 1.55;
   }
 
   /* --- Forms --- */
   .form-card {
-    max-width: 600px;
+    max-width: 620px;
     padding: 26px;
+    position: relative;
   }
   .form-header {
     display: flex;
@@ -781,37 +949,37 @@
     padding-bottom: 22px;
     margin-bottom: 22px;
     border-bottom: 1px solid var(--border);
+    padding-right: 44px;
   }
   .form-header-icon {
-    width: 46px; height: 46px;
+    width: 50px; height: 50px;
     border-radius: 14px;
     background: var(--emerald-soft);
     color: var(--emerald-hover);
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 18px;
+    font-size: 20px;
     flex: 0 0 auto;
   }
-  .form-header h3 { font-size: 16px; font-weight: 700; }
-  .form-header p { font-size: 12.5px; color: var(--text-2); margin-top: 2px; }
+  .form-header h3 { font-size: 20px; font-weight: 700; }
+  .form-header p { font-size: 16px; color: var(--text-2); margin-top: 2px; }
 
   .field { display: block; margin-bottom: 16px; }
   .field > span {
     display: block;
-    font-size: 12px;
+    font-size: 16px;
     font-weight: 700;
     color: var(--text-2);
-    margin-bottom: 7px;
+    margin-bottom: 8px;
     letter-spacing: .2px;
-    text-transform: uppercase;
   }
   input, select, textarea {
     width: 100%;
     font-family: inherit;
-    font-size: 14px;
+    font-size: 16px;
     color: var(--text);
-    padding: 11px 14px;
+    padding: 12px 15px;
     border: 1.5px solid var(--border);
     border-radius: var(--r-sm);
     background: var(--surface);
@@ -827,10 +995,10 @@
     background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath fill='%2364748B' d='M6 8L0 0h12z'/%3E%3C/svg%3E");
     background-repeat: no-repeat;
     background-position: right 14px center;
-    padding-right: 36px;
+    padding-right: 38px;
     cursor: pointer;
   }
-  textarea { resize: vertical; min-height: 68px; }
+  textarea { resize: vertical; min-height: 70px; }
   .row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
 
   /* --- Modal --- */
@@ -853,7 +1021,7 @@
     border-radius: var(--r-lg);
     padding: 24px;
     width: 100%;
-    max-width: 480px;
+    max-width: 500px;
     box-shadow: var(--shadow-lg);
     max-height: 90vh;
     overflow-y: auto;
@@ -872,7 +1040,7 @@
     gap: 10px;
   }
   .modal-head h3 {
-    font-size: 17px;
+    font-size: 20px;
     font-weight: 800;
     letter-spacing: -.02em;
   }
@@ -883,19 +1051,20 @@
     margin-top: 8px;
     padding-top: 18px;
     border-top: 1px solid var(--border);
+    flex-wrap: wrap;
   }
 
   /* --- Toast --- */
   #toast {
     position: fixed;
-    bottom: 24px;
+    bottom: 88px;
     left: 50%;
     transform: translateX(-50%) translateY(140px);
-    background: var(--slate-900, #0F172A);
+    background: #0F172A;
     color: #fff;
-    padding: 12px 20px;
+    padding: 14px 20px;
     border-radius: 12px;
-    font-size: 13.5px;
+    font-size: 16px;
     font-weight: 600;
     z-index: 999;
     opacity: 0;
@@ -908,38 +1077,255 @@
     pointer-events: none;
   }
   #toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
-  #toast i { color: #34D399; font-size: 15px; }
+  #toast i { color: #34D399; font-size: 16px; }
   #toast.error { background: #B91C1C; }
   #toast.error i { color: #FECACA; }
 
-  /* --- Report styles (used only inside hidden node, not visible) --- */
-  .report-wrap {
-    font-family: 'Inter', Arial, sans-serif;
-    color: #0F172A;
+  /* ============ SITE FOOTER (bottom center) ============ */
+  .site-footer {
+    position: fixed;
+    left: 50%;
+    bottom: 18px;
+    transform: translateX(-50%);
+    z-index: 90;
+    font-family: inherit;
   }
 
-  /* --- Responsive --- */
+  .footer-toggle {
+    width: 52px;
+    height: 52px;
+    border-radius: 50%;
+    border: 1px solid transparent;
+    background: linear-gradient(135deg, var(--emerald) 0%, var(--emerald-deep) 100%);
+    color: #fff;
+    font-size: 20px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 8px 24px rgba(16,185,129,.35);
+    transition: transform .2s ease, box-shadow .2s ease, filter .2s ease;
+  }
+  .footer-toggle:hover {
+    transform: translateY(-2px) scale(1.05);
+    box-shadow: 0 12px 30px rgba(16,185,129,.45);
+    filter: brightness(1.05);
+  }
+  .footer-toggle:active { transform: scale(.95); }
+  .site-footer.open .footer-toggle {
+    transform: rotate(90deg);
+    filter: brightness(.95);
+  }
+
+  .footer-body {
+    position: absolute;
+    left: 50%;
+    bottom: calc(100% + 14px);
+    width: 380px;
+    max-width: calc(100vw - 24px);
+    max-height: min(66vh, 600px);
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--r-lg);
+    box-shadow: var(--shadow-lg);
+    padding: 16px;
+    opacity: 0;
+    transform: translateX(-50%) translateY(12px) scale(.96);
+    transform-origin: bottom center;
+    pointer-events: none;
+    transition: opacity .22s ease, transform .24s cubic-bezier(.2,.9,.3,1.15);
+    /* Hide scrollbar but allow scrolling */
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+  .footer-body::-webkit-scrollbar {
+    display: none;
+    width: 0;
+    height: 0;
+  }
+  .site-footer.open .footer-body {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0) scale(1);
+    pointer-events: auto;
+  }
+
+  .footer-heading {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--text-2);
+    padding-bottom: 12px;
+    margin-bottom: 12px;
+    border-bottom: 1px solid var(--border);
+  }
+  .footer-heading i { color: var(--emerald); font-size: 16px; }
+
+  .footer-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .footer-card {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 12px;
+    border-radius: 12px;
+    background: var(--surface-2);
+    border: 1px solid transparent;
+    text-decoration: none;
+    color: var(--text);
+    transition: background-color .16s, border-color .16s, transform .16s;
+  }
+  .footer-card:hover {
+    background: var(--surface-3);
+    border-color: var(--border);
+    transform: translateX(2px);
+  }
+
+  .fc-icon {
+    width: 38px;
+    height: 38px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    flex: 0 0 auto;
+    color: var(--fc, #10B981);
+    background: color-mix(in srgb, var(--fc, #10B981) 15%, transparent);
+  }
+
+  .fc-body { flex: 1; min-width: 0; }
+  .fc-title {
+    font-size: 16px;
+    font-weight: 700;
+    line-height: 1.3;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .fc-sub {
+    font-size: 16px;
+    color: var(--text-2);
+    margin-top: 1px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .fc-arrow {
+    font-size: 13px;
+    color: var(--text-3);
+    opacity: 0;
+    transition: opacity .16s ease;
+    flex: 0 0 auto;
+  }
+  .footer-card:hover .fc-arrow { opacity: 1; }
+
+  .footer-note {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    margin-top: 14px;
+    padding-top: 12px;
+    border-top: 1px solid var(--border);
+    font-size: 16px;
+    color: var(--text-3);
+  }
+  .footer-note i { color: #f472b6; font-size: 14px; }
+
+  /* ============ RESPONSIVE ============ */
+
+  /* Tablets & small laptops */
+  @media (max-width: 900px) {
+    main { padding: 22px 18px 140px; }
+    .grid { grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 14px; }
+    .hero { padding: 18px; gap: 14px; }
+    .hero-img { width: 72px; height: 72px; font-size: 28px; }
+  }
+
+  /* Phones */
   @media (max-width: 720px) {
     .topbar { padding: 9px 14px; }
     .topbar-right .btn span { display: none; }
-    .topbar-right .btn { padding: 9px 11px; }
+    .topbar-right .btn { padding: 10px 12px; }
     .brand span { display: none; }
-    main { padding: 18px 14px 90px; }
-    .grid { grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 12px; }
-    .file-thumb { height: 100px; font-size: 28px; }
-    .hero { flex-direction: column; text-align: center; padding: 18px; }
-    .hero-img { width: 64px; height: 64px; font-size: 24px; }
-    .hero-stats { justify-content: center; width: 100%; }
-    .stat { min-width: 0; flex: 1; }
-    .stat-label { font-size: 10px; }
-    .row2 { grid-template-columns: 1fr; }
-    .login-card { padding: 36px 26px 30px; }
-    .login-card h1 { font-size: 26px; }
-  }
-  @media (max-width: 420px) {
+    .brand { font-size: 18px; }
+    .brand-logo { width: 36px; height: 36px; font-size: 15px; }
+
+    main { padding: 18px 14px 150px; }
+
+    .grid { grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 12px; }
+
+    .file-card-body { padding: 12px 14px 14px; }
+    .file-card-body h3 { font-size: 16px; }
+    .file-card-body .muted { font-size: 16px; }
+    .folder-badge { width: 58px; height: 58px; font-size: 24px; border-radius: 16px; }
+    .file-del { width: 32px; height: 32px; font-size: 13px; }
+
+    .hero { flex-direction: column; text-align: center; padding: 18px; gap: 12px; }
+    .hero-img { width: 68px; height: 68px; font-size: 26px; }
+    .hero-info h2 { font-size: 22px; }
+    .hero-stats { width: 100%; display: grid; grid-template-columns: 1fr; gap: 8px; }
+    .stat { min-width: 0; width: 100%; text-align: left; }
+
+    .view-title h1, .view-title h2 { font-size: 22px; }
     .view-head { align-items: stretch; }
     .view-head > div:last-child { width: 100%; }
-    .view-head > div:last-child .btn { flex: 1; justify-content: center; }
+    .view-head > div:last-child .btn { flex: 1 1 auto; }
+    .view-head > div:last-child .btn-round { flex: 0 0 auto; }
+
+    .row2 { grid-template-columns: 1fr; }
+    .login-card { padding: 36px 26px 30px; }
+    .login-card h1 { font-size: 28px; }
+    .login-logo { width: 72px; height: 72px; font-size: 30px; }
+    .login-features { font-size: 15px; gap: 6px; }
+    .login-features span { padding: 5px 10px; }
+
+    .avatar-menu { width: 240px; }
+    .avatar-menu-name, .avatar-menu-email { max-width: 150px; }
+    .avatar-menu-email { font-size: 14px; }
+
+    .form-card { padding: 20px; }
+    .form-header { gap: 12px; padding-right: 40px; }
+    .form-header-icon { width: 44px; height: 44px; font-size: 18px; }
+    .form-header h3 { font-size: 18px; }
+    .form-header p { font-size: 15px; }
+
+    .tx-row { padding: 12px 14px; gap: 10px; }
+    .tx-left { flex: 1 1 100%; }
+    .tx-right { flex: 1 1 100%; justify-content: space-between; }
+    .tx-amt { font-size: 18px; }
+
+    .project-head { flex-wrap: wrap; }
+    .project-stats { gap: 6px; }
+
+    .site-footer { bottom: 14px; }
+    .footer-toggle { width: 48px; height: 48px; font-size: 18px; }
+    .footer-body { width: calc(100vw - 20px); max-height: 60vh; }
+
+    #toast { bottom: 82px; font-size: 15px; padding: 12px 16px; }
+
+    .modal { padding: 20px; }
+    .modal-head h3 { font-size: 19px; }
+    .modal-actions .btn { flex: 1 1 auto; }
+  }
+
+  /* Small phones */
+  @media (max-width: 400px) {
+    .grid { grid-template-columns: 1fr; }
+    .folder-badge { width: 66px; height: 66px; font-size: 26px; }
+    .hero-info h2 { font-size: 20px; }
+    .login-card h1 { font-size: 26px; }
+    .login-features { display: none; }
+    .topbar-right { gap: 2px; }
+    .avatar { width: 34px; height: 34px; }
   }
 </style>
 </head>
@@ -954,8 +1340,8 @@
     <div class="login-logo"><i class="fas fa-folder-open"></i></div>
     <h1>Due Desk</h1>
     <p class="sub">Manage your files, projects,<br>payments &amp; dues — all in one place.</p>
-    <button id="googleLoginBtn" class="btn btn-google">
-      <svg width="18" height="18" viewBox="0 0 48 48" aria-hidden="true">
+    <button id="googleLoginBtn" class="btn-google">
+      <svg width="20" height="20" viewBox="0 0 48 48" aria-hidden="true">
         <path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/>
         <path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/>
         <path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/>
@@ -965,7 +1351,7 @@
     </button>
     <div class="login-features">
       <span><i class="fas fa-check"></i> Track payments</span>
-      <span><i class="fas fa-check"></i> Export reports</span>
+      <span><i class="fas fa-check"></i> Live sync</span>
       <span><i class="fas fa-check"></i> Manage dues</span>
     </div>
   </div>
@@ -980,7 +1366,7 @@
     </div>
     <div class="topbar-right">
       <button class="btn btn-ghost" id="navPayment" title="New Payment">
-        <i class="fas fa-credit-card"></i><span>New Payment</span>
+        <i class="fas fa-credit-card"></i><span>Payment</span>
       </button>
       <button class="btn btn-ghost" id="navRecycle" title="Recycle Bin">
         <i class="fas fa-recycle"></i><span>Recycle</span>
@@ -988,10 +1374,25 @@
       <button class="theme-toggle" id="themeToggle" title="Toggle theme" aria-label="Toggle theme">
         <i class="fas fa-moon theme-icon"></i>
       </button>
-      <img id="userPhoto" class="avatar" alt="user" />
-      <button class="btn btn-ghost" id="logoutBtn" title="Logout">
-        <i class="fas fa-right-from-bracket"></i><span>Logout</span>
-      </button>
+
+      <div class="avatar-wrap" id="avatarWrap">
+        <img id="userPhoto" class="avatar" alt="user" />
+        <div class="avatar-menu" id="avatarMenu">
+          <div class="avatar-menu-head">
+            <img id="userPhotoMenu" class="avatar" alt="" />
+            <div style="min-width:0;">
+              <div class="avatar-menu-name" id="menuName">User</div>
+              <div class="avatar-menu-email" id="menuEmail"></div>
+            </div>
+          </div>
+          <button class="avatar-menu-item" id="switchAccountBtn">
+            <i class="fas fa-arrow-right-arrow-left"></i> Switch Account
+          </button>
+          <button class="avatar-menu-item danger" id="logoutBtn">
+            <i class="fas fa-right-from-bracket"></i> Logout
+          </button>
+        </div>
+      </div>
     </div>
   </header>
 
@@ -1025,7 +1426,7 @@
         </div>
         <div>
           <button class="btn btn-secondary" id="downloadFileBtn">
-            <i class="fas fa-file-arrow-down"></i> Summary JPG
+            <i class="fas fa-file-arrow-down"></i> Summary
           </button>
           <button class="btn btn-primary" id="addProjectBtn">
             <i class="fas fa-plus"></i> New Project
@@ -1048,7 +1449,7 @@
         </div>
         <div>
           <button class="btn btn-secondary" id="downloadProjectBtn">
-            <i class="fas fa-file-arrow-down"></i> History JPG
+            <i class="fas fa-file-arrow-down"></i> History
           </button>
           <button class="btn btn-primary" id="addTxBtn">
             <i class="fas fa-plus"></i> Add Payment
@@ -1062,8 +1463,13 @@
     <section id="view-payment" class="view hidden">
       <div class="view-head">
         <div class="view-title">
-          <h1>New Payment Record</h1>
+          <h1>New Payment</h1>
           <p>Record a payment against a project</p>
+        </div>
+        <div>
+          <button class="btn btn-round danger" id="closePaymentBtn" title="Close" aria-label="Close payment form">
+            <i class="fas fa-xmark"></i>
+          </button>
         </div>
       </div>
       <div class="card form-card">
@@ -1091,7 +1497,7 @@
         <label class="field"><span>Note (optional)</span>
           <input type="text" id="payNote" placeholder="e.g. Cash / bKash / Bank" />
         </label>
-        <button class="btn btn-primary" id="savePaymentBtn" style="width:100%;justify-content:center;padding:13px;font-size:14.5px;">
+        <button class="btn btn-primary" id="savePaymentBtn" style="width:100%;justify-content:center;padding:14px;font-size:16px;">
           <i class="fas fa-check"></i> Save Payment
         </button>
       </div>
@@ -1101,13 +1507,85 @@
     <section id="view-recycle" class="view hidden">
       <div class="view-head">
         <div class="view-title">
-          <h1><i class="fas fa-recycle" style="color:var(--emerald);margin-right:6px;"></i>Recycle Bin</h1>
+          <h1><i class="fas fa-recycle" style="color:var(--emerald);margin-right:8px;"></i>Recycle Bin</h1>
           <p>Deleted files and projects can be restored or permanently removed</p>
         </div>
       </div>
       <div id="recycleList" class="tx-list"></div>
     </section>
   </main>
+
+  <!-- ============ SITE FOOTER (bottom center) ============ -->
+  <footer class="site-footer" id="siteFooter">
+    <button id="footerToggle" class="footer-toggle" aria-label="Show more websites" title="More websites">
+      <i class="fa-solid fa-circle-nodes"></i>
+    </button>
+
+    <div class="footer-body">
+      <div class="footer-heading">
+        <i class="fa-solid fa-circle-nodes"></i>
+        <span>More by Faizul Islam Riyad</span>
+      </div>
+
+      <div class="footer-grid">
+        <a class="footer-card" href="https://fixup-invoice.vercel.app/faizul.html" target="_blank" rel="noopener">
+          <span class="fc-icon" style="--fc:#7c5cff"><i class="fa-solid fa-file-invoice-dollar"></i></span>
+          <div class="fc-body"><div class="fc-title">Fixup Invoice</div><div class="fc-sub">Invoicing tool</div></div>
+          <i class="fa-solid fa-arrow-up-right-from-square fc-arrow"></i>
+        </a>
+        <a class="footer-card" href="https://saveclientinfo.vercel.app/" target="_blank" rel="noopener">
+          <span class="fc-icon" style="--fc:#4ade80"><i class="fa-solid fa-address-book"></i></span>
+          <div class="fc-body"><div class="fc-title">Client Info Saver</div><div class="fc-sub">Save client details</div></div>
+          <i class="fa-solid fa-arrow-up-right-from-square fc-arrow"></i>
+        </a>
+        <a class="footer-card" href="https://waveey.vercel.app/" target="_blank" rel="noopener">
+          <span class="fc-icon" style="--fc:#22d3ee"><i class="fa-solid fa-music"></i></span>
+          <div class="fc-body"><div class="fc-title">Waveey</div><div class="fc-sub">Free sound SFX</div></div>
+          <i class="fa-solid fa-arrow-up-right-from-square fc-arrow"></i>
+        </a>
+        <a class="footer-card" href="https://javeda.vercel.app/" target="_blank" rel="noopener">
+          <span class="fc-icon" style="--fc:#fbbf24"><i class="fa-solid fa-graduation-cap"></i></span>
+          <div class="fc-body"><div class="fc-title">Javeda Learner</div><div class="fc-sub">Learning platform</div></div>
+          <i class="fa-solid fa-arrow-up-right-from-square fc-arrow"></i>
+        </a>
+        <a class="footer-card" href="https://mysmartpoll.vercel.app/" target="_blank" rel="noopener">
+          <span class="fc-icon" style="--fc:#f472b6"><i class="fa-solid fa-square-poll-vertical"></i></span>
+          <div class="fc-body"><div class="fc-title">Smart Poll</div><div class="fc-sub">Create polls easily</div></div>
+          <i class="fa-solid fa-arrow-up-right-from-square fc-arrow"></i>
+        </a>
+        <a class="footer-card" href="https://passbox-nine.vercel.app/" target="_blank" rel="noopener">
+          <span class="fc-icon" style="--fc:#a78bfa"><i class="fa-solid fa-shield-halved"></i></span>
+          <div class="fc-body"><div class="fc-title">PassBox</div><div class="fc-sub">Password saver</div></div>
+          <i class="fa-solid fa-arrow-up-right-from-square fc-arrow"></i>
+        </a>
+        <a class="footer-card" href="https://pftracker-iota.vercel.app/" target="_blank" rel="noopener">
+          <span class="fc-icon" style="--fc:#fb923c"><i class="fa-solid fa-chart-line"></i></span>
+          <div class="fc-body"><div class="fc-title">PF Tracker</div><div class="fc-sub">Finance tracker</div></div>
+          <i class="fa-solid fa-arrow-up-right-from-square fc-arrow"></i>
+        </a>
+        <a class="footer-card" href="https://fixnote.netlify.app/" target="_blank" rel="noopener">
+          <span class="fc-icon" style="--fc:#f59e0b"><i class="fa-solid fa-pen-nib"></i></span>
+          <div class="fc-body"><div class="fc-title">Fixnote</div><div class="fc-sub">Correction manager</div></div>
+          <i class="fa-solid fa-arrow-up-right-from-square fc-arrow"></i>
+        </a>
+        <a class="footer-card" href="https://wishees.vercel.app/" target="_blank" rel="noopener">
+          <span class="fc-icon" style="--fc:#d946ef"><i class="fa-solid fa-gift"></i></span>
+          <div class="fc-body"><div class="fc-title">Wishees</div><div class="fc-sub">Write your wish</div></div>
+          <i class="fa-solid fa-arrow-up-right-from-square fc-arrow"></i>
+        </a>
+        <a class="footer-card" href="https://analysisyt.netlify.app/" target="_blank" rel="noopener">
+          <span class="fc-icon" style="--fc:#ef4444"><i class="fa-solid fa-chart-simple"></i></span>
+          <div class="fc-body"><div class="fc-title">TubeScope</div><div class="fc-sub">YouTube channel analysis</div></div>
+          <i class="fa-solid fa-arrow-up-right-from-square fc-arrow"></i>
+        </a>
+      </div>
+
+      <div class="footer-note">
+        <i class="fa-solid fa-heart"></i>
+        <span>Made with care</span>
+      </div>
+    </div>
+  </footer>
 </div>
 
 <div id="modalRoot"></div>
@@ -1121,7 +1599,7 @@ import {
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 import {
   getFirestore, collection, doc, addDoc, setDoc, getDoc, getDocs,
-  updateDoc, deleteDoc, writeBatch, serverTimestamp
+  updateDoc, deleteDoc, writeBatch, serverTimestamp, onSnapshot
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 /* ---------------- FIREBASE ---------------- */
@@ -1146,6 +1624,11 @@ let projects = [];
 let activeProject = null;
 let transactions = [];
 
+let filesUnsub = null;
+let projectsUnsub = null;
+let txUnsub = null;
+let recycleUnsub = null;
+
 /* ---------------- HELPERS ---------------- */
 const $  = s => document.querySelector(s);
 const $$ = s => [...document.querySelectorAll(s)];
@@ -1156,7 +1639,12 @@ const esc = s => String(s ?? '').replace(/[&<>"']/g, c =>
 const num = v => { const n = parseFloat(v); return isNaN(n) ? 0 : n; };
 const fmt = n => num(n).toLocaleString('en-US',{minimumFractionDigits:2, maximumFractionDigits:2});
 const today = () => new Date().toISOString().slice(0,10);
-const tsSeconds = t => (t && typeof t === 'object' && 'seconds' in t) ? t.seconds : 0;
+const tsSeconds = t => {
+  if (!t) return 0;
+  if (typeof t === 'object' && 'seconds' in t) return t.seconds;
+  if (typeof t.toMillis === 'function') return t.toMillis() / 1000;
+  return 0;
+};
 
 const filesCol   = () => collection(db,'users',uid,'files');
 const projectsCol= fid => collection(db,'users',uid,'files',fid,'projects');
@@ -1177,7 +1665,7 @@ function toggleTheme(){
   const current = document.documentElement.getAttribute('data-theme') || 'light';
   applyTheme(current === 'light' ? 'dark' : 'light');
 }
-const initTheme = (() => {
+(function initTheme(){
   const t = document.documentElement.getAttribute('data-theme') || 'light';
   updateThemeIcons(t);
   const t1 = $('#themeToggle');
@@ -1199,10 +1687,24 @@ function toast(msg, type='success'){
 
 /* ---------------- VIEW SWITCHING ---------------- */
 function showView(name){
+  if (name !== 'recycle') cleanupRecycleListener();
+  if (name !== 'file' && name !== 'project') { /* keep projects unsub for now */ }
   $$('.view').forEach(v => v.classList.add('hidden'));
   const v = document.getElementById('view-' + name);
   if (v) v.classList.remove('hidden');
   window.scrollTo({ top:0, behavior:'smooth' });
+}
+
+/* ---------------- LISTENER CLEANUP ---------------- */
+function cleanupFilesListener(){ if (filesUnsub){ filesUnsub(); filesUnsub = null; } }
+function cleanupProjectsListener(){ if (projectsUnsub){ projectsUnsub(); projectsUnsub = null; } }
+function cleanupTxListener(){ if (txUnsub){ txUnsub(); txUnsub = null; } }
+function cleanupRecycleListener(){ if (recycleUnsub){ recycleUnsub(); recycleUnsub = null; } }
+function cleanupAllListeners(){
+  cleanupFilesListener();
+  cleanupProjectsListener();
+  cleanupTxListener();
+  cleanupRecycleListener();
 }
 
 /* ---------------- IMAGE COMPRESSION ---------------- */
@@ -1274,6 +1776,34 @@ function showModal({ title, body, submitText = 'Save', submitIcon = 'fa-check', 
   };
 }
 
+/* ---------------- AVATAR MENU ---------------- */
+const avatarWrap = $('#avatarWrap');
+function closeAvatarMenu(){ avatarWrap.classList.remove('open'); }
+
+$('#userPhoto').addEventListener('click', e => {
+  e.stopPropagation();
+  avatarWrap.classList.toggle('open');
+});
+
+$('#switchAccountBtn').onclick = async () => {
+  closeAvatarMenu();
+  try {
+    const provider = new GoogleAuthProvider();
+    provider.setCustomParameters({ prompt: 'select_account' });
+    await signInWithPopup(auth, provider);
+  } catch (err){
+    if (err.code !== 'auth/popup-closed-by-user') toast(err.message, 'error');
+  }
+};
+
+$('#logoutBtn').onclick = () => { closeAvatarMenu(); signOut(auth); };
+
+document.addEventListener('click', e => {
+  if (avatarWrap.classList.contains('open') && !avatarWrap.contains(e.target)) {
+    closeAvatarMenu();
+  }
+});
+
 /* ================= AUTH ================= */
 $('#googleLoginBtn').onclick = async () => {
   try { await signInWithPopup(auth, new GoogleAuthProvider()); }
@@ -1281,40 +1811,150 @@ $('#googleLoginBtn').onclick = async () => {
     if (err.code !== 'auth/popup-closed-by-user') toast(err.message, 'error');
   }
 };
-$('#logoutBtn').onclick = () => signOut(auth);
 
 onAuthStateChanged(auth, async user => {
   if (user){
     uid = user.uid;
     $('#loginScreen').classList.add('hidden');
     $('#app').classList.remove('hidden');
-    $('#userPhoto').src = user.photoURL || 'https://ui-avatars.com/api/?name=' + encodeURIComponent(user.displayName || 'U');
-    await loadFiles();
+    const photo = user.photoURL || 'https://ui-avatars.com/api/?name=' + encodeURIComponent(user.displayName || 'U');
+    $('#userPhoto').src = photo;
+    $('#userPhotoMenu').src = photo;
+    $('#menuName').textContent = user.displayName || 'User';
+    $('#menuEmail').textContent = user.email || '';
+    closeAvatarMenu();
+
+    /* Start live sync */
+    setupFilesListener();
     showView('files');
   } else {
-    uid = null; files = []; projects = []; activeFile = null; activeProject = null;
+    uid = null;
+    files = []; projects = []; transactions = [];
+    activeFile = null; activeProject = null;
+    cleanupAllListeners();
     $('#app').classList.add('hidden');
     $('#loginScreen').classList.remove('hidden');
+    closeFooter();
+    closeAvatarMenu();
   }
 });
 
-$('#brandHome').onclick = async () => { await loadFiles(); showView('files'); };
+$('#brandHome').onclick = () => {
+  cleanupProjectsListener();
+  cleanupTxListener();
+  activeFile = null;
+  activeProject = null;
+  showView('files');
+};
+
 $('#navPayment').onclick = () => openPaymentView();
 $('#navRecycle').onclick = () => openRecycleView();
+
 $$('[data-back]').forEach(b => b.onclick = () => {
   const t = b.dataset.back;
-  if (t === 'files'){ loadFiles(); showView('files'); }
-  else if (t === 'file'){ renderFileHero(); renderProjects(); showView('file'); }
+  if (t === 'files'){
+    cleanupProjectsListener();
+    cleanupTxListener();
+    activeFile = null;
+    activeProject = null;
+    showView('files');
+  } else if (t === 'file'){
+    cleanupTxListener();
+    activeProject = null;
+    showView('file');
+  }
 });
 
-/* ================= FILES ================= */
-async function loadFiles(){
-  const snap = await getDocs(filesCol());
-  files = snap.docs.map(d => ({ id: d.id, ...d.data() }));
-  files.sort((a,b) => tsSeconds(b.createdAt) - tsSeconds(a.createdAt));
-  renderFiles();
+/* ================= LIVE LISTENERS ================= */
+
+function setupFilesListener(){
+  cleanupFilesListener();
+  filesUnsub = onSnapshot(filesCol(),
+    snap => {
+      files = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+      files.sort((a,b) => tsSeconds(b.createdAt) - tsSeconds(a.createdAt));
+      renderFiles();
+
+      /* If the currently open file was deleted elsewhere, go back */
+      if (activeFile && !files.find(f => f.id === activeFile.id)){
+        activeFile = null;
+        activeProject = null;
+        cleanupProjectsListener();
+        cleanupTxListener();
+        if (!document.getElementById('view-files').classList.contains('hidden')
+            || !document.getElementById('view-file').classList.contains('hidden')
+            || !document.getElementById('view-project').classList.contains('hidden')){
+          showView('files');
+        }
+      }
+    },
+    err => console.error('Files sync:', err)
+  );
 }
 
+function setupProjectsListener(fid){
+  cleanupProjectsListener();
+  projectsUnsub = onSnapshot(projectsCol(fid),
+    snap => {
+      projects = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+      projects.sort((a,b) => tsSeconds(b.createdAt) - tsSeconds(a.createdAt));
+
+      if (activeFile && activeFile.id === fid){
+        renderFileHero();
+        renderProjects();
+
+        if (activeProject){
+          const updated = projects.find(p => p.id === activeProject.id);
+          if (updated){
+            activeProject = updated;
+            renderProjectHero();
+          } else {
+            /* Active project was deleted elsewhere */
+            if (!document.getElementById('view-project').classList.contains('hidden')){
+              activeProject = null;
+              cleanupTxListener();
+              showView('file');
+            }
+          }
+        }
+      }
+    },
+    err => console.error('Projects sync:', err)
+  );
+}
+
+function setupTxListener(fid, pid){
+  cleanupTxListener();
+  txUnsub = onSnapshot(txCol(fid, pid),
+    snap => {
+      transactions = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+      transactions.sort((a,b) => {
+        const da = (a.date || ''), dbb = (b.date || '');
+        if (da !== dbb) return dbb.localeCompare(da);
+        return tsSeconds(b.createdAt) - tsSeconds(a.createdAt);
+      });
+      if (activeProject && activeProject.id === pid){
+        renderProjectHero();
+        renderTransactions();
+      }
+    },
+    err => console.error('Transactions sync:', err)
+  );
+}
+
+function setupRecycleListener(){
+  cleanupRecycleListener();
+  recycleUnsub = onSnapshot(recycleCol(),
+    snap => {
+      const items = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+      items.sort((a,b) => tsSeconds(b.deletedAt) - tsSeconds(a.deletedAt));
+      renderRecycleItems(items);
+    },
+    err => console.error('Recycle sync:', err)
+  );
+}
+
+/* ================= FILES RENDER ================= */
 function renderFiles(){
   const grid = $('#filesGrid');
   const countEl = $('#filesCount');
@@ -1331,7 +1971,11 @@ function renderFiles(){
   }
   grid.innerHTML = files.map(f => `
     <div class="card file-card" data-file="${f.id}">
-      <div class="file-thumb">${f.image ? `<img src="${f.image}" alt="">` : `<i class="fas fa-folder"></i>`}</div>
+      <div class="file-thumb${f.image ? ' has-image' : ''}">
+        ${f.image
+          ? `<img src="${f.image}" alt="">`
+          : `<div class="folder-badge"><i class="fas fa-folder"></i></div>`}
+      </div>
       <div class="file-card-body">
         <h3>${esc(f.name)}</h3>
         <span class="muted"><i class="fas fa-calendar"></i> ${f.createdAt ? new Date(tsSeconds(f.createdAt)*1000).toLocaleDateString() : '—'}</span>
@@ -1375,7 +2019,6 @@ $('#createFileBtn').onclick = () => {
       let image = '';
       if (imgFile && imgFile.size > 0) image = await compressImage(imgFile);
       await addDoc(filesCol(), { name, image, createdAt: serverTimestamp() });
-      await loadFiles();
       toast('File created');
     }
   });
@@ -1385,13 +2028,23 @@ async function openFile(fid){
   const fs = await getDoc(doc(db,'users',uid,'files',fid));
   if (!fs.exists()){ toast('File not found', 'error'); return; }
   activeFile = { id: fs.id, ...fs.data() };
-  await loadProjects(fid);
-  renderFileHero();
-  renderProjects();
+  activeProject = null;
+  cleanupTxListener();
+
+  /* Show loading placeholder while listener fires */
+  $('#fileHero').innerHTML = '';
+  $('#projectsGrid').innerHTML = `
+    <div class="empty">
+      <div class="empty-icon"><i class="fas fa-spinner fa-spin"></i></div>
+      <p>Loading…</p>
+    </div>`;
+
+  setupProjectsListener(fid);
   showView('file');
 }
 
 function renderFileHero(){
+  if (!activeFile) return;
   const totalPay = projects.reduce((s,p) => s + num(p.payment), 0);
   const totalDue = projects.reduce((s,p) => s + num(p.due), 0);
   $('#fileHero').innerHTML = `
@@ -1426,13 +2079,7 @@ function renderFileHero(){
     </div>`;
 }
 
-/* ================= PROJECTS ================= */
-async function loadProjects(fid){
-  const snap = await getDocs(projectsCol(fid));
-  projects = snap.docs.map(d => ({ id: d.id, ...d.data() }));
-  projects.sort((a,b) => tsSeconds(b.createdAt) - tsSeconds(a.createdAt));
-}
-
+/* ================= PROJECTS RENDER ================= */
 function statusOf(p){
   const due = num(p.due);
   const paid = num(p.payment);
@@ -1551,9 +2198,7 @@ function openProjectModal(fid, project){
         await addDoc(projectsCol(fid), { ...data, createdAt: serverTimestamp() });
         toast('Project created');
       }
-      await loadProjects(fid);
-      renderFileHero();
-      renderProjects();
+      /* Listener will refresh the UI automatically */
     }
   });
 }
@@ -1578,11 +2223,8 @@ async function deleteProjectToRecycle(pid){
 
   for (const t of txs) await deleteDoc(doc(db,'users',uid,'files',activeFile.id,'projects',pid,'transactions',t.id));
   await deleteDoc(pRef);
-
-  await loadProjects(activeFile.id);
-  renderFileHero();
-  renderProjects();
   toast('Project moved to Recycle Bin');
+  /* Listeners handle UI refresh */
 }
 
 async function deleteFileToRecycle(fid){
@@ -1616,32 +2258,31 @@ async function deleteFileToRecycle(fid){
   for (const p of projectsArr)
     await deleteDoc(doc(db,'users',uid,'files',fid,'projects',p.id));
   await deleteDoc(doc(db,'users',uid,'files',fid));
-
-  await loadFiles();
   toast('File moved to Recycle Bin');
+  /* Files listener auto-refreshes */
 }
 
 /* ================= PROJECT DETAIL ================= */
-async function openProject(pid){
-  activeProject = projects.find(p => p.id === pid);
-  if (!activeProject) return;
-  await loadTransactions(activeFile.id, pid);
+function openProject(pid){
+  if (!activeFile) return;
+  const proj = projects.find(p => p.id === pid);
+  if (!proj) return;
+  activeProject = proj;
+  transactions = [];
+
   renderProjectHero();
-  renderTransactions();
+  $('#txList').innerHTML = `
+    <div class="empty">
+      <div class="empty-icon"><i class="fas fa-spinner fa-spin"></i></div>
+      <p>Loading transactions…</p>
+    </div>`;
+
+  setupTxListener(activeFile.id, pid);
   showView('project');
 }
 
-async function loadTransactions(fid, pid){
-  const snap = await getDocs(txCol(fid, pid));
-  transactions = snap.docs.map(d => ({ id: d.id, ...d.data() }));
-  transactions.sort((a,b) => {
-    const da = (a.date || ''), dbb = (b.date || '');
-    if (da !== dbb) return dbb.localeCompare(da);
-    return tsSeconds(b.createdAt) - tsSeconds(a.createdAt);
-  });
-}
-
 function renderProjectHero(){
+  if (!activeProject) return;
   const p = activeProject;
   const st = statusOf(p);
   $('#projectHero').innerHTML = `
@@ -1660,7 +2301,7 @@ function renderProjectHero(){
             <div class="stat-icon brand"><i class="fas fa-calendar"></i></div>
             <div>
               <div class="stat-label">Date</div>
-              <div class="stat-value" style="font-size:13.5px;">${esc(p.date || '—')}</div>
+              <div class="stat-value date-stat">${esc(p.date || '—')}</div>
             </div>
           </div>
           <div class="stat">
@@ -1702,11 +2343,49 @@ function renderTransactions(){
         <div class="tx-dot"><i class="fas fa-receipt"></i></div>
         <div style="min-width:0;">
           <div class="tx-note">${esc(t.note || 'Payment received')}</div>
-          <div class="tx-date"><i class="fas fa-calendar" style="font-size:10px;"></i>${esc(t.date || '—')}</div>
+          <div class="tx-date"><i class="fas fa-calendar"></i>${esc(t.date || '—')}</div>
         </div>
       </div>
-      <div class="tx-amt">+ ৳${fmt(t.amount)}</div>
+      <div class="tx-right">
+        <div class="tx-amt">+ ৳${fmt(t.amount)}</div>
+        <button class="icon-btn danger" data-deltx="${t.id}" title="Delete payment" aria-label="Delete payment">
+          <i class="fas fa-trash"></i>
+        </button>
+      </div>
     </div>`).join('');
+
+  wrap.querySelectorAll('[data-deltx]').forEach(b => {
+    b.onclick = async e => {
+      e.stopPropagation();
+      const tx = transactions.find(x => x.id === b.dataset.deltx);
+      if (!tx) return;
+      if (!confirm(`Delete this payment of ৳${fmt(tx.amount)}?\nDue will increase by ৳${fmt(tx.amount)}.`)) return;
+      b.disabled = true;
+      try {
+        await deleteTransaction(activeFile.id, activeProject.id, tx.id, tx.amount);
+        toast('Payment deleted — due updated');
+        /* Listeners will refresh the UI */
+      } catch (err){
+        console.error(err);
+        toast(err.message, 'error');
+        b.disabled = false;
+      }
+    };
+  });
+}
+
+async function deleteTransaction(fid, pid, txId, amount){
+  const pRef  = doc(db,'users',uid,'files',fid,'projects',pid);
+  const pSnap = await getDoc(pRef);
+  if (!pSnap.exists()) throw new Error('Project not found');
+  const p = pSnap.data();
+  const amt = num(amount);
+  const newPayment = Math.max(0, num(p.payment) - amt);
+  const newDue = num(p.due) + amt;
+  const batch = writeBatch(db);
+  batch.delete(doc(db,'users',uid,'files',fid,'projects',pid,'transactions',txId));
+  batch.update(pRef, { payment: newPayment, due: newDue });
+  await batch.commit();
 }
 
 $('#addTxBtn').onclick = () => {
@@ -1715,7 +2394,7 @@ $('#addTxBtn').onclick = () => {
     submitText: 'Add Payment',
     submitIcon: 'fa-check',
     body: `
-      <p class="muted" style="margin-bottom:16px;padding:10px 12px;background:var(--surface-2);border-radius:10px;">
+      <p class="muted" style="margin-bottom:16px;padding:12px 14px;background:var(--surface-2);border-radius:10px;">
         <i class="fas fa-info-circle"></i> Recording against <b>${esc(activeProject.name)}</b>
       </p>
       <label class="field"><span>Amount</span>
@@ -1731,8 +2410,8 @@ $('#addTxBtn').onclick = () => {
       const amount = num(fd.get('amount'));
       if (amount <= 0) throw new Error('Enter a valid amount');
       await addPayment(activeFile.id, activeProject.id, amount, fd.get('note'), fd.get('date'));
-      await openProject(activeProject.id);
       toast('Payment recorded');
+      /* Listeners auto-refresh */
     }
   });
 };
@@ -1762,8 +2441,7 @@ async function addPayment(fileId, projectId, amount, note, date){
 }
 
 /* ================= PAYMENT VIEW ================= */
-async function openPaymentView(){
-  await loadFiles();
+function openPaymentView(){
   const sel = $('#payFileSelect');
   sel.innerHTML = `<option value="">— Select File —</option>` +
     files.map(f => `<option value="${f.id}">${esc(f.name)}</option>`).join('');
@@ -1773,6 +2451,8 @@ async function openPaymentView(){
   $('#payDate').value  = today();
   showView('payment');
 }
+
+$('#closePaymentBtn').onclick = () => showView('files');
 
 $('#payFileSelect').onchange = async e => {
   const fid = e.target.value;
@@ -1803,14 +2483,9 @@ $('#savePaymentBtn').onclick = async () => {
     toast('Payment recorded — due updated');
     $('#payAmount').value = '';
     $('#payNote').value = '';
+    /* Refresh dropdown due amount */
     $('#payFileSelect').dispatchEvent(new Event('change'));
-
-    if (activeFile && activeFile.id === fid){
-      await loadProjects(fid);
-      if (!document.getElementById('view-file').classList.contains('hidden')){
-        renderFileHero(); renderProjects();
-      }
-    }
+    /* Live listeners will update everything else */
   } catch (err){
     console.error(err);
     toast(err.message, 'error');
@@ -1818,15 +2493,13 @@ $('#savePaymentBtn').onclick = async () => {
 };
 
 /* ================= RECYCLE BIN ================= */
-async function openRecycleView(){
-  const list = $('#recycleList');
-  list.innerHTML = `<div class="empty"><div class="empty-icon"><i class="fas fa-spinner fa-spin"></i></div><p>Loading…</p></div>`;
+function openRecycleView(){
   showView('recycle');
+  setupRecycleListener();
+}
 
-  const snap = await getDocs(recycleCol());
-  const items = snap.docs.map(d => ({ id: d.id, ...d.data() }));
-  items.sort((a,b) => tsSeconds(b.deletedAt) - tsSeconds(a.deletedAt));
-
+function renderRecycleItems(items){
+  const list = $('#recycleList');
   if (!items.length){
     list.innerHTML = `
       <div class="empty">
@@ -1848,7 +2521,7 @@ async function openRecycleView(){
       <div class="card recycle-card">
         <div style="min-width:0;">
           <h3><i class="fas ${icon}"></i> ${esc(title)}</h3>
-          <p class="muted" style="margin-top:3px;">${sub} · deleted ${when}</p>
+          <p class="muted" style="margin-top:4px;">${sub} · deleted ${when}</p>
         </div>
         <div class="recycle-actions">
           <button class="btn btn-secondary" data-restore="${it.id}"><i class="fas fa-rotate-left"></i> Restore</button>
@@ -1861,7 +2534,7 @@ async function openRecycleView(){
     b.onclick = async () => {
       const item = items.find(x => x.id === b.dataset.restore);
       b.disabled = true;
-      try { await restoreItem(item); toast('Restored'); await openRecycleView(); }
+      try { await restoreItem(item); toast('Restored'); /* Listener refreshes */ }
       catch (err){ console.error(err); toast(err.message, 'error'); b.disabled = false; }
     };
   });
@@ -1870,7 +2543,7 @@ async function openRecycleView(){
       if (!confirm('Permanently delete this item? This cannot be undone.')) return;
       await deleteDoc(doc(db,'users',uid,'recycle',b.dataset.purge));
       toast('Permanently deleted');
-      await openRecycleView();
+      /* Listener refreshes */
     };
   });
 }
@@ -2044,7 +2717,6 @@ function projectReportNode(file, project, txs){
   return reportShell(project.name, 'Project Transaction History — ' + (file?.name || ''), body);
 }
 
-/* Download buttons */
 $('#downloadFileBtn').onclick = async () => {
   if (!activeFile) return;
   if (!projects.length) return toast('No projects to export', 'error');
@@ -2072,8 +2744,25 @@ $('#downloadProjectBtn').onclick = async () => {
   finally { btn.disabled = false; }
 };
 
-/* Esc key closes modal */
-document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+/* ================= FOOTER ================= */
+const siteFooter = $('#siteFooter');
+const footerToggle = $('#footerToggle');
+function closeFooter(){ siteFooter.classList.remove('open'); }
+function toggleFooter(){ siteFooter.classList.toggle('open'); }
+footerToggle.addEventListener('click', e => {
+  e.stopPropagation();
+  toggleFooter();
+});
+document.addEventListener('click', e => {
+  if (siteFooter.classList.contains('open') && !siteFooter.contains(e.target)){
+    closeFooter();
+  }
+});
+
+/* Esc closes modal, footer, avatar menu */
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape'){ closeModal(); closeFooter(); closeAvatarMenu(); }
+});
 </script>
 </body>
 </html>
