@@ -1,0 +1,1151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Due Desk — Files, Projects & Dues</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<style>
+  :root{
+    --bg:#f4f6fb;
+    --card:#ffffff;
+    --text:#1b2133;
+    --muted:#6b7590;
+    --primary:#6c5ce7;
+    --primary-dark:#5a4bd4;
+    --secondary:#00b894;
+    --danger:#e74c3c;
+    --border:#e4e8f3;
+    --radius:16px;
+    --shadow:0 6px 28px rgba(27,33,51,.08);
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{
+    font-family:'Inter',system-ui,-apple-system,sans-serif;
+    background:var(--bg);color:var(--text);min-height:100vh;
+    -webkit-font-smoothing:antialiased;
+  }
+  .hidden{display:none !important;}
+  .muted{color:var(--muted);font-size:13px;}
+
+  /* ---------- Buttons ---------- */
+  .btn{
+    border:none;cursor:pointer;font-family:inherit;font-size:14px;font-weight:600;
+    padding:10px 18px;border-radius:12px;transition:.18s ease;display:inline-flex;
+    align-items:center;gap:8px;white-space:nowrap;
+  }
+  .btn:active{transform:scale(.97);}
+  .btn-primary{background:var(--primary);color:#fff;box-shadow:0 6px 16px rgba(108,92,231,.28);}
+  .btn-primary:hover{background:var(--primary-dark);}
+  .btn-secondary{background:#e9f9f3;color:#008f72;}
+  .btn-secondary:hover{background:#d8f5eb;}
+  .btn-ghost{background:transparent;color:var(--muted);}
+  .btn-ghost:hover{background:#eef1f9;color:var(--text);}
+  .btn-danger{background:#fdecea;color:var(--danger);}
+  .btn-danger:hover{background:#fbdcd8;}
+  .btn-google{
+    background:#fff;color:#333;border:1.5px solid var(--border);
+    padding:13px 26px;border-radius:14px;font-size:15px;
+    box-shadow:0 2px 10px rgba(0,0,0,.05);
+  }
+  .btn-google:hover{background:#f8f9fe;border-color:#cfd6ea;}
+  .btn:disabled{opacity:.6;cursor:not-allowed;}
+
+  /* ---------- Login ---------- */
+  .login-screen{
+    min-height:100vh;display:flex;align-items:center;justify-content:center;
+    background:radial-gradient(circle at 20% 20%,#e9e5ff 0%,transparent 50%),
+               radial-gradient(circle at 80% 80%,#dff7ef 0%,transparent 50%),
+               var(--bg);
+    padding:24px;
+  }
+  .login-card{
+    background:var(--card);border-radius:24px;padding:48px 40px;text-align:center;
+    box-shadow:var(--shadow);max-width:400px;width:100%;
+  }
+  .login-card .logo{font-size:52px;margin-bottom:8px;}
+  .login-card h1{font-size:30px;font-weight:800;letter-spacing:-.5px;}
+  .login-card p{color:var(--muted);margin:10px 0 28px;font-size:14px;line-height:1.6;}
+
+  /* ---------- Topbar ---------- */
+  .topbar{
+    position:sticky;top:0;z-index:50;background:rgba(255,255,255,.85);
+    backdrop-filter:blur(14px);border-bottom:1px solid var(--border);
+    display:flex;align-items:center;justify-content:space-between;
+    padding:12px 22px;gap:12px;
+  }
+  .brand{font-weight:800;font-size:18px;cursor:pointer;display:flex;align-items:center;gap:8px;letter-spacing:-.3px;}
+  .topbar-right{display:flex;align-items:center;gap:6px;flex-wrap:wrap;}
+  .avatar{width:34px;height:34px;border-radius:50%;object-fit:cover;border:2px solid #fff;box-shadow:0 2px 8px rgba(0,0,0,.12);}
+
+  /* ---------- Layout ---------- */
+  main{max-width:1180px;margin:0 auto;padding:26px 22px 80px;}
+  .view-head{
+    display:flex;align-items:center;justify-content:space-between;
+    gap:14px;margin:18px 0;flex-wrap:wrap;
+  }
+  .view-head h2{font-size:22px;font-weight:800;letter-spacing:-.4px;}
+  .view-head > div{display:flex;gap:8px;flex-wrap:wrap;}
+  .back-btn{margin-bottom:6px;padding-left:0;}
+
+  .grid{
+    display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:16px;
+  }
+  .card{
+    background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);
+    border:1px solid rgba(228,232,243,.7);overflow:hidden;
+  }
+
+  /* File card */
+  .file-card{cursor:pointer;transition:.2s ease;position:relative;}
+  .file-card:hover{transform:translateY(-4px);box-shadow:0 14px 34px rgba(27,33,51,.13);}
+  .file-thumb{
+    height:120px;background:linear-gradient(135deg,#efeaff,#e3f8f1);
+    display:flex;align-items:center;justify-content:center;font-size:40px;overflow:hidden;
+  }
+  .file-thumb img{width:100%;height:100%;object-fit:cover;}
+  .file-card-body{padding:14px 16px 16px;}
+  .file-card-body h3{font-size:16px;font-weight:700;margin-bottom:4px;word-break:break-word;}
+  .file-del{
+    position:absolute;top:10px;right:10px;width:32px;height:32px;border-radius:10px;
+    border:none;background:rgba(255,255,255,.92);cursor:pointer;font-size:15px;
+    display:flex;align-items:center;justify-content:center;box-shadow:0 2px 8px rgba(0,0,0,.12);
+  }
+  .file-del:hover{background:#fdecea;}
+
+  /* Hero */
+  .hero{
+    display:flex;align-items:center;gap:16px;background:var(--card);
+    padding:18px;border-radius:var(--radius);box-shadow:var(--shadow);margin-bottom:6px;
+  }
+  .hero-img{
+    width:74px;height:74px;border-radius:16px;overflow:hidden;flex:0 0 auto;
+    background:linear-gradient(135deg,#efeaff,#e3f8f1);display:flex;
+    align-items:center;justify-content:center;font-size:30px;
+  }
+  .hero-img img{width:100%;height:100%;object-fit:cover;}
+  .hero h2{font-size:21px;font-weight:800;letter-spacing:-.4px;word-break:break-word;}
+  .hero-meta{display:flex;gap:16px;margin-top:8px;flex-wrap:wrap;font-size:13px;}
+  .hero-meta b{font-weight:700;}
+  .green{color:#00a884;}
+  .red{color:var(--danger);}
+
+  /* Project card */
+  .project-card{padding:16px;cursor:pointer;transition:.2s ease;}
+  .project-card:hover{transform:translateY(-3px);box-shadow:0 14px 34px rgba(27,33,51,.12);}
+  .pc-head{display:flex;justify-content:space-between;align-items:flex-start;gap:10px;}
+  .pc-head h3{font-size:15.5px;font-weight:700;word-break:break-word;line-height:1.35;}
+  .badge{
+    font-size:11px;font-weight:700;padding:4px 9px;border-radius:20px;white-space:nowrap;
+  }
+  .badge.due{background:#fdecea;color:var(--danger);}
+  .badge.ok{background:#e9f9f3;color:#008f72;}
+  .pc-info{font-size:12.5px;color:var(--muted);margin:8px 0 12px;line-height:1.5;
+    display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;}
+  .pc-stats{display:flex;gap:10px;margin-bottom:12px;}
+  .pc-stats > div{flex:1;background:#f8f9fe;border-radius:11px;padding:8px 10px;}
+  .pc-stats span{display:block;font-size:10.5px;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:.4px;}
+  .pc-stats strong{font-size:14.5px;font-weight:700;}
+  .pc-foot{display:flex;justify-content:space-between;align-items:center;
+    border-top:1px solid var(--border);padding-top:10px;}
+  .icon-btn{
+    border:none;background:transparent;cursor:pointer;font-size:14px;padding:5px 7px;
+    border-radius:8px;line-height:1;
+  }
+  .icon-btn:hover{background:#eef1f9;}
+
+  /* Transaction list */
+  .tx-list{display:flex;flex-direction:column;gap:10px;}
+  .tx-row{
+    background:var(--card);border-radius:14px;padding:13px 16px;box-shadow:0 2px 12px rgba(27,33,51,.05);
+    display:flex;align-items:center;justify-content:space-between;gap:12px;
+    border:1px solid rgba(228,232,243,.7);
+  }
+  .tx-left{display:flex;align-items:center;gap:12px;min-width:0;}
+  .tx-dot{
+    width:36px;height:36px;border-radius:11px;background:#e9f9f3;color:#008f72;
+    display:flex;align-items:center;justify-content:center;font-size:15px;flex:0 0 auto;
+  }
+  .tx-note{font-size:13.5px;font-weight:600;word-break:break-word;}
+  .tx-date{font-size:11.5px;color:var(--muted);margin-top:2px;}
+  .tx-amt{font-weight:800;color:#00a884;font-size:15px;white-space:nowrap;}
+
+  /* Forms */
+  .form-card{max-width:560px;padding:22px;}
+  .field{display:block;margin-bottom:14px;}
+  .field > span{display:block;font-size:12.5px;font-weight:700;color:var(--muted);margin-bottom:6px;}
+  input,select,textarea{
+    width:100%;font-family:inherit;font-size:14px;color:var(--text);
+    padding:11px 13px;border:1.5px solid var(--border);border-radius:11px;
+    background:#fbfcff;outline:none;transition:.15s;resize:vertical;
+  }
+  input:focus,select:focus,textarea:focus{border-color:var(--primary);background:#fff;box-shadow:0 0 0 4px rgba(108,92,231,.1);}
+  .row2{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+
+  /* Empty */
+  .empty{
+    grid-column:1/-1;text-align:center;padding:56px 20px;color:var(--muted);
+    background:var(--card);border-radius:var(--radius);border:2px dashed var(--border);font-size:14px;
+  }
+
+  /* Modal */
+  .modal-backdrop{
+    position:fixed;inset:0;background:rgba(20,24,40,.5);backdrop-filter:blur(3px);
+    display:flex;align-items:center;justify-content:center;padding:18px;z-index:200;
+    animation:fade .18s ease;
+  }
+  @keyframes fade{from{opacity:0}to{opacity:1}}
+  .modal{
+    background:var(--card);border-radius:20px;padding:24px;width:100%;max-width:460px;
+    box-shadow:0 24px 60px rgba(0,0,0,.25);max-height:90vh;overflow-y:auto;
+    animation:pop .2s ease;
+  }
+  @keyframes pop{from{transform:scale(.95);opacity:0}to{transform:scale(1);opacity:1}}
+  .modal h3{font-size:18px;font-weight:800;margin-bottom:16px;}
+  .modal-actions{display:flex;justify-content:flex-end;gap:8px;margin-top:6px;}
+
+  /* Toast */
+  #toast{
+    position:fixed;bottom:22px;left:50%;transform:translateX(-50%) translateY(120px);
+    background:#1b2133;color:#fff;padding:12px 22px;border-radius:12px;font-size:13.5px;
+    font-weight:600;z-index:999;opacity:0;transition:.3s cubic-bezier(.2,.9,.3,1.2);
+    box-shadow:0 10px 30px rgba(0,0,0,.3);max-width:90vw;text-align:center;
+  }
+  #toast.show{transform:translateX(-50%) translateY(0);opacity:1;}
+  #toast.error{background:var(--danger);}
+
+  /* Recycle */
+  .recycle-card{padding:14px 16px;display:flex;justify-content:space-between;align-items:center;gap:12px;}
+  .recycle-card h3{font-size:15px;font-weight:700;}
+  .recycle-actions{display:flex;gap:6px;flex-wrap:wrap;}
+
+  @media(max-width:640px){
+    .topbar{padding:10px 14px;}
+    .topbar-right .btn span{display:none;}
+    main{padding:16px 14px 90px;}
+    .brand span{display:none;}
+    .row2{grid-template-columns:1fr;}
+    .view-head h2{font-size:19px;}
+  }
+</style>
+</head>
+<body>
+
+<!-- ================= LOGIN ================= -->
+<div id="loginScreen" class="login-screen">
+  <div class="login-card">
+    <div class="logo">📁</div>
+    <h1>Due Desk</h1>
+    <p>Manage your files, projects, payments &amp; dues — all in one place.</p>
+    <button id="googleLoginBtn" class="btn btn-google">
+      <svg width="19" height="19" viewBox="0 0 48 48"><path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/><path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/><path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/><path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/></svg>
+      Continue with Google
+    </button>
+  </div>
+</div>
+
+<!-- ================= APP ================= -->
+<div id="app" class="hidden">
+  <header class="topbar">
+    <div class="brand" id="brandHome">📁 <span>Due Desk</span></div>
+    <div class="topbar-right">
+      <button class="btn btn-ghost" id="navPayment">💰<span>New Payment</span></button>
+      <button class="btn btn-ghost" id="navRecycle">🗑<span>Recycle Bin</span></button>
+      <img id="userPhoto" class="avatar" alt="user" />
+      <button class="btn btn-ghost" id="logoutBtn">Logout</button>
+    </div>
+  </header>
+
+  <main>
+    <!-- FILES -->
+    <section id="view-files" class="view">
+      <div class="view-head">
+        <h2>My Files</h2>
+        <div><button class="btn btn-primary" id="createFileBtn">+ New File</button></div>
+      </div>
+      <div id="filesGrid" class="grid"></div>
+    </section>
+
+    <!-- FILE DETAIL -->
+    <section id="view-file" class="view hidden">
+      <button class="btn btn-ghost back-btn" data-back="files">← Back to Files</button>
+      <div id="fileHero"></div>
+      <div class="view-head">
+        <h2>Projects</h2>
+        <div>
+          <button class="btn btn-secondary" id="downloadFileBtn">⬇ Summary JPG</button>
+          <button class="btn btn-primary" id="addProjectBtn">+ New Project</button>
+        </div>
+      </div>
+      <div id="projectsGrid" class="grid"></div>
+    </section>
+
+    <!-- PROJECT DETAIL -->
+    <section id="view-project" class="view hidden">
+      <button class="btn btn-ghost back-btn" data-back="file">← Back to Projects</button>
+      <div id="projectHero"></div>
+      <div class="view-head">
+        <h2>Transaction History</h2>
+        <div>
+          <button class="btn btn-secondary" id="downloadProjectBtn">⬇ History JPG</button>
+          <button class="btn btn-primary" id="addTxBtn">+ Add Payment</button>
+        </div>
+      </div>
+      <div id="txList" class="tx-list"></div>
+    </section>
+
+    <!-- NEW PAYMENT -->
+    <section id="view-payment" class="view hidden">
+      <div class="view-head"><h2>New Payment Record</h2></div>
+      <div class="card form-card">
+        <label class="field"><span>Select File</span>
+          <select id="payFileSelect"></select>
+        </label>
+        <label class="field"><span>Select Project</span>
+          <select id="payProjectSelect"><option value="">— Select a file first —</option></select>
+        </label>
+        <div class="row2">
+          <label class="field"><span>Amount</span>
+            <input type="number" id="payAmount" step="0.01" min="0" placeholder="0.00" />
+          </label>
+          <label class="field"><span>Date</span>
+            <input type="date" id="payDate" />
+          </label>
+        </div>
+        <label class="field"><span>Note (optional)</span>
+          <input type="text" id="payNote" placeholder="e.g. Cash / bKash / Bank" />
+        </label>
+        <button class="btn btn-primary" id="savePaymentBtn" style="width:100%;justify-content:center;">
+          Save Payment
+        </button>
+      </div>
+    </section>
+
+    <!-- RECYCLE BIN -->
+    <section id="view-recycle" class="view hidden">
+      <div class="view-head"><h2>🗑 Recycle Bin</h2></div>
+      <div id="recycleList" class="tx-list"></div>
+    </section>
+  </main>
+</div>
+
+<div id="modalRoot"></div>
+<div id="toast"></div>
+
+<!-- ================= APP LOGIC ================= -->
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import {
+  getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+import {
+  getFirestore, collection, doc, addDoc, setDoc, getDoc, getDocs,
+  updateDoc, deleteDoc, writeBatch, serverTimestamp
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+/* ---------------- FIREBASE ---------------- */
+const firebaseConfig = {
+  apiKey: "AIzaSyDbnGu2YudfsY14nXFfwrcH6YsHRm9mwTI",
+  authDomain: "duedesk-42e37.firebaseapp.com",
+  projectId: "duedesk-42e37",
+  storageBucket: "duedesk-42e37.firebasestorage.app",
+  messagingSenderId: "767145755792",
+  appId: "1:767145755792:web:58c0dda436f0bf04458415",
+  measurementId: "G-78HJ2D61XR"
+};
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db   = getFirestore(app);
+
+/* ---------------- STATE ---------------- */
+let uid = null;
+let files = [];
+let activeFile = null;
+let projects = [];
+let activeProject = null;
+let transactions = [];
+
+/* ---------------- HELPERS ---------------- */
+const $  = s => document.querySelector(s);
+const $$ = s => [...document.querySelectorAll(s)];
+
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c =>
+  ({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[c]));
+
+const num = v => { const n = parseFloat(v); return isNaN(n) ? 0 : n; };
+const fmt = n => num(n).toLocaleString('en-US',{minimumFractionDigits:2, maximumFractionDigits:2});
+const today = () => new Date().toISOString().slice(0,10);
+const tsSeconds = t => (t && typeof t === 'object' && 'seconds' in t) ? t.seconds : 0;
+
+const filesCol   = () => collection(db,'users',uid,'files');
+const projectsCol= fid => collection(db,'users',uid,'files',fid,'projects');
+const txCol      = (fid,pid) => collection(db,'users',uid,'files',fid,'projects',pid,'transactions');
+const recycleCol = () => collection(db,'users',uid,'recycle');
+
+let toastTimer;
+function toast(msg, type='ok'){
+  const el = $('#toast');
+  el.textContent = msg;
+  el.className = 'show' + (type === 'error' ? ' error' : '');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(()=>{ el.className = ''; }, 2800);
+}
+
+function showView(name){
+  $$('.view').forEach(v => v.classList.add('hidden'));
+  const v = document.getElementById('view-' + name);
+  if (v) v.classList.remove('hidden');
+  window.scrollTo({ top:0, behavior:'smooth' });
+}
+
+/* Image compression → base64 (keeps Firestore doc small) */
+function compressImage(file, maxSize = 700, quality = 0.78){
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onerror = reject;
+    reader.onload = e => {
+      const img = new Image();
+      img.onerror = reject;
+      img.onload = () => {
+        let { width, height } = img;
+        if (width > height && width > maxSize){ height = Math.round(height * maxSize / width); width = maxSize; }
+        else if (height > maxSize){ width = Math.round(width * maxSize / height); height = maxSize; }
+        const canvas = document.createElement('canvas');
+        canvas.width = width; canvas.height = height;
+        canvas.getContext('2d').drawImage(img, 0, 0, width, height);
+        resolve(canvas.toDataURL('image/jpeg', quality));
+      };
+      img.src = e.target.result;
+    };
+    reader.readAsDataURL(file);
+  });
+}
+
+/* ---------------- MODAL ---------------- */
+function closeModal(){ $('#modalRoot').innerHTML = ''; }
+
+function showModal({ title, body, submitText = 'Save', onSubmit }){
+  $('#modalRoot').innerHTML = `
+    <div class="modal-backdrop">
+      <div class="modal">
+        <h3>${esc(title)}</h3>
+        <form id="modalForm">
+          ${body}
+          <div class="modal-actions">
+            <button type="button" class="btn btn-ghost" id="modalCancel">Cancel</button>
+            <button type="submit" class="btn btn-primary">${esc(submitText)}</button>
+          </div>
+        </form>
+      </div>
+    </div>`;
+
+  $('#modalCancel').onclick = closeModal;
+  $('#modalRoot .modal-backdrop').onclick = e => {
+    if (e.target.classList.contains('modal-backdrop')) closeModal();
+  };
+  $('#modalForm').onsubmit = async e => {
+    e.preventDefault();
+    const btn = e.target.querySelector('button[type=submit]');
+    btn.disabled = true;
+    try {
+      await onSubmit(new FormData(e.target), e.target);
+      closeModal();
+    } catch (err) {
+      console.error(err);
+      toast(err.message || 'Something went wrong', 'error');
+    } finally { btn.disabled = false; }
+  };
+}
+
+/* ================= AUTH ================= */
+$('#googleLoginBtn').onclick = async () => {
+  try { await signInWithPopup(auth, new GoogleAuthProvider()); }
+  catch (err){
+    if (err.code !== 'auth/popup-closed-by-user') toast(err.message, 'error');
+  }
+};
+$('#logoutBtn').onclick = () => signOut(auth);
+
+onAuthStateChanged(auth, async user => {
+  if (user){
+    uid = user.uid;
+    $('#loginScreen').classList.add('hidden');
+    $('#app').classList.remove('hidden');
+    $('#userPhoto').src = user.photoURL || 'https://ui-avatars.com/api/?name=' + encodeURIComponent(user.displayName || 'U');
+    await loadFiles();
+    showView('files');
+  } else {
+    uid = null; files = []; projects = []; activeFile = null; activeProject = null;
+    $('#app').classList.add('hidden');
+    $('#loginScreen').classList.remove('hidden');
+  }
+});
+
+$('#brandHome').onclick = async () => { await loadFiles(); showView('files'); };
+$('#navPayment').onclick = () => openPaymentView();
+$('#navRecycle').onclick = () => openRecycleView();
+$$('[data-back]').forEach(b => b.onclick = () => {
+  const t = b.dataset.back;
+  if (t === 'files'){ loadFiles(); showView('files'); }
+  else if (t === 'file'){ renderFileHero(); renderProjects(); showView('file'); }
+});
+
+/* ================= FILES ================= */
+async function loadFiles(){
+  const snap = await getDocs(filesCol());
+  files = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+  files.sort((a,b) => tsSeconds(b.createdAt) - tsSeconds(a.createdAt));
+  renderFiles();
+}
+
+function renderFiles(){
+  const grid = $('#filesGrid');
+  if (!files.length){
+    grid.innerHTML = `<div class="empty">📁 No files yet.<br>Click <b>“+ New File”</b> to create your first file.</div>`;
+    return;
+  }
+  grid.innerHTML = files.map(f => `
+    <div class="card file-card" data-file="${f.id}">
+      <button class="file-del" data-del="${f.id}" title="Move to recycle bin">🗑</button>
+      <div class="file-thumb">${f.image ? `<img src="${f.image}" alt="">` : `<span>📁</span>`}</div>
+      <div class="file-card-body">
+        <h3>${esc(f.name)}</h3>
+        <p class="muted">${f.createdAt ? new Date(tsSeconds(f.createdAt)*1000).toLocaleDateString() : ''}</p>
+      </div>
+    </div>`).join('');
+
+  grid.querySelectorAll('[data-file]').forEach(el => {
+    el.onclick = e => {
+      if (e.target.closest('[data-del]')) return;
+      openFile(el.dataset.file);
+    };
+  });
+  grid.querySelectorAll('[data-del]').forEach(btn => {
+    btn.onclick = async e => {
+      e.stopPropagation();
+      if (confirm('Move this file (and all its projects) to the Recycle Bin?'))
+        await deleteFileToRecycle(btn.dataset.del);
+    };
+  });
+}
+
+$('#createFileBtn').onclick = () => {
+  showModal({
+    title: 'Create New File',
+    submitText: 'Create File',
+    body: `
+      <label class="field"><span>File Name</span>
+        <input name="name" required placeholder="e.g. Client A / Office 2024" />
+      </label>
+      <label class="field"><span>Image (optional)</span>
+        <input type="file" name="image" accept="image/*" />
+      </label>`,
+    onSubmit: async (fd) => {
+      const name = (fd.get('name') || '').trim();
+      if (!name) throw new Error('File name is required');
+      const imgFile = fd.get('image');
+      let image = '';
+      if (imgFile && imgFile.size > 0) image = await compressImage(imgFile);
+      await addDoc(filesCol(), { name, image, createdAt: serverTimestamp() });
+      await loadFiles();
+      toast('File created ✅');
+    }
+  });
+};
+
+async function openFile(fid){
+  const fs = await getDoc(doc(db,'users',uid,'files',fid));
+  if (!fs.exists()){ toast('File not found', 'error'); return; }
+  activeFile = { id: fs.id, ...fs.data() };
+  await loadProjects(fid);
+  renderFileHero();
+  renderProjects();
+  showView('file');
+}
+
+function renderFileHero(){
+  const totalPay = projects.reduce((s,p) => s + num(p.payment), 0);
+  const totalDue = projects.reduce((s,p) => s + num(p.due), 0);
+  $('#fileHero').innerHTML = `
+    <div class="hero">
+      <div class="hero-img">${activeFile.image ? `<img src="${activeFile.image}" alt="">` : '📁'}</div>
+      <div style="min-width:0;">
+        <h2>${esc(activeFile.name)}</h2>
+        <div class="hero-meta">
+          <span class="muted">${projects.length} project${projects.length !== 1 ? 's' : ''}</span>
+          <span class="muted">Paid: <b class="green">৳${fmt(totalPay)}</b></span>
+          <span class="muted">Due: <b class="red">৳${fmt(totalDue)}</b></span>
+        </div>
+      </div>
+    </div>`;
+}
+
+/* ================= PROJECTS ================= */
+async function loadProjects(fid){
+  const snap = await getDocs(projectsCol(fid));
+  projects = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+  projects.sort((a,b) => tsSeconds(b.createdAt) - tsSeconds(a.createdAt));
+}
+
+function renderProjects(){
+  const grid = $('#projectsGrid');
+  if (!projects.length){
+    grid.innerHTML = `<div class="empty">📋 No projects in this file yet.<br>Click <b>“+ New Project”</b> to add one.</div>`;
+    return;
+  }
+  grid.innerHTML = projects.map(p => `
+    <div class="card project-card" data-project="${p.id}">
+      <div class="pc-head">
+        <h3>${esc(p.name)}</h3>
+        <span class="badge ${num(p.due) > 0 ? 'due' : 'ok'}">
+          ${num(p.due) > 0 ? 'Due ৳' + fmt(p.due) : 'Clear'}
+        </span>
+      </div>
+      ${p.info ? `<p class="pc-info">${esc(p.info)}</p>` : '<div style="height:8px"></div>'}
+      <div class="pc-stats">
+        <div><span>Payment</span><strong class="green">৳${fmt(p.payment)}</strong></div>
+        <div><span>Due</span><strong class="red">৳${fmt(p.due)}</strong></div>
+      </div>
+      <div class="pc-foot">
+        <span class="muted">${esc(p.date || '')}</span>
+        <div>
+          <button class="icon-btn" data-edit="${p.id}" title="Edit">✏️</button>
+          <button class="icon-btn" data-del="${p.id}" title="Delete">🗑</button>
+        </div>
+      </div>
+    </div>`).join('');
+
+  grid.querySelectorAll('[data-project]').forEach(el => {
+    el.onclick = e => {
+      if (e.target.closest('[data-edit]') || e.target.closest('[data-del]')) return;
+      openProject(el.dataset.project);
+    };
+  });
+  grid.querySelectorAll('[data-edit]').forEach(b => {
+    b.onclick = e => { e.stopPropagation(); openProjectModal(activeFile.id, projects.find(p => p.id === b.dataset.edit)); };
+  });
+  grid.querySelectorAll('[data-del]').forEach(b => {
+    b.onclick = async e => {
+      e.stopPropagation();
+      if (confirm('Move this project to the Recycle Bin?'))
+        await deleteProjectToRecycle(b.dataset.del);
+    };
+  });
+}
+
+$('#addProjectBtn').onclick = () => openProjectModal(activeFile.id, null);
+
+function openProjectModal(fid, project){
+  const p = project || {};
+  showModal({
+    title: project ? 'Edit Project' : 'New Project',
+    submitText: project ? 'Update Project' : 'Create Project',
+    body: `
+      <label class="field"><span>Project Name</span>
+        <input name="name" required value="${esc(p.name || '')}" placeholder="e.g. Website Redesign" />
+      </label>
+      <label class="field"><span>Info</span>
+        <textarea name="info" rows="2" placeholder="Short description...">${esc(p.info || '')}</textarea>
+      </label>
+      <div class="row2">
+        <label class="field"><span>Payment</span>
+          <input type="number" step="0.01" min="0" name="payment" value="${num(p.payment)}" />
+        </label>
+        <label class="field"><span>Due</span>
+          <input type="number" step="0.01" min="0" name="due" value="${num(p.due)}" />
+        </label>
+      </div>
+      <label class="field"><span>Date</span>
+        <input type="date" name="date" value="${esc(p.date || today())}" />
+      </label>`,
+    onSubmit: async (fd) => {
+      const data = {
+        name: (fd.get('name') || '').trim(),
+        info: (fd.get('info') || '').trim(),
+        payment: num(fd.get('payment')),
+        due: num(fd.get('due')),
+        date: fd.get('date') || today()
+      };
+      if (!data.name) throw new Error('Project name is required');
+
+      if (project){
+        await updateDoc(doc(db,'users',uid,'files',fid,'projects',project.id), data);
+        toast('Project updated ✅');
+      } else {
+        await addDoc(projectsCol(fid), { ...data, createdAt: serverTimestamp() });
+        toast('Project created ✅');
+      }
+      await loadProjects(fid);
+      renderFileHero();
+      renderProjects();
+    }
+  });
+}
+
+async function deleteProjectToRecycle(pid){
+  const pRef  = doc(db,'users',uid,'files',activeFile.id,'projects',pid);
+  const pSnap = await getDoc(pRef);
+  if (!pSnap.exists()) return;
+
+  // backup transactions too
+  const txSnap = await getDocs(txCol(activeFile.id, pid));
+  const txs = txSnap.docs.map(d => ({ id: d.id, data: d.data() }));
+
+  await addDoc(recycleCol(), {
+    type: 'project',
+    fileId: activeFile.id,
+    fileName: activeFile.name,
+    projectId: pid,
+    project: pSnap.data(),
+    transactions: txs,
+    deletedAt: serverTimestamp()
+  });
+
+  for (const t of txs) await deleteDoc(doc(db,'users',uid,'files',activeFile.id,'projects',pid,'transactions',t.id));
+  await deleteDoc(pRef);
+
+  await loadProjects(activeFile.id);
+  renderFileHero();
+  renderProjects();
+  toast('Project moved to Recycle Bin 🗑');
+}
+
+async function deleteFileToRecycle(fid){
+  const fSnap = await getDoc(doc(db,'users',uid,'files',fid));
+  if (!fSnap.exists()) return;
+  const fdata = fSnap.data();
+
+  const projSnap = await getDocs(projectsCol(fid));
+  const projectsArr = [];
+  for (const pd of projSnap.docs){
+    const txSnap = await getDocs(txCol(fid, pd.id));
+    projectsArr.push({
+      id: pd.id,
+      data: pd.data(),
+      transactions: txSnap.docs.map(t => ({ id: t.id, data: t.data() }))
+    });
+  }
+
+  await addDoc(recycleCol(), {
+    type: 'file',
+    fileId: fid,
+    name: fdata.name || 'Untitled',
+    image: fdata.image || '',
+    projects: projectsArr,
+    deletedAt: serverTimestamp()
+  });
+
+  for (const p of projectsArr)
+    for (const t of p.transactions)
+      await deleteDoc(doc(db,'users',uid,'files',fid,'projects',p.id,'transactions',t.id));
+  for (const p of projectsArr)
+    await deleteDoc(doc(db,'users',uid,'files',fid,'projects',p.id));
+  await deleteDoc(doc(db,'users',uid,'files',fid));
+
+  await loadFiles();
+  toast('File moved to Recycle Bin 🗑');
+}
+
+/* ================= PROJECT DETAIL ================= */
+async function openProject(pid){
+  activeProject = projects.find(p => p.id === pid);
+  if (!activeProject) return;
+  await loadTransactions(activeFile.id, pid);
+  renderProjectHero();
+  renderTransactions();
+  showView('project');
+}
+
+async function loadTransactions(fid, pid){
+  const snap = await getDocs(txCol(fid, pid));
+  transactions = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+  transactions.sort((a,b) => {
+    const da = (a.date || ''), dbb = (b.date || '');
+    if (da !== dbb) return dbb.localeCompare(da);
+    return tsSeconds(b.createdAt) - tsSeconds(a.createdAt);
+  });
+}
+
+function renderProjectHero(){
+  const p = activeProject;
+  $('#projectHero').innerHTML = `
+    <div class="hero" style="align-items:flex-start;">
+      <div class="hero-img" style="font-size:26px;">📋</div>
+      <div style="min-width:0;flex:1;">
+        <h2>${esc(p.name)}</h2>
+        ${p.info ? `<p class="muted" style="margin-top:6px;line-height:1.55;">${esc(p.info)}</p>` : ''}
+        <div class="hero-meta">
+          <span class="muted">Date: <b>${esc(p.date || '—')}</b></span>
+          <span class="muted">Payment: <b class="green">৳${fmt(p.payment)}</b></span>
+          <span class="muted">Due: <b class="red">৳${fmt(p.due)}</b></span>
+        </div>
+      </div>
+    </div>`;
+}
+
+function renderTransactions(){
+  const wrap = $('#txList');
+  if (!transactions.length){
+    wrap.innerHTML = `<div class="empty">💳 No transactions yet.<br>Click <b>“+ Add Payment”</b> to record one.</div>`;
+    return;
+  }
+  wrap.innerHTML = transactions.map(t => `
+    <div class="tx-row">
+      <div class="tx-left">
+        <div class="tx-dot">💵</div>
+        <div style="min-width:0;">
+          <div class="tx-note">${esc(t.note || 'Payment received')}</div>
+          <div class="tx-date">${esc(t.date || '—')}</div>
+        </div>
+      </div>
+      <div class="tx-amt">+ ৳${fmt(t.amount)}</div>
+    </div>`).join('');
+}
+
+$('#addTxBtn').onclick = () => {
+  showModal({
+    title: 'Add Payment — ' + activeProject.name,
+    submitText: 'Add Payment',
+    body: `
+      <label class="field"><span>Amount</span>
+        <input type="number" name="amount" step="0.01" min="0.01" required placeholder="0.00" />
+      </label>
+      <label class="field"><span>Date</span>
+        <input type="date" name="date" value="${today()}" />
+      </label>
+      <label class="field"><span>Note (optional)</span>
+        <input name="note" placeholder="e.g. bKash / Cash" />
+      </label>`,
+    onSubmit: async (fd) => {
+      const amount = num(fd.get('amount'));
+      if (amount <= 0) throw new Error('Enter a valid amount');
+      await addPayment(activeFile.id, activeProject.id, amount, fd.get('note'), fd.get('date'));
+      await openProject(activeProject.id); // refresh
+      toast('Payment recorded ✅');
+    }
+  });
+};
+
+/* ================= ADD PAYMENT (core) ================= */
+async function addPayment(fileId, projectId, amount, note, date){
+  const pRef  = doc(db,'users',uid,'files',fileId,'projects',projectId);
+  const pSnap = await getDoc(pRef);
+  if (!pSnap.exists()) throw new Error('Project not found');
+
+  const p  = pSnap.data();
+  const amt = num(amount);
+
+  const newPayment = num(p.payment) + amt;
+  const newDue     = num(p.due) - amt;
+
+  const txRef = doc(collection(db,'users',uid,'files',fileId,'projects',projectId,'transactions'));
+  const batch = writeBatch(db);
+  batch.set(txRef, {
+    amount: amt,
+    note: (note || '').toString().trim(),
+    date: date || today(),
+    createdAt: serverTimestamp()
+  });
+  batch.update(pRef, { payment: newPayment, due: newDue });
+  await batch.commit();
+}
+
+/* ================= PAYMENT VIEW ================= */
+async function openPaymentView(){
+  await loadFiles();
+  const sel = $('#payFileSelect');
+  sel.innerHTML = `<option value="">— Select File —</option>` +
+    files.map(f => `<option value="${f.id}">${esc(f.name)}</option>`).join('');
+  $('#payProjectSelect').innerHTML = `<option value="">— Select a file first —</option>`;
+  $('#payAmount').value = '';
+  $('#payNote').value  = '';
+  $('#payDate').value  = today();
+  showView('payment');
+}
+
+$('#payFileSelect').onchange = async e => {
+  const fid = e.target.value;
+  const pSel = $('#payProjectSelect');
+  if (!fid){ pSel.innerHTML = `<option value="">— Select a file first —</option>`; return; }
+  pSel.innerHTML = `<option value="">Loading…</option>`;
+  const snap = await getDocs(projectsCol(fid));
+  const list = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+  pSel.innerHTML = `<option value="">— Select Project —</option>` +
+    list.map(p => `<option value="${p.id}">${esc(p.name)} — Due ৳${fmt(p.due)}</option>`).join('');
+};
+
+$('#savePaymentBtn').onclick = async () => {
+  const fid = $('#payFileSelect').value;
+  const pid = $('#payProjectSelect').value;
+  const amt = num($('#payAmount').value);
+  const note = $('#payNote').value;
+  const date = $('#payDate').value || today();
+
+  if (!fid) return toast('Please select a file', 'error');
+  if (!pid) return toast('Please select a project', 'error');
+  if (amt <= 0) return toast('Enter a valid amount', 'error');
+
+  const btn = $('#savePaymentBtn');
+  btn.disabled = true;
+  try {
+    await addPayment(fid, pid, amt, note, date);
+    toast('Payment recorded ✅ Due updated');
+    $('#payAmount').value = '';
+    $('#payNote').value = '';
+    // refresh project dropdown (due changed)
+    $('#payFileSelect').dispatchEvent(new Event('change'));
+    if (activeFile && activeFile.id === fid){
+      await loadProjects(fid);
+      if (document.getElementById('view-file').classList.contains('hidden') === false){
+        renderFileHero(); renderProjects();
+      }
+    }
+  } catch (err){
+    console.error(err);
+    toast(err.message, 'error');
+  } finally { btn.disabled = false; }
+};
+
+/* ================= RECYCLE BIN ================= */
+async function openRecycleView(){
+  const list = $('#recycleList');
+  list.innerHTML = `<div class="empty">Loading…</div>`;
+  const snap = await getDocs(recycleCol());
+  const items = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+  items.sort((a,b) => tsSeconds(b.deletedAt) - tsSeconds(a.deletedAt));
+
+  if (!items.length){
+    list.innerHTML = `<div class="empty">🗑 Recycle Bin is empty.</div>`;
+    showView('recycle');
+    return;
+  }
+
+  list.innerHTML = items.map(it => `
+    <div class="card recycle-card">
+      <div style="min-width:0;">
+        <h3>${it.type === 'file' ? '📁' : '📋'} ${esc(it.type === 'file' ? it.name : (it.project?.name || 'Project'))}</h3>
+        <p class="muted" style="margin-top:3px;">
+          ${it.type === 'file'
+            ? `File • ${(it.projects || []).length} projects`
+            : `Project • from “${esc(it.fileName || '—')}”`}
+          • deleted ${it.deletedAt ? new Date(tsSeconds(it.deletedAt)*1000).toLocaleDateString() : ''}
+        </p>
+      </div>
+      <div class="recycle-actions">
+        <button class="btn btn-secondary" data-restore="${it.id}">Restore</button>
+        <button class="btn btn-danger" data-purge="${it.id}">Delete</button>
+      </div>
+    </div>`).join('');
+
+  list.querySelectorAll('[data-restore]').forEach(b => {
+    b.onclick = async () => {
+      const item = items.find(x => x.id === b.dataset.restore);
+      b.disabled = true;
+      try { await restoreItem(item); toast('Restored ✅'); await openRecycleView(); }
+      catch (err){ console.error(err); toast(err.message, 'error'); b.disabled = false; }
+    };
+  });
+  list.querySelectorAll('[data-purge]').forEach(b => {
+    b.onclick = async () => {
+      if (!confirm('Permanently delete this item? This cannot be undone.')) return;
+      await deleteDoc(doc(db,'users',uid,'recycle',b.dataset.purge));
+      toast('Permanently deleted');
+      await openRecycleView();
+    };
+  });
+
+  showView('recycle');
+}
+
+async function restoreItem(item){
+  if (item.type === 'project'){
+    await setDoc(doc(db,'users',uid,'files',item.fileId,'projects',item.projectId), item.project);
+    for (const t of (item.transactions || []))
+      await setDoc(doc(db,'users',uid,'files',item.fileId,'projects',item.projectId,'transactions',t.id), t.data);
+  } else {
+    await setDoc(doc(db,'users',uid,'files',item.fileId), {
+      name: item.name,
+      image: item.image || '',
+      createdAt: serverTimestamp()
+    });
+    for (const p of (item.projects || [])){
+      await setDoc(doc(db,'users',uid,'files',item.fileId,'projects',p.id), p.data);
+      for (const t of (p.transactions || []))
+        await setDoc(doc(db,'users',uid,'files',item.fileId,'projects',p.id,'transactions',t.id), t.data);
+    }
+  }
+  await deleteDoc(doc(db,'users',uid,'recycle',item.id));
+}
+
+/* ================= JPG REPORTS ================= */
+async function downloadNodeAsJPG(node, filename){
+  const holder = document.createElement('div');
+  holder.style.cssText = 'position:fixed;left:-99999px;top:0;width:900px;background:#fff;';
+  holder.appendChild(node);
+  document.body.appendChild(holder);
+  try {
+    const canvas = await html2canvas(node, {
+      backgroundColor: '#ffffff',
+      scale: 2,
+      useCORS: true,
+      logging: false
+    });
+    const a = document.createElement('a');
+    a.download = filename;
+    a.href = canvas.toDataURL('image/jpeg', 0.93);
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+  } finally {
+    holder.remove();
+  }
+}
+
+function reportShell(title, subtitle, bodyHtml){
+  const el = document.createElement('div');
+  el.style.cssText = 'width:900px;padding:40px;background:#fff;box-sizing:border-box;' +
+    'font-family:Inter,Arial,Helvetica,sans-serif;color:#1b2133;';
+  el.innerHTML = `
+    <div style="display:flex;justify-content:space-between;align-items:flex-start;
+                border-bottom:3px solid #6c5ce7;padding-bottom:16px;margin-bottom:26px;">
+      <div>
+        <div style="font-size:24px;font-weight:800;letter-spacing:.4px;">📁 Due Desk</div>
+        <div style="font-size:13px;color:#6b7590;margin-top:5px;">${esc(subtitle)}</div>
+      </div>
+      <div style="text-align:right;font-size:12px;color:#6b7590;line-height:1.6;">
+        <div>${new Date().toLocaleDateString()}</div>
+        <div>${new Date().toLocaleTimeString()}</div>
+      </div>
+    </div>
+    <h1 style="font-size:21px;margin:0 0 18px;font-weight:800;">${esc(title)}</h1>
+    ${bodyHtml}
+    <div style="margin-top:30px;padding-top:14px;border-top:1px solid #e4e8f3;
+                font-size:11px;color:#9aa3bb;text-align:center;">
+      Generated by Due Desk
+    </div>`;
+  return el;
+}
+
+function fileReportNode(file, projs){
+  const rows = projs.map((p,i) => `
+    <tr>
+      <td style="padding:10px 8px;border-bottom:1px solid #eef1f8;">${i+1}</td>
+      <td style="padding:10px 8px;border-bottom:1px solid #eef1f8;font-weight:600;">${esc(p.name)}</td>
+      <td style="padding:10px 8px;border-bottom:1px solid #eef1f8;color:#6b7590;font-size:12px;">${esc(p.info || '—')}</td>
+      <td style="padding:10px 8px;border-bottom:1px solid #eef1f8;">${esc(p.date || '—')}</td>
+      <td style="padding:10px 8px;border-bottom:1px solid #eef1f8;text-align:right;color:#00a884;font-weight:700;">৳${fmt(p.payment)}</td>
+      <td style="padding:10px 8px;border-bottom:1px solid #eef1f8;text-align:right;color:#e74c3c;font-weight:700;">৳${fmt(p.due)}</td>
+    </tr>`).join('');
+
+  const tp = projs.reduce((s,p) => s + num(p.payment), 0);
+  const td = projs.reduce((s,p) => s + num(p.due), 0);
+
+  const body = `
+    <table style="width:100%;border-collapse:collapse;font-size:13px;">
+      <thead>
+        <tr style="background:#f4f6fb;text-align:left;">
+          <th style="padding:11px 8px;font-size:12px;color:#6b7590;">#</th>
+          <th style="padding:11px 8px;font-size:12px;color:#6b7590;">PROJECT</th>
+          <th style="padding:11px 8px;font-size:12px;color:#6b7590;">INFO</th>
+          <th style="padding:11px 8px;font-size:12px;color:#6b7590;">DATE</th>
+          <th style="padding:11px 8px;font-size:12px;color:#6b7590;text-align:right;">PAYMENT</th>
+          <th style="padding:11px 8px;font-size:12px;color:#6b7590;text-align:right;">DUE</th>
+        </tr>
+      </thead>
+      <tbody>${rows || `<tr><td colspan="6" style="padding:24px;text-align:center;color:#9aa3bb;">No projects</td></tr>`}</tbody>
+      <tfoot>
+        <tr style="background:#f4f6fb;font-weight:800;">
+          <td colspan="4" style="padding:13px 8px;">TOTAL</td>
+          <td style="padding:13px 8px;text-align:right;color:#00a884;">৳${fmt(tp)}</td>
+          <td style="padding:13px 8px;text-align:right;color:#e74c3c;">৳${fmt(td)}</td>
+        </tr>
+      </tfoot>
+    </table>`;
+
+  return reportShell(file.name, 'File Summary Report', body);
+}
+
+function projectReportNode(file, project, txs){
+  const rows = txs.map((t,i) => `
+    <tr>
+      <td style="padding:10px 8px;border-bottom:1px solid #eef1f8;">${i+1}</td>
+      <td style="padding:10px 8px;border-bottom:1px solid #eef1f8;">${esc(t.date || '—')}</td>
+      <td style="padding:10px 8px;border-bottom:1px solid #eef1f8;color:#6b7590;">${esc(t.note || 'Payment received')}</td>
+      <td style="padding:10px 8px;border-bottom:1px solid #eef1f8;text-align:right;color:#00a884;font-weight:700;">৳${fmt(t.amount)}</td>
+    </tr>`).join('');
+
+  const totalTx = txs.reduce((s,t) => s + num(t.amount), 0);
+
+  const body = `
+    <div style="display:flex;gap:12px;margin-bottom:22px;">
+      <div style="flex:1;background:#f8f9fe;border-radius:12px;padding:14px 16px;">
+        <div style="font-size:11px;color:#6b7590;font-weight:700;letter-spacing:.5px;">PAYMENT</div>
+        <div style="font-size:19px;font-weight:800;color:#00a884;margin-top:4px;">৳${fmt(project.payment)}</div>
+      </div>
+      <div style="flex:1;background:#fdf2f1;border-radius:12px;padding:14px 16px;">
+        <div style="font-size:11px;color:#6b7590;font-weight:700;letter-spacing:.5px;">DUE</div>
+        <div style="font-size:19px;font-weight:800;color:#e74c3c;margin-top:4px;">৳${fmt(project.due)}</div>
+      </div>
+      <div style="flex:1;background:#f8f9fe;border-radius:12px;padding:14px 16px;">
+        <div style="font-size:11px;color:#6b7590;font-weight:700;letter-spacing:.5px;">DATE</div>
+        <div style="font-size:15px;font-weight:800;margin-top:7px;">${esc(project.date || '—')}</div>
+      </div>
+    </div>
+    ${project.info ? `<div style="background:#fbfcff;border-left:4px solid #6c5ce7;padding:12px 16px;border-radius:8px;font-size:13px;color:#4a5268;margin-bottom:22px;line-height:1.6;">${esc(project.info)}</div>` : ''}
+    <table style="width:100%;border-collapse:collapse;font-size:13px;">
+      <thead>
+        <tr style="background:#f4f6fb;text-align:left;">
+          <th style="padding:11px 8px;font-size:12px;color:#6b7590;">#</th>
+          <th style="padding:11px 8px;font-size:12px;color:#6b7590;">DATE</th>
+          <th style="padding:11px 8px;font-size:12px;color:#6b7590;">NOTE</th>
+          <th style="padding:11px 8px;font-size:12px;color:#6b7590;text-align:right;">AMOUNT</th>
+        </tr>
+      </thead>
+      <tbody>${rows || `<tr><td colspan="4" style="padding:24px;text-align:center;color:#9aa3bb;">No transactions</td></tr>`}</tbody>
+      <tfoot>
+        <tr style="background:#f4f6fb;font-weight:800;">
+          <td colspan="3" style="padding:13px 8px;">TOTAL RECEIVED (${txs.length} payments)</td>
+          <td style="padding:13px 8px;text-align:right;color:#00a884;">৳${fmt(totalTx)}</td>
+        </tr>
+      </tfoot>
+    </table>`;
+
+  return reportShell(project.name, 'Project Transaction History — ' + (file?.name || ''), body);
+}
+
+/* Download buttons */
+$('#downloadFileBtn').onclick = async () => {
+  if (!activeFile) return;
+  if (!projects.length) return toast('No projects to export', 'error');
+  const btn = $('#downloadFileBtn');
+  btn.disabled = true;
+  try {
+    const node = fileReportNode(activeFile, projects);
+    const safe = (activeFile.name || 'file').replace(/[^\w\-]+/g, '_');
+    await downloadNodeAsJPG(node, `DueDesk_${safe}_summary.jpg`);
+    toast('Summary downloaded ✅');
+  } catch (err){ console.error(err); toast('Download failed', 'error'); }
+  finally { btn.disabled = false; }
+};
+
+$('#downloadProjectBtn').onclick = async () => {
+  if (!activeProject) return;
+  const btn = $('#downloadProjectBtn');
+  btn.disabled = true;
+  try {
+    const node = projectReportNode(activeFile, activeProject, transactions);
+    const safe = (activeProject.name || 'project').replace(/[^\w\-]+/g, '_');
+    await downloadNodeAsJPG(node, `DueDesk_${safe}_history.jpg`);
+    toast('History downloaded ✅');
+  } catch (err){ console.error(err); toast('Download failed', 'error'); }
+  finally { btn.disabled = false; }
+};
+
+/* Esc key closes modal */
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+</script>
+</body>
+</html>
