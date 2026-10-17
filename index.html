@@ -471,6 +471,7 @@
     max-width: 1200px;
     margin: 0 auto;
     padding: 26px 22px 140px;
+    overflow-x: hidden; /* prevent horizontal scroll from native date inputs */
   }
   .view:not(.hidden) { animation: fadeUp .32s ease; }
   @keyframes fadeUp {
@@ -965,7 +966,7 @@
   .form-header h3 { font-size: 20px; font-weight: 700; }
   .form-header p { font-size: 16px; color: var(--text-2); margin-top: 2px; }
 
-  .field { display: block; margin-bottom: 16px; }
+  .field { display: block; margin-bottom: 16px; min-width: 0; }
   .field > span {
     display: block;
     font-size: 16px;
@@ -976,6 +977,9 @@
   }
   input, select, textarea {
     width: 100%;
+    min-width: 0;
+    max-width: 100%;
+    box-sizing: border-box;
     font-family: inherit;
     font-size: 16px;
     color: var(--text);
@@ -985,6 +989,22 @@
     background: var(--surface);
     outline: none;
   }
+  /* Prevent native date/number inputs from expanding past their container */
+  input[type="date"],
+  input[type="number"] {
+    display: block;
+    width: 100%;
+    min-width: 0;
+    max-width: 100%;
+    -webkit-appearance: none;
+    appearance: none;
+  }
+  input[type="date"] {
+    min-height: 48px;
+    line-height: normal;
+  }
+  input[type="date"]::-webkit-date-and-time-value { text-align: left; }
+
   input::placeholder, textarea::placeholder { color: var(--text-3); }
   input:focus, select:focus, textarea:focus {
     border-color: var(--emerald);
@@ -992,6 +1012,7 @@
   }
   select {
     appearance: none;
+    -webkit-appearance: none;
     background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath fill='%2364748B' d='M6 8L0 0h12z'/%3E%3C/svg%3E");
     background-repeat: no-repeat;
     background-position: right 14px center;
@@ -999,7 +1020,11 @@
     cursor: pointer;
   }
   textarea { resize: vertical; min-height: 70px; }
-  .row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+  .row2 {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: 14px;
+  }
 
   /* --- Modal --- */
   .modal-backdrop {
@@ -1136,7 +1161,6 @@
     transform-origin: bottom center;
     pointer-events: none;
     transition: opacity .22s ease, transform .24s cubic-bezier(.2,.9,.3,1.15);
-    /* Hide scrollbar but allow scrolling */
     scrollbar-width: none;
     -ms-overflow-style: none;
   }
@@ -1245,7 +1269,7 @@
   /* Tablets & small laptops */
   @media (max-width: 900px) {
     main { padding: 22px 18px 140px; }
-    .grid { grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 14px; }
+    .grid { grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: 14px; }
     .hero { padding: 18px; gap: 14px; }
     .hero-img { width: 72px; height: 72px; font-size: 28px; }
   }
@@ -1261,50 +1285,126 @@
 
     main { padding: 18px 14px 150px; }
 
-    .grid { grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 12px; }
+    /* Smaller file cards + thumbnails */
+    .grid { grid-template-columns: repeat(auto-fill, minmax(145px, 1fr)); gap: 12px; }
 
-    .file-card-body { padding: 12px 14px 14px; }
-    .file-card-body h3 { font-size: 16px; }
-    .file-card-body .muted { font-size: 16px; }
-    .folder-badge { width: 58px; height: 58px; font-size: 24px; border-radius: 16px; }
-    .file-del { width: 32px; height: 32px; font-size: 13px; }
+    .file-card-body { padding: 10px 12px 12px; }
+    .file-card-body h3 { font-size: 15px; margin-bottom: 4px; }
+    .file-card-body .muted { font-size: 13px; }
+    .file-card-body .muted i { font-size: 12px; }
+    .folder-badge {
+      width: 50px;
+      height: 50px;
+      font-size: 20px;
+      border-radius: 13px;
+      box-shadow: 0 6px 18px rgba(16,185,129,.38);
+    }
+    .file-del { width: 30px; height: 30px; font-size: 12px; top: 8px; right: 8px; }
 
-    .hero { flex-direction: column; text-align: center; padding: 18px; gap: 12px; }
-    .hero-img { width: 68px; height: 68px; font-size: 26px; }
-    .hero-info h2 { font-size: 22px; }
-    .hero-stats { width: 100%; display: grid; grid-template-columns: 1fr; gap: 8px; }
-    .stat { min-width: 0; width: 100%; text-align: left; }
+    /* Hero */
+    .hero { flex-direction: column; text-align: center; padding: 16px; gap: 12px; }
+    .hero-img { width: 58px; height: 58px; font-size: 22px; border-radius: 15px; }
+    .hero-info { width: 100%; }
+    .hero-info h2 { font-size: 19px; margin-bottom: 12px; }
+    .hero-info p.hero-info-text { font-size: 14px; }
 
-    .view-title h1, .view-title h2 { font-size: 22px; }
+    /* === 3 counters side by side on one row === */
+    .hero-stats {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 6px;
+      width: 100%;
+    }
+    .stat {
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+      padding: 8px 5px;
+      min-width: 0;
+      width: 100%;
+      text-align: center;
+    }
+    .stat-icon {
+      width: 26px;
+      height: 26px;
+      font-size: 12px;
+      border-radius: 7px;
+      flex: 0 0 auto;
+    }
+    .stat > div:last-child {
+      width: 100%;
+      min-width: 0;
+      text-align: center;
+    }
+    .stat-label {
+      font-size: clamp(10px, 2.9vw, 13px);
+      line-height: 1.2;
+      margin-bottom: 1px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .stat-value {
+      font-size: clamp(12px, 3.7vw, 16px);
+      line-height: 1.2;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      max-width: 100%;
+    }
+    .stat-value.date-stat { font-size: clamp(10px, 2.9vw, 13px); }
+
+    .view-title h1, .view-title h2 { font-size: 20px; }
     .view-head { align-items: stretch; }
     .view-head > div:last-child { width: 100%; }
     .view-head > div:last-child .btn { flex: 1 1 auto; }
     .view-head > div:last-child .btn-round { flex: 0 0 auto; }
 
+    /* Forms + date input fix */
     .row2 { grid-template-columns: 1fr; }
+    input, select, textarea { font-size: 16px; padding: 12px 14px; }
+    input[type="date"] {
+      display: block;
+      width: 100%;
+      min-width: 0;
+      max-width: 100%;
+      -webkit-appearance: none;
+      appearance: none;
+      min-height: 48px;
+    }
+
     .login-card { padding: 36px 26px 30px; }
     .login-card h1 { font-size: 28px; }
     .login-logo { width: 72px; height: 72px; font-size: 30px; }
-    .login-features { font-size: 15px; gap: 6px; }
+    .login-features { font-size: 14px; gap: 6px; }
     .login-features span { padding: 5px 10px; }
 
     .avatar-menu { width: 240px; }
-    .avatar-menu-name, .avatar-menu-email { max-width: 150px; }
-    .avatar-menu-email { font-size: 14px; }
+    .avatar-menu-name { font-size: 15px; max-width: 150px; }
+    .avatar-menu-email { font-size: 13px; max-width: 150px; }
+    .avatar-menu-item { font-size: 15px; padding: 11px; }
 
-    .form-card { padding: 20px; }
+    .form-card { padding: 18px; }
     .form-header { gap: 12px; padding-right: 40px; }
     .form-header-icon { width: 44px; height: 44px; font-size: 18px; }
-    .form-header h3 { font-size: 18px; }
-    .form-header p { font-size: 15px; }
+    .form-header h3 { font-size: 17px; }
+    .form-header p { font-size: 14px; }
 
     .tx-row { padding: 12px 14px; gap: 10px; }
     .tx-left { flex: 1 1 100%; }
     .tx-right { flex: 1 1 100%; justify-content: space-between; }
-    .tx-amt { font-size: 18px; }
+    .tx-amt { font-size: 17px; }
 
     .project-head { flex-wrap: wrap; }
+    .project-head h3 { font-size: 16px; }
     .project-stats { gap: 6px; }
+    .pstat-label { font-size: 13px; }
+    .pstat-value { font-size: 16px; }
+    .project-info { font-size: 14px; }
+    .project-foot { font-size: 14px; }
+
+    .badge { font-size: 14px; padding: 5px 10px; }
 
     .site-footer { bottom: 14px; }
     .footer-toggle { width: 48px; height: 48px; font-size: 18px; }
@@ -1313,19 +1413,44 @@
     #toast { bottom: 82px; font-size: 15px; padding: 12px 16px; }
 
     .modal { padding: 20px; }
-    .modal-head h3 { font-size: 19px; }
+    .modal-head h3 { font-size: 18px; }
     .modal-actions .btn { flex: 1 1 auto; }
+
+    .empty h3 { font-size: 16px; }
+    .empty p { font-size: 14px; }
   }
 
   /* Small phones */
   @media (max-width: 400px) {
-    .grid { grid-template-columns: 1fr; }
-    .folder-badge { width: 66px; height: 66px; font-size: 26px; }
-    .hero-info h2 { font-size: 20px; }
+    /* Keep 2 columns — never go full-width */
+    .grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+
+    .folder-badge {
+      width: 42px;
+      height: 42px;
+      font-size: 17px;
+      border-radius: 11px;
+    }
+    .file-card-body h3 { font-size: 14px; }
+    .file-card-body .muted { font-size: 12px; }
+
+    .hero-img { width: 52px; height: 52px; font-size: 20px; }
+    .hero-info h2 { font-size: 18px; }
+
+    .stat { padding: 7px 4px; gap: 3px; }
+    .stat-icon { width: 22px; height: 22px; font-size: 10px; border-radius: 6px; }
+    .stat-label { font-size: 10px; }
+    .stat-value { font-size: 12px; }
+    .stat-value.date-stat { font-size: 10px; }
+
     .login-card h1 { font-size: 26px; }
     .login-features { display: none; }
     .topbar-right { gap: 2px; }
     .avatar { width: 34px; height: 34px; }
+
+    .badge { font-size: 13px; padding: 4px 8px; }
+    .pstat-label { font-size: 12px; }
+    .pstat-value { font-size: 15px; }
   }
 </style>
 </head>
@@ -1688,7 +1813,6 @@ function toast(msg, type='success'){
 /* ---------------- VIEW SWITCHING ---------------- */
 function showView(name){
   if (name !== 'recycle') cleanupRecycleListener();
-  if (name !== 'file' && name !== 'project') { /* keep projects unsub for now */ }
   $$('.view').forEach(v => v.classList.add('hidden'));
   const v = document.getElementById('view-' + name);
   if (v) v.classList.remove('hidden');
@@ -1824,7 +1948,6 @@ onAuthStateChanged(auth, async user => {
     $('#menuEmail').textContent = user.email || '';
     closeAvatarMenu();
 
-    /* Start live sync */
     setupFilesListener();
     showView('files');
   } else {
@@ -1875,7 +1998,6 @@ function setupFilesListener(){
       files.sort((a,b) => tsSeconds(b.createdAt) - tsSeconds(a.createdAt));
       renderFiles();
 
-      /* If the currently open file was deleted elsewhere, go back */
       if (activeFile && !files.find(f => f.id === activeFile.id)){
         activeFile = null;
         activeProject = null;
@@ -1909,7 +2031,6 @@ function setupProjectsListener(fid){
             activeProject = updated;
             renderProjectHero();
           } else {
-            /* Active project was deleted elsewhere */
             if (!document.getElementById('view-project').classList.contains('hidden')){
               activeProject = null;
               cleanupTxListener();
@@ -2031,7 +2152,6 @@ async function openFile(fid){
   activeProject = null;
   cleanupTxListener();
 
-  /* Show loading placeholder while listener fires */
   $('#fileHero').innerHTML = '';
   $('#projectsGrid').innerHTML = `
     <div class="empty">
@@ -2198,7 +2318,6 @@ function openProjectModal(fid, project){
         await addDoc(projectsCol(fid), { ...data, createdAt: serverTimestamp() });
         toast('Project created');
       }
-      /* Listener will refresh the UI automatically */
     }
   });
 }
@@ -2224,7 +2343,6 @@ async function deleteProjectToRecycle(pid){
   for (const t of txs) await deleteDoc(doc(db,'users',uid,'files',activeFile.id,'projects',pid,'transactions',t.id));
   await deleteDoc(pRef);
   toast('Project moved to Recycle Bin');
-  /* Listeners handle UI refresh */
 }
 
 async function deleteFileToRecycle(fid){
@@ -2259,7 +2377,6 @@ async function deleteFileToRecycle(fid){
     await deleteDoc(doc(db,'users',uid,'files',fid,'projects',p.id));
   await deleteDoc(doc(db,'users',uid,'files',fid));
   toast('File moved to Recycle Bin');
-  /* Files listener auto-refreshes */
 }
 
 /* ================= PROJECT DETAIL ================= */
@@ -2364,7 +2481,6 @@ function renderTransactions(){
       try {
         await deleteTransaction(activeFile.id, activeProject.id, tx.id, tx.amount);
         toast('Payment deleted — due updated');
-        /* Listeners will refresh the UI */
       } catch (err){
         console.error(err);
         toast(err.message, 'error');
@@ -2411,7 +2527,6 @@ $('#addTxBtn').onclick = () => {
       if (amount <= 0) throw new Error('Enter a valid amount');
       await addPayment(activeFile.id, activeProject.id, amount, fd.get('note'), fd.get('date'));
       toast('Payment recorded');
-      /* Listeners auto-refresh */
     }
   });
 };
@@ -2483,9 +2598,7 @@ $('#savePaymentBtn').onclick = async () => {
     toast('Payment recorded — due updated');
     $('#payAmount').value = '';
     $('#payNote').value = '';
-    /* Refresh dropdown due amount */
     $('#payFileSelect').dispatchEvent(new Event('change'));
-    /* Live listeners will update everything else */
   } catch (err){
     console.error(err);
     toast(err.message, 'error');
@@ -2534,7 +2647,7 @@ function renderRecycleItems(items){
     b.onclick = async () => {
       const item = items.find(x => x.id === b.dataset.restore);
       b.disabled = true;
-      try { await restoreItem(item); toast('Restored'); /* Listener refreshes */ }
+      try { await restoreItem(item); toast('Restored'); }
       catch (err){ console.error(err); toast(err.message, 'error'); b.disabled = false; }
     };
   });
@@ -2543,7 +2656,6 @@ function renderRecycleItems(items){
       if (!confirm('Permanently delete this item? This cannot be undone.')) return;
       await deleteDoc(doc(db,'users',uid,'recycle',b.dataset.purge));
       toast('Permanently deleted');
-      /* Listener refreshes */
     };
   });
 }
