@@ -931,7 +931,6 @@
 
     .grid { grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 11px; }
 
-    /* ---- Project boxes: one per line on small screens ---- */
     #projectsGrid { grid-template-columns: 1fr; gap: 12px; }
 
     .file-card-body { padding: 10px 12px 12px; }
@@ -1456,6 +1455,10 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db   = getFirestore(app);
+
+/* ================= iDevice detection ================= */
+const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) ||
+              (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
 
 let uid = null;
 let files = [];
@@ -2475,7 +2478,7 @@ async function restoreItem(item){
   await deleteDoc(doc(db,'users',uid,'recycle',item.id));
 }
 
-/* ================= REPORTS (theme-aware & stylish) ================= */
+/* ================= REPORTS ================= */
 
 function reportTheme() {
   const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
@@ -2771,59 +2774,160 @@ function projectReportNode(file, project, txs){
   return reportShell(project.name, 'Project Transaction History', statsHtml, infoHtml + table);
 }
 
-async function downloadNodeAsJPG(node, filename, bgColor){
+/* ================= DOWNLOAD (with iOS fix) ================= */
+
+async function downloadNodeAsJPG(node, filename, bgColor, iosWindow) {
   await ensureHtml2Canvas();
+
   const holder = document.createElement('div');
   holder.style.cssText = 'position:fixed;left:-99999px;top:0;width:900px;background:' + bgColor + ';';
   holder.appendChild(node);
   document.body.appendChild(holder);
+
   try {
+    // iOS needs lower scale to avoid memory crash on large canvases
     const canvas = await window.html2canvas(node, {
       backgroundColor: bgColor || '#ffffff',
-      scale: 2,
+      scale: isIOS ? 1.5 : 2,
       useCORS: true,
       logging: false
     });
-    const a = document.createElement('a');
-    a.download = filename;
-    a.href = canvas.toDataURL('image/jpeg', 0.93);
-    document.body.appendChild(a);
-    a.click();
-    a.remove();
+
+    if (isIOS) {
+      // ---- iOS path: use toBlob + open in the window we already opened ----
+      await new Promise((resolve, reject) => {
+        canvas.toBlob((blob) => {
+          if (!blob) { reject(new Error('Could not create image')); return; }
+          const url = URL.createObjectURL(blob);
+
+          if (iosWindow && !iosWindow.closed) {
+            // populate the window that was opened during the user tap
+            try {
+              iosWindow.location.href = url;
+            } catch (e) {
+              // fallback if that fails
+              window.open(url, '_blank');
+            }
+          } else {
+            // fallback: try opening a new tab (might get blocked, but try anyway)
+            const w = window.open(url, '_blank');
+            if (!w) {
+              // last resort: navigate current page (user can go back)
+              window.location.href = url;
+            }
+          }
+
+          // keep URL alive long enough for the user to save it
+          setTimeout(() => URL.revokeObjectURL(url), 120000);
+          resolve();
+        }, 'image/jpeg', 0.90);
+      });
+    } else {
+      // ---- Desktop / Android: standard anchor download ----
+      const a = document.createElement('a');
+      a.download = filename;
+      a.href = canvas.toDataURL('image/jpeg', 0.93);
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+    }
+  } catch (err) {
+    console.error('Download error:', err);
+    if (iosWindow && !iosWindow.closed) iosWindow.close();
+    throw err;
   } finally {
     holder.remove();
   }
 }
 
+function iosPlaceholderHtml(){
+  const c = reportTheme();
+  return `<!DOCTYPE html><html><head><meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <style>
+      html,body{margin:0;height:100%;background:${c.bg};
+        font-family:-apple-system,'Inter',system-ui,sans-serif;color:${c.text};}
+      body{display:flex;align-items:center;justify-content:center;flex-direction:column;
+        text-align:center;padding:24px;}
+      .spin{width:36px;height:36px;border:3px solid ${c.border};
+        border-top-color:${c.emerald};border-radius:50%;
+        animation:s .9s linear infinite;margin-bottom:18px;}
+      @keyframes s{to{transform:rotate(360deg);}}
+      p{font-size:14px;color:${c.text2};margin:0;}
+    </style></head><body>
+    <div class="spin"></div><p>Generating image…</p>
+    </body></html>`;
+}
+
 $('#downloadFileBtn').onclick = async () => {
   if (!activeFile) return;
   if (!projects.length) return toast('No projects to export', 'error');
+
   const btn = $('#downloadFileBtn');
   btn.disabled = true;
+
+  // iOS: open window synchronously in the user tap to preserve gesture
+  let iosWindow = null;
+  if (isIOS) {
+    iosWindow = window.open('', '_blank');
+    if (iosWindow) {
+      try {
+        iosWindow.document.open();
+        iosWindow.document.write(iosPlaceholderHtml());
+        iosWindow.document.close();
+      } catch (e) { /* ignore */ }
+    }
+  }
+
   try {
     const c = reportTheme();
     const node = fileReportNode(activeFile, projects);
     const safe = (activeFile.name || 'file').replace(/[^\w\-]+/g, '_');
-    await downloadNodeAsJPG(node, `DueDesk_${safe}_summary.jpg`, c.bg);
-    toast('Summary downloaded');
-  } catch (err){ console.error(err); toast('Download failed', 'error'); }
-  finally { btn.disabled = false; }
+    await downloadNodeAsJPG(node, `DueDesk_${safe}_summary.jpg`, c.bg, iosWindow);
+    toast(isIOS ? 'Image opened — long-press to save' : 'Summary downloaded');
+  } catch (err){
+    console.error(err);
+    toast('Download failed', 'error');
+    if (iosWindow && !iosWindow.closed) iosWindow.close();
+  } finally {
+    btn.disabled = false;
+  }
 };
 
 $('#downloadProjectBtn').onclick = async () => {
   if (!activeProject) return;
+
   const btn = $('#downloadProjectBtn');
   btn.disabled = true;
+
+  let iosWindow = null;
+  if (isIOS) {
+    iosWindow = window.open('', '_blank');
+    if (iosWindow) {
+      try {
+        iosWindow.document.open();
+        iosWindow.document.write(iosPlaceholderHtml());
+        iosWindow.document.close();
+      } catch (e) { /* ignore */ }
+    }
+  }
+
   try {
     const c = reportTheme();
     const node = projectReportNode(activeFile, activeProject, transactions);
     const safe = (activeProject.name || 'project').replace(/[^\w\-]+/g, '_');
-    await downloadNodeAsJPG(node, `DueDesk_${safe}_history.jpg`, c.bg);
-    toast('History downloaded');
-  } catch (err){ console.error(err); toast('Download failed', 'error'); }
-  finally { btn.disabled = false; }
+    await downloadNodeAsJPG(node, `DueDesk_${safe}_history.jpg`, c.bg, iosWindow);
+    toast(isIOS ? 'Image opened — long-press to save' : 'History downloaded');
+  } catch (err){
+    console.error(err);
+    toast('Download failed', 'error');
+    if (iosWindow && !iosWindow.closed) iosWindow.close();
+  } finally {
+    btn.disabled = false;
+  }
 };
 
+/* ================= FOOTER ================= */
 const siteFooter = $('#siteFooter');
 const footerToggle = $('#footerToggle');
 function closeFooter(){ siteFooter.classList.remove('open'); }
