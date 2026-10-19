@@ -6,7 +6,6 @@
 <meta name="theme-color" content="#10B981" />
 <title>Due Desk — Files, Projects & Dues</title>
 
-<!-- Performance hints -->
 <link rel="preconnect" href="https://www.gstatic.com" crossorigin>
 <link rel="preconnect" href="https://firestore.googleapis.com">
 <link rel="preconnect" href="https://identitytoolkit.googleapis.com">
@@ -16,7 +15,6 @@
 
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-<!-- html2canvas loaded lazily on first download -->
 
 <script>
   (function() {
@@ -27,7 +25,6 @@
   })();
 </script>
 <style>
-  /* ============ DESIGN TOKENS ============ */
   :root {
     --emerald: #10B981;
     --emerald-hover: #059669;
@@ -95,7 +92,6 @@
     --pending-text: #CBD5E1;
   }
 
-  /* ============ RESET ============ */
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
   html { -webkit-text-size-adjust: 100%; -webkit-tap-highlight-color: transparent; }
   body {
@@ -116,7 +112,6 @@
   button { font-family: inherit; }
   a { color: inherit; }
 
-  /* Currency */
   .tk {
     font-size: 0.72em;
     font-weight: 500;
@@ -131,22 +126,14 @@
                 color .18s ease, box-shadow .18s ease, transform .15s ease;
   }
 
-  /* ============ BUTTONS ============ */
   .btn {
-    border: none;
-    cursor: pointer;
-    font-size: 16px;
-    font-weight: 500;
+    border: none; cursor: pointer;
+    font-size: 16px; font-weight: 500;
     padding: 12px 18px;
     border-radius: var(--r-sm);
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    gap: 9px;
-    white-space: nowrap;
-    background: transparent;
-    color: var(--text);
-    line-height: 1.2;
+    display: inline-flex; align-items: center; justify-content: center;
+    gap: 9px; white-space: nowrap;
+    background: transparent; color: var(--text); line-height: 1.2;
   }
   .btn:active { transform: scale(.97); }
   .btn:disabled { opacity: .55; cursor: not-allowed; transform: none; }
@@ -178,16 +165,11 @@
     border: 1.5px solid var(--border);
     padding: 14px 26px;
     border-radius: var(--r);
-    font-size: 16px;
-    font-weight: 500;
+    font-size: 16px; font-weight: 500;
     box-shadow: var(--shadow-sm);
     width: 100%;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    gap: 10px;
-    cursor: pointer;
-    font-family: inherit;
+    display: inline-flex; align-items: center; justify-content: center;
+    gap: 10px; cursor: pointer; font-family: inherit;
   }
   .btn-google:hover { border-color: var(--border-strong); background: var(--surface-2); }
 
@@ -196,12 +178,9 @@
     border-radius: 50%;
     background: var(--surface-2);
     border: 1px solid var(--border);
-    color: var(--text-2);
-    font-size: 16px;
+    color: var(--text-2); font-size: 16px;
     flex: 0 0 auto;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
+    display: inline-flex; align-items: center; justify-content: center;
     cursor: pointer;
   }
   .btn-round:hover { background: var(--surface-3); color: var(--text); border-color: var(--border-strong); }
@@ -228,7 +207,6 @@
   }
   .theme-toggle:hover { background: var(--surface-3); color: var(--text); }
 
-  /* ============ LOGIN ============ */
   .login-screen {
     min-height: 100vh;
     display: flex; align-items: center; justify-content: center;
@@ -302,7 +280,6 @@
   }
   .login-features i { color: var(--emerald); font-size: 12px; }
 
-  /* ============ TOPBAR ============ */
   .topbar {
     position: sticky; top: 0; z-index: 50;
     background: color-mix(in srgb, var(--surface) 88%, transparent);
@@ -392,7 +369,6 @@
   .avatar-menu-item.danger:hover { background: var(--overdue-bg); }
   .avatar-menu-item i { width: 18px; text-align: center; font-size: 14px; }
 
-  /* ============ LAYOUT ============ */
   main {
     max-width: 1200px; margin: 0 auto;
     padding: 26px 22px 140px;
@@ -422,7 +398,6 @@
   }
   .back-btn:hover { color: var(--text); background: transparent; }
 
-  /* ============ GRID + CARDS ============ */
   .grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
@@ -435,7 +410,6 @@
     box-shadow: var(--shadow-sm);
   }
 
-  /* --- File cards --- */
   .file-card {
     position: relative; cursor: pointer; overflow: hidden;
     will-change: transform;
@@ -516,7 +490,6 @@
   .file-card:hover .file-del { opacity: 1; transform: scale(1); }
   .file-del:hover { background: var(--overdue-bg); color: var(--overdue-text); }
 
-  /* --- Hero --- */
   .hero {
     display: flex; align-items: center; gap: 18px;
     background: var(--surface);
@@ -580,7 +553,6 @@
   .stat-value.due { color: var(--partial); }
   .stat-value.date-stat { font-size: 15px; }
 
-  /* --- Badges --- */
   .badge {
     font-size: 15px; font-weight: 500;
     padding: 5px 11px; border-radius: var(--r-full);
@@ -593,7 +565,6 @@
   .badge.overdue { background: var(--overdue-bg); color: var(--overdue-text); }
   .badge.pending { background: var(--pending-bg); color: var(--pending-text); }
 
-  /* --- Project cards --- */
   .project-card {
     padding: 18px;
     cursor: pointer;
@@ -641,7 +612,6 @@
   }
   .project-foot i { margin-right: 6px; opacity: .8; font-size: 13px; }
 
-  /* --- Transaction rows --- */
   .tx-list { display: flex; flex-direction: column; gap: 10px; }
   .tx-row {
     background: var(--surface);
@@ -680,7 +650,6 @@
   }
   .tx-right .icon-btn { width: 36px; height: 36px; font-size: 14px; }
 
-  /* --- Recycle cards --- */
   .recycle-card {
     padding: 16px 18px;
     display: flex; justify-content: space-between; align-items: center;
@@ -695,7 +664,6 @@
   .recycle-actions { display: flex; gap: 6px; flex-wrap: wrap; }
   .recycle-actions .btn { padding: 9px 14px; font-size: 15px; }
 
-  /* --- Empty states --- */
   .empty {
     grid-column: 1/-1;
     text-align: center;
@@ -719,7 +687,6 @@
     margin: 0 auto; line-height: 1.55;
   }
 
-  /* --- Forms --- */
   .form-card { max-width: 620px; padding: 26px; position: relative; }
   .form-header {
     display: flex; align-items: center; gap: 14px;
@@ -777,7 +744,6 @@
   textarea { resize: vertical; min-height: 70px; }
   .row2 { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 14px; }
 
-  /* --- Modal --- */
   .modal-backdrop {
     position: fixed; inset: 0;
     background: rgba(15,23,42,.55);
@@ -816,7 +782,6 @@
     flex-wrap: wrap;
   }
 
-  /* --- Toast --- */
   #toast {
     position: fixed; bottom: 88px; left: 50%;
     transform: translateX(-50%) translateY(140px);
@@ -835,7 +800,6 @@
   #toast.error { background: #B91C1C; }
   #toast.error i { color: #FECACA; }
 
-  /* ============ SITE FOOTER ============ */
   .site-footer {
     position: fixed; left: 50%; bottom: 18px;
     transform: translateX(-50%);
@@ -932,7 +896,6 @@
   }
   .footer-note i { color: #f472b6; font-size: 13px; }
 
-  /* ============ SKELETON ============ */
   @keyframes skelPulse {
     0%, 100% { opacity: 1; }
     50% { opacity: .45; }
@@ -942,8 +905,6 @@
     border-radius: 6px;
     animation: skelPulse 1.4s ease-in-out infinite;
   }
-
-  /* ============ RESPONSIVE ============ */
 
   @media (max-width: 1100px) {
     main { padding: 24px 18px 140px; }
@@ -970,6 +931,9 @@
 
     .grid { grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 11px; }
 
+    /* ---- Project boxes: one per line on small screens ---- */
+    #projectsGrid { grid-template-columns: 1fr; gap: 12px; }
+
     .file-card-body { padding: 10px 12px 12px; }
     .file-card-body h3 { font-size: 15px; margin-bottom: 4px; }
     .file-card-body .muted { font-size: 13px; }
@@ -982,7 +946,6 @@
     .file-del {
       width: 30px; height: 30px; font-size: 12px;
       top: 8px; right: 8px;
-      /* Always visible on touch devices */
       opacity: 1; transform: scale(1);
     }
 
@@ -992,7 +955,6 @@
     .hero-info h2 { font-size: 18px; margin-bottom: 10px; }
     .hero-info p.hero-info-text { font-size: 14px; }
 
-    /* 3 counters in one row */
     .hero-stats {
       display: grid;
       grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -1083,9 +1045,9 @@
     .empty p { font-size: 14px; }
   }
 
-  /* Small phones */
   @media (max-width: 560px) {
     .grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+    #projectsGrid { grid-template-columns: 1fr; gap: 10px; }
 
     .file-card-body { padding: 9px 10px 11px; }
     .file-card-body h3 { font-size: 14px; }
@@ -1146,7 +1108,6 @@
     .modal-actions { padding-top: 14px; margin-top: 6px; }
   }
 
-  /* Very small phones */
   @media (max-width: 400px) {
     main { padding: 14px 10px 145px; }
     .grid { gap: 8px; }
@@ -1196,7 +1157,6 @@
     .tx-note { font-size: 14px; }
   }
 
-  /* Tiny phones */
   @media (max-width: 340px) {
     main { padding: 12px 8px 140px; }
     .grid { gap: 6px; }
@@ -1210,7 +1170,6 @@
     .brand-logo { width: 30px; height: 30px; font-size: 12px; }
   }
 
-  /* Landscape phones — tighten vertical spacing */
   @media (max-height: 500px) and (orientation: landscape) {
     .hero { flex-direction: row; text-align: left; padding: 14px; }
     .hero-stats { grid-template-columns: repeat(3, minmax(0, 1fr)); }
@@ -1227,7 +1186,6 @@
 </head>
 <body>
 
-<!-- ================= LOGIN ================= -->
 <div id="loginScreen" class="login-screen">
   <button class="theme-toggle login-theme" id="themeToggleLogin" title="Toggle theme" aria-label="Toggle theme">
     <i class="fas fa-moon theme-icon"></i>
@@ -1253,7 +1211,6 @@
   </div>
 </div>
 
-<!-- ================= APP ================= -->
 <div id="app" class="hidden">
   <header class="topbar">
     <div class="brand" id="brandHome">
@@ -1292,7 +1249,6 @@
   </header>
 
   <main>
-    <!-- FILES -->
     <section id="view-files" class="view">
       <div class="view-head">
         <div class="view-title">
@@ -1308,7 +1264,6 @@
       <div id="filesGrid" class="grid"></div>
     </section>
 
-    <!-- FILE DETAIL -->
     <section id="view-file" class="view hidden">
       <button class="btn btn-ghost back-btn" data-back="files">
         <i class="fas fa-arrow-left"></i> Back to Files
@@ -1331,7 +1286,6 @@
       <div id="projectsGrid" class="grid"></div>
     </section>
 
-    <!-- PROJECT DETAIL -->
     <section id="view-project" class="view hidden">
       <button class="btn btn-ghost back-btn" data-back="file">
         <i class="fas fa-arrow-left"></i> Back to Projects
@@ -1354,7 +1308,6 @@
       <div id="txList" class="tx-list"></div>
     </section>
 
-    <!-- NEW PAYMENT -->
     <section id="view-payment" class="view hidden">
       <div class="view-head">
         <div class="view-title">
@@ -1398,7 +1351,6 @@
       </div>
     </section>
 
-    <!-- RECYCLE BIN -->
     <section id="view-recycle" class="view hidden">
       <div class="view-head">
         <div class="view-title">
@@ -1410,7 +1362,6 @@
     </section>
   </main>
 
-  <!-- FOOTER -->
   <footer class="site-footer" id="siteFooter">
     <button id="footerToggle" class="footer-toggle" aria-label="Show more websites" title="More websites">
       <i class="fa-solid fa-circle-nodes"></i>
@@ -1483,7 +1434,6 @@
 <div id="modalRoot"></div>
 <div id="toast"></div>
 
-<!-- ================= APP LOGIC ================= -->
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 import {
@@ -1494,7 +1444,6 @@ import {
   updateDoc, deleteDoc, writeBatch, serverTimestamp, onSnapshot
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
-/* ---------------- FIREBASE ---------------- */
 const firebaseConfig = {
   apiKey: "AIzaSyDbnGu2YudfsY14nXFfwrcH6YsHRm9mwTI",
   authDomain: "duedesk-42e37.firebaseapp.com",
@@ -1508,7 +1457,6 @@ const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db   = getFirestore(app);
 
-/* ---------------- STATE ---------------- */
 let uid = null;
 let files = [];
 let activeFile = null;
@@ -1521,7 +1469,6 @@ let projectsUnsub = null;
 let txUnsub = null;
 let recycleUnsub = null;
 
-/* ---------------- HELPERS ---------------- */
 const $  = s => document.querySelector(s);
 const $$ = s => [...document.querySelectorAll(s)];
 
@@ -1538,7 +1485,6 @@ const tsSeconds = t => {
   return 0;
 };
 
-/* Currency helper: "Tk" in smaller text before the amount */
 const tkHtml = n => `<span class="tk">Tk</span>${fmt(n)}`;
 const tkInline = n => `<span style="font-size:0.72em;opacity:0.82;margin-right:3px;font-weight:500">Tk</span>${fmt(n)}`;
 
@@ -1547,7 +1493,6 @@ const projectsCol= fid => collection(db,'users',uid,'files',fid,'projects');
 const txCol      = (fid,pid) => collection(db,'users',uid,'files',fid,'projects',pid,'transactions');
 const recycleCol = () => collection(db,'users',uid,'recycle');
 
-/* ---------------- CACHE (fast load) ---------------- */
 const CACHE_FILES = () => 'dd:files:' + uid;
 const CACHE_PROJECTS = (fid) => 'dd:proj:' + uid + ':' + fid;
 const CACHE_TX = (fid, pid) => 'dd:tx:' + uid + ':' + fid + ':' + pid;
@@ -1555,7 +1500,7 @@ const CACHE_TX = (fid, pid) => 'dd:tx:' + uid + ':' + fid + ':' + pid;
 function cacheSave(key, data){
   try {
     const json = JSON.stringify(data);
-    if (json.length > 4000000) return; // skip huge payloads
+    if (json.length > 4000000) return;
     localStorage.setItem(key, json);
   } catch(e) {
     try { localStorage.removeItem(key); } catch(e2) {}
@@ -1567,17 +1512,7 @@ function cacheLoad(key){
     return raw ? JSON.parse(raw) : null;
   } catch(e) { return null; }
 }
-function cacheClearAll(){
-  try {
-    Object.keys(localStorage).forEach(k => {
-      if (k.startsWith('dd:files:') || k.startsWith('dd:proj:') || k.startsWith('dd:tx:')) {
-        localStorage.removeItem(k);
-      }
-    });
-  } catch(e) {}
-}
 
-/* ---------------- LAZY HTML2CANVAS ---------------- */
 let _h2cPromise = null;
 function ensureHtml2Canvas(){
   if (window.html2canvas) return Promise.resolve();
@@ -1593,7 +1528,6 @@ function ensureHtml2Canvas(){
   return _h2cPromise;
 }
 
-/* ---------------- THEME ---------------- */
 function applyTheme(theme){
   document.documentElement.setAttribute('data-theme', theme);
   try { localStorage.setItem('duedesk-theme', theme); } catch(e) {}
@@ -1616,7 +1550,6 @@ function toggleTheme(){
   if (t2) t2.onclick = toggleTheme;
 })();
 
-/* ---------------- TOAST ---------------- */
 let toastTimer;
 function toast(msg, type='success'){
   const el = $('#toast');
@@ -1627,7 +1560,6 @@ function toast(msg, type='success'){
   toastTimer = setTimeout(()=>{ el.className = ''; }, 2500);
 }
 
-/* ---------------- VIEW SWITCHING ---------------- */
 function showView(name){
   if (name !== 'recycle') cleanupRecycleListener();
   $$('.view').forEach(v => v.classList.add('hidden'));
@@ -1636,7 +1568,6 @@ function showView(name){
   window.scrollTo({ top:0, behavior:'smooth' });
 }
 
-/* ---------------- LISTENER CLEANUP ---------------- */
 function cleanupFilesListener(){ if (filesUnsub){ filesUnsub(); filesUnsub = null; } }
 function cleanupProjectsListener(){ if (projectsUnsub){ projectsUnsub(); projectsUnsub = null; } }
 function cleanupTxListener(){ if (txUnsub){ txUnsub(); txUnsub = null; } }
@@ -1648,7 +1579,6 @@ function cleanupAllListeners(){
   cleanupRecycleListener();
 }
 
-/* ---------------- IMAGE COMPRESSION ---------------- */
 function compressImage(file, maxSize = 700, quality = 0.78){
   return new Promise((resolve, reject) => {
     const reader = new FileReader();
@@ -1671,7 +1601,6 @@ function compressImage(file, maxSize = 700, quality = 0.78){
   });
 }
 
-/* ---------------- MODAL ---------------- */
 function closeModal(){ $('#modalRoot').innerHTML = ''; }
 
 function showModal({ title, body, submitText = 'Save', submitIcon = 'fa-check', onSubmit }){
@@ -1717,7 +1646,6 @@ function showModal({ title, body, submitText = 'Save', submitIcon = 'fa-check', 
   };
 }
 
-/* ---------------- AVATAR MENU ---------------- */
 const avatarWrap = $('#avatarWrap');
 function closeAvatarMenu(){ avatarWrap.classList.remove('open'); }
 
@@ -1745,7 +1673,6 @@ document.addEventListener('click', e => {
   }
 });
 
-/* ================= AUTH (FAST PATH) ================= */
 $('#googleLoginBtn').onclick = async () => {
   try { await signInWithPopup(auth, new GoogleAuthProvider()); }
   catch (err){
@@ -1768,7 +1695,6 @@ function activateUser(user){
   $('#app').classList.remove('hidden');
   closeAvatarMenu();
 
-  // Instant render from cache
   const cached = cacheLoad(CACHE_FILES());
   if (cached && cached.length){
     files = cached;
@@ -1791,12 +1717,10 @@ function deactivateUser(){
   closeAvatarMenu();
 }
 
-// Synchronous fast path: show app immediately if user is already signed in
 if (auth.currentUser){
   activateUser(auth.currentUser);
 }
 
-// Then keep state in sync
 onAuthStateChanged(auth, user => {
   if (user){
     if (uid !== user.uid) activateUser(user);
@@ -1806,7 +1730,6 @@ onAuthStateChanged(auth, user => {
   }
 });
 
-/* ================= NAV ================= */
 $('#brandHome').onclick = () => {
   cleanupProjectsListener();
   cleanupTxListener();
@@ -1832,8 +1755,6 @@ $$('[data-back]').forEach(b => b.onclick = () => {
     showView('file');
   }
 });
-
-/* ================= LIVE LISTENERS ================= */
 
 function setupFilesListener(){
   cleanupFilesListener();
@@ -1924,7 +1845,6 @@ function setupRecycleListener(){
   );
 }
 
-/* ================= SKELETON ================= */
 function renderFilesSkeleton(){
   const grid = $('#filesGrid');
   grid.innerHTML = Array(6).fill(0).map(() => `
@@ -1937,7 +1857,6 @@ function renderFilesSkeleton(){
     </div>`).join('');
 }
 
-/* ================= FILES ================= */
 function renderFiles(){
   const grid = $('#filesGrid');
   const countEl = $('#filesCount');
@@ -2007,7 +1926,6 @@ $('#createFileBtn').onclick = () => {
   });
 };
 
-/* ---- FAST openFile: no network await ---- */
 function openFile(fid){
   const cachedFile = files.find(f => f.id === fid);
   if (!cachedFile){ toast('File not found', 'error'); return; }
@@ -2016,7 +1934,6 @@ function openFile(fid){
   activeProject = null;
   cleanupTxListener();
 
-  // 1. Instant render from cache
   const cachedProjects = cacheLoad(CACHE_PROJECTS(fid));
   if (cachedProjects && cachedProjects.length !== undefined){
     projects = cachedProjects;
@@ -2033,8 +1950,6 @@ function openFile(fid){
   }
 
   showView('file');
-
-  // 2. Refresh from server in background
   setupProjectsListener(fid);
 }
 
@@ -2074,7 +1989,6 @@ function renderFileHero(){
     </div>`;
 }
 
-/* ================= PROJECTS ================= */
 function statusOf(p){
   const due = num(p.due);
   const paid = num(p.payment);
@@ -2097,7 +2011,6 @@ function renderProjects(){
       </div>`;
     return;
   }
-  // NOTE: "Due __" badge removed from under the project name as requested.
   grid.innerHTML = projects.map(p => `
     <div class="card project-card" data-project="${p.id}">
       <div class="project-head">
@@ -2251,7 +2164,6 @@ async function deleteFileToRecycle(fid){
   toast('File moved to Recycle Bin');
 }
 
-/* ================= PROJECT DETAIL (fast) ================= */
 function openProject(pid){
   if (!activeFile) return;
   const proj = projects.find(p => p.id === pid);
@@ -2259,11 +2171,7 @@ function openProject(pid){
   activeProject = proj;
 
   const cached = cacheLoad(CACHE_TX(activeFile.id, pid));
-  if (cached) {
-    transactions = cached;
-  } else {
-    transactions = [];
-  }
+  transactions = cached || [];
 
   renderProjectHero();
   if (transactions.length || cached) {
@@ -2413,7 +2321,6 @@ $('#addTxBtn').onclick = () => {
   });
 };
 
-/* ================= ADD PAYMENT (core) ================= */
 async function addPayment(fileId, projectId, amount, note, date){
   const pRef  = doc(db,'users',uid,'files',fileId,'projects',projectId);
   const pSnap = await getDoc(pRef);
@@ -2437,7 +2344,6 @@ async function addPayment(fileId, projectId, amount, note, date){
   await batch.commit();
 }
 
-/* ================= PAYMENT VIEW ================= */
 function openPaymentView(){
   const sel = $('#payFileSelect');
   sel.innerHTML = `<option value="">— Select File —</option>` +
@@ -2456,7 +2362,6 @@ $('#payFileSelect').onchange = async e => {
   const pSel = $('#payProjectSelect');
   if (!fid){ pSel.innerHTML = `<option value="">— Select a file first —</option>`; return; }
 
-  // Cache-first
   const cached = cacheLoad(CACHE_PROJECTS(fid));
   if (cached){
     pSel.innerHTML = `<option value="">— Select Project —</option>` +
@@ -2496,7 +2401,6 @@ $('#savePaymentBtn').onclick = async () => {
   } finally { btn.disabled = false; }
 };
 
-/* ================= RECYCLE BIN ================= */
 function openRecycleView(){
   showView('recycle');
   setupRecycleListener();
@@ -2571,16 +2475,311 @@ async function restoreItem(item){
   await deleteDoc(doc(db,'users',uid,'recycle',item.id));
 }
 
-/* ================= JPG REPORTS ================= */
-async function downloadNodeAsJPG(node, filename){
+/* ================= REPORTS (theme-aware & stylish) ================= */
+
+function reportTheme() {
+  const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+  return {
+    isDark,
+    bg:         isDark ? '#0F172A' : '#F8FAFC',
+    surface:    isDark ? '#1E293B' : '#FFFFFF',
+    surfaceAlt: isDark ? '#172033' : '#F8FAFC',
+    text:       isDark ? '#F1F5F9' : '#0F172A',
+    text2:      isDark ? '#94A3B8' : '#64748B',
+    text3:      isDark ? '#64748B' : '#94A3B8',
+    border:     isDark ? '#334155' : '#E2E8F0',
+    emerald:    '#10B981',
+    emeraldDeep:'#047857',
+    paid:       isDark ? '#34D399' : '#059669',
+    paidBg:     isDark ? 'rgba(52, 211, 153, 0.14)' : '#D1FAE5',
+    due:        isDark ? '#FBBF24' : '#D97706',
+    dueBg:      isDark ? 'rgba(251, 191, 36, 0.14)' : '#FEF3C7',
+    rowAlt:     isDark ? 'rgba(255,255,255,0.02)' : '#FAFBFC',
+    shadow:     isDark ? '0 4px 16px rgba(0,0,0,0.35)' : '0 2px 12px rgba(15,23,42,0.06)',
+    glow:       isDark ? 'rgba(16, 185, 129, 0.15)' : 'rgba(16, 185, 129, 0.08)',
+    glowSoft:   isDark ? 'rgba(16, 185, 129, 0.08)' : 'rgba(16, 185, 129, 0.04)'
+  };
+}
+
+function reportHeaderHtml(subtitle) {
+  return `
+    <div style="position:relative;background:linear-gradient(135deg,#10B981 0%,#047857 100%);
+                border-radius:24px;padding:28px 32px;margin-bottom:24px;
+                box-shadow:0 20px 40px rgba(16,185,129,0.28);overflow:hidden;">
+      <div style="position:absolute;top:-50px;right:-30px;width:180px;height:180px;
+                  background:rgba(255,255,255,0.10);border-radius:50%;"></div>
+      <div style="position:absolute;bottom:-70px;right:80px;width:140px;height:140px;
+                  background:rgba(255,255,255,0.07);border-radius:50%;"></div>
+      <div style="position:absolute;top:-30px;left:220px;width:80px;height:80px;
+                  background:rgba(255,255,255,0.05);border-radius:50%;"></div>
+      <div style="position:relative;display:flex;justify-content:space-between;align-items:center;gap:20px;flex-wrap:wrap;">
+        <div style="display:flex;align-items:center;gap:16px;">
+          <div style="width:52px;height:52px;background:rgba(255,255,255,0.22);border-radius:14px;
+                      display:flex;align-items:center;justify-content:center;
+                      border:1px solid rgba(255,255,255,0.35);">
+            <svg width="26" height="26" viewBox="0 0 24 24" fill="none"
+                 stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path>
+            </svg>
+          </div>
+          <div>
+            <div style="font-size:11px;color:rgba(255,255,255,0.85);font-weight:600;
+                        letter-spacing:2.2px;text-transform:uppercase;">Due Desk</div>
+            <div style="font-size:22px;color:#ffffff;font-weight:600;margin-top:3px;
+                        letter-spacing:-0.3px;">${esc(subtitle)}</div>
+          </div>
+        </div>
+        <div style="text-align:right;color:rgba(255,255,255,0.95);font-size:12px;
+                    line-height:1.7;font-weight:500;">
+          <div>${new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}</div>
+          <div style="opacity:0.8;">${new Date().toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' })}</div>
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+function reportStatHtml(c, label, valueHtml, iconSvg, iconBg, iconColor, valueColor) {
+  return `
+    <div style="background:${c.surface};border:1px solid ${c.border};border-radius:16px;
+                padding:16px 18px;box-shadow:${c.shadow};">
+      <div style="display:flex;align-items:center;gap:9px;margin-bottom:10px;">
+        <div style="width:30px;height:30px;border-radius:8px;background:${iconBg};
+                    color:${iconColor};display:flex;align-items:center;justify-content:center;
+                    font-size:13px;">
+          ${iconSvg}
+        </div>
+        <div style="font-size:11px;color:${c.text2};font-weight:600;
+                    text-transform:uppercase;letter-spacing:0.6px;">${label}</div>
+      </div>
+      <div style="font-size:19px;color:${valueColor};font-weight:500;
+                  font-variant-numeric:tabular-nums;line-height:1.2;">${valueHtml}</div>
+    </div>
+  `;
+}
+
+function reportShell(title, subtitle, statsHtml, bodyHtml) {
+  const c = reportTheme();
+  const el = document.createElement('div');
+  el.style.cssText = `width:900px;padding:44px 40px;background:${c.bg};box-sizing:border-box;` +
+    `font-family:Inter,Arial,Helvetica,sans-serif;color:${c.text};font-weight:400;position:relative;overflow:hidden;`;
+
+  el.innerHTML = `
+    <div style="position:absolute;top:-120px;right:-120px;width:340px;height:340px;
+                background:radial-gradient(circle, ${c.glow} 0%, transparent 70%);
+                border-radius:50%;pointer-events:none;"></div>
+    <div style="position:absolute;bottom:-140px;left:-100px;width:320px;height:320px;
+                background:radial-gradient(circle, ${c.glowSoft} 0%, transparent 70%);
+                border-radius:50%;pointer-events:none;"></div>
+
+    <div style="position:relative;">
+      ${reportHeaderHtml(subtitle)}
+
+      <div style="font-size:20px;font-weight:600;color:${c.text};
+                  margin-bottom:18px;padding:0 4px;letter-spacing:-0.3px;">
+        ${esc(title)}
+      </div>
+
+      ${statsHtml || ''}
+      ${bodyHtml}
+
+      <div style="margin-top:32px;padding-top:16px;border-top:1px solid ${c.border};
+                  font-size:11px;color:${c.text3};text-align:center;font-weight:400;
+                  display:flex;align-items:center;justify-content:center;gap:8px;">
+        <span style="display:inline-block;width:6px;height:6px;background:${c.emerald};
+                     border-radius:50%;"></span>
+        <span>Generated by Due Desk</span>
+      </div>
+    </div>
+  `;
+  return el;
+}
+
+function reportTableHtml(c, headers, rowsHtml, footerHtml) {
+  return `
+    <div style="background:${c.surface};border:1px solid ${c.border};border-radius:16px;
+                overflow:hidden;box-shadow:${c.shadow};margin-bottom:24px;">
+      <table style="width:100%;border-collapse:collapse;font-size:13px;">
+        <thead>
+          <tr style="background:${c.surfaceAlt};">
+            ${headers.map(h => `
+              <th style="padding:14px 14px;text-align:${h.align || 'left'};
+                         font-size:11px;color:${c.text2};font-weight:600;
+                         text-transform:uppercase;letter-spacing:0.5px;
+                         border-bottom:1px solid ${c.border};">${h.label}</th>
+            `).join('')}
+          </tr>
+        </thead>
+        <tbody>${rowsHtml}</tbody>
+        ${footerHtml || ''}
+      </table>
+    </div>
+  `;
+}
+
+function fileReportNode(file, projs){
+  const c = reportTheme();
+
+  const rows = projs.map((p,i) => `
+    <tr style="background:${i % 2 === 1 ? c.rowAlt : 'transparent'};">
+      <td style="padding:13px 14px;border-bottom:1px solid ${c.border};
+                 color:${c.text2};font-size:12px;font-weight:400;width:36px;">${i+1}</td>
+      <td style="padding:13px 14px;border-bottom:1px solid ${c.border};
+                 color:${c.text};font-weight:500;">${esc(p.name)}</td>
+      <td style="padding:13px 14px;border-bottom:1px solid ${c.border};
+                 color:${c.text2};font-size:12px;font-weight:400;
+                 max-width:180px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">
+        ${esc(p.info || '—')}
+      </td>
+      <td style="padding:13px 14px;border-bottom:1px solid ${c.border};
+                 color:${c.text2};font-size:12px;font-weight:400;white-space:nowrap;">
+        ${esc(p.date || '—')}
+      </td>
+      <td style="padding:13px 14px;border-bottom:1px solid ${c.border};
+                 text-align:right;color:${c.paid};font-weight:500;
+                 font-variant-numeric:tabular-nums;white-space:nowrap;">${tkInline(p.payment)}</td>
+      <td style="padding:13px 14px;border-bottom:1px solid ${c.border};
+                 text-align:right;color:${num(p.due) > 0 ? c.due : c.paid};
+                 font-weight:500;font-variant-numeric:tabular-nums;white-space:nowrap;">${tkInline(p.due)}</td>
+    </tr>
+  `).join('');
+
+  const tp = projs.reduce((s,p) => s + num(p.payment), 0);
+  const td = projs.reduce((s,p) => s + num(p.due), 0);
+
+  const bodyRows = rows || `
+    <tr>
+      <td colspan="6" style="padding:36px 16px;text-align:center;
+                             color:${c.text3};font-weight:400;">No projects yet</td>
+    </tr>`;
+
+  const footerRow = `
+    <tfoot>
+      <tr style="background:${c.surfaceAlt};">
+        <td colspan="4" style="padding:15px 14px;color:${c.text};font-weight:600;font-size:13px;
+                               letter-spacing:0.3px;">TOTAL</td>
+        <td style="padding:15px 14px;text-align:right;color:${c.paid};font-weight:600;
+                   font-variant-numeric:tabular-nums;white-space:nowrap;">${tkInline(tp)}</td>
+        <td style="padding:15px 14px;text-align:right;color:${td > 0 ? c.due : c.paid};
+                   font-weight:600;font-variant-numeric:tabular-nums;white-space:nowrap;">${tkInline(td)}</td>
+      </tr>
+    </tfoot>
+  `;
+
+  const table = reportTableHtml(c, [
+    { label: '#' },
+    { label: 'Project' },
+    { label: 'Info' },
+    { label: 'Date' },
+    { label: 'Payment', align: 'right' },
+    { label: 'Due', align: 'right' }
+  ], bodyRows, footerRow);
+
+  const statsHtml = `
+    <div style="display:grid;grid-template-columns:repeat(3, 1fr);gap:12px;margin-bottom:24px;position:relative;">
+      ${reportStatHtml(c, 'Projects', String(projs.length),
+        '<i class="fas fa-layer-group"></i>',
+        c.isDark ? 'rgba(16,185,129,0.16)' : '#D1FAE5',
+        c.emerald, c.text)}
+      ${reportStatHtml(c, 'Total Paid', tkInline(tp),
+        '<i class="fas fa-arrow-trend-up"></i>',
+        c.paidBg, c.paid, c.paid)}
+      ${reportStatHtml(c, 'Total Due', tkInline(td),
+        '<i class="fas fa-hourglass-half"></i>',
+        c.dueBg, c.due, c.due)}
+    </div>
+  `;
+
+  return reportShell(file.name, 'File Summary Report', statsHtml, table);
+}
+
+function projectReportNode(file, project, txs){
+  const c = reportTheme();
+
+  const rows = txs.map((t,i) => `
+    <tr style="background:${i % 2 === 1 ? c.rowAlt : 'transparent'};">
+      <td style="padding:13px 14px;border-bottom:1px solid ${c.border};
+                 color:${c.text2};font-size:12px;font-weight:400;width:36px;">${i+1}</td>
+      <td style="padding:13px 14px;border-bottom:1px solid ${c.border};
+                 color:${c.text2};font-size:12px;font-weight:400;white-space:nowrap;">
+        ${esc(t.date || '—')}
+      </td>
+      <td style="padding:13px 14px;border-bottom:1px solid ${c.border};
+                 color:${c.text};font-weight:400;">${esc(t.note || 'Payment received')}</td>
+      <td style="padding:13px 14px;border-bottom:1px solid ${c.border};
+                 text-align:right;color:${c.paid};font-weight:500;
+                 font-variant-numeric:tabular-nums;white-space:nowrap;">${tkInline(t.amount)}</td>
+    </tr>
+  `).join('');
+
+  const totalTx = txs.reduce((s,t) => s + num(t.amount), 0);
+
+  const bodyRows = rows || `
+    <tr>
+      <td colspan="4" style="padding:36px 16px;text-align:center;
+                             color:${c.text3};font-weight:400;">No transactions yet</td>
+    </tr>`;
+
+  const footerRow = `
+    <tfoot>
+      <tr style="background:${c.surfaceAlt};">
+        <td colspan="3" style="padding:15px 14px;color:${c.text};font-weight:600;font-size:13px;
+                               letter-spacing:0.3px;">
+          TOTAL RECEIVED &nbsp;
+          <span style="color:${c.text2};font-weight:400;font-size:12px;">
+            (${txs.length} payment${txs.length === 1 ? '' : 's'})
+          </span>
+        </td>
+        <td style="padding:15px 14px;text-align:right;color:${c.paid};font-weight:600;
+                   font-variant-numeric:tabular-nums;white-space:nowrap;">${tkInline(totalTx)}</td>
+      </tr>
+    </tfoot>
+  `;
+
+  const table = reportTableHtml(c, [
+    { label: '#' },
+    { label: 'Date' },
+    { label: 'Note' },
+    { label: 'Amount', align: 'right' }
+  ], bodyRows, footerRow);
+
+  const statsHtml = `
+    <div style="display:grid;grid-template-columns:repeat(3, 1fr);gap:12px;margin-bottom:24px;position:relative;">
+      ${reportStatHtml(c, 'Payment', tkInline(project.payment),
+        '<i class="fas fa-arrow-trend-up"></i>',
+        c.paidBg, c.paid, c.paid)}
+      ${reportStatHtml(c, 'Due', tkInline(project.due),
+        '<i class="fas fa-hourglass-half"></i>',
+        c.dueBg, c.due, c.due)}
+      ${reportStatHtml(c, 'Date', esc(project.date || '—'),
+        '<i class="fas fa-calendar"></i>',
+        c.isDark ? 'rgba(16,185,129,0.16)' : '#D1FAE5',
+        c.emerald, c.text)}
+    </div>
+  `;
+
+  const infoHtml = project.info ? `
+    <div style="background:${c.surface};border:1px solid ${c.border};
+                border-left:4px solid ${c.emerald};
+                border-radius:14px;padding:14px 18px;margin-bottom:24px;
+                font-size:13px;color:${c.text2};line-height:1.6;font-weight:400;
+                box-shadow:${c.shadow};">
+      ${esc(project.info)}
+    </div>
+  ` : '';
+
+  return reportShell(project.name, 'Project Transaction History', statsHtml, infoHtml + table);
+}
+
+async function downloadNodeAsJPG(node, filename, bgColor){
   await ensureHtml2Canvas();
   const holder = document.createElement('div');
-  holder.style.cssText = 'position:fixed;left:-99999px;top:0;width:900px;background:#fff;';
+  holder.style.cssText = 'position:fixed;left:-99999px;top:0;width:900px;background:' + bgColor + ';';
   holder.appendChild(node);
   document.body.appendChild(holder);
   try {
     const canvas = await window.html2canvas(node, {
-      backgroundColor: '#ffffff',
+      backgroundColor: bgColor || '#ffffff',
       scale: 2,
       useCORS: true,
       logging: false
@@ -2596,140 +2795,16 @@ async function downloadNodeAsJPG(node, filename){
   }
 }
 
-function reportShell(title, subtitle, bodyHtml){
-  const el = document.createElement('div');
-  el.style.cssText = 'width:900px;padding:40px;background:#fff;box-sizing:border-box;' +
-    'font-family:Inter,Arial,Helvetica,sans-serif;color:#0F172A;font-weight:400;';
-  el.innerHTML = `
-    <div style="display:flex;justify-content:space-between;align-items:flex-start;
-                border-bottom:3px solid #10B981;padding-bottom:16px;margin-bottom:26px;">
-      <div>
-        <div style="font-size:22px;font-weight:700;letter-spacing:.3px;color:#0F172A;">
-          <span style="display:inline-block;width:34px;height:34px;background:linear-gradient(135deg,#10B981,#047857);
-                       border-radius:9px;color:#fff;text-align:center;line-height:34px;font-size:15px;
-                       margin-right:10px;vertical-align:middle;">&#128193;</span>
-          Due Desk
-        </div>
-        <div style="font-size:13px;color:#64748B;margin-top:8px;font-weight:400;">${esc(subtitle)}</div>
-      </div>
-      <div style="text-align:right;font-size:12px;color:#64748B;line-height:1.6;font-weight:400;">
-        <div>${new Date().toLocaleDateString()}</div>
-        <div>${new Date().toLocaleTimeString()}</div>
-      </div>
-    </div>
-    <h1 style="font-size:20px;margin:0 0 18px;font-weight:600;color:#0F172A;">${esc(title)}</h1>
-    ${bodyHtml}
-    <div style="margin-top:30px;padding-top:14px;border-top:1px solid #E2E8F0;
-                font-size:11px;color:#94A3B8;text-align:center;font-weight:400;">
-      Generated by Due Desk
-    </div>`;
-  return el;
-}
-
-function fileReportNode(file, projs){
-  const rows = projs.map((p,i) => {
-    const st = statusOf(p);
-    return `
-      <tr>
-        <td style="padding:11px 10px;border-bottom:1px solid #F1F5F9;color:#64748B;font-size:12px;font-weight:400;">${i+1}</td>
-        <td style="padding:11px 10px;border-bottom:1px solid #F1F5F9;font-weight:500;color:#0F172A;">${esc(p.name)}</td>
-        <td style="padding:11px 10px;border-bottom:1px solid #F1F5F9;color:#64748B;font-size:12px;font-weight:400;">${esc(p.info || '—')}</td>
-        <td style="padding:11px 10px;border-bottom:1px solid #F1F5F9;color:#64748B;font-size:12px;font-weight:400;">${esc(p.date || '—')}</td>
-        <td style="padding:11px 10px;border-bottom:1px solid #F1F5F9;text-align:right;color:#059669;font-weight:500;font-variant-numeric:tabular-nums;">${tkInline(p.payment)}</td>
-        <td style="padding:11px 10px;border-bottom:1px solid #F1F5F9;text-align:right;color:${num(p.due)>0?'#D97706':'#059669'};font-weight:500;font-variant-numeric:tabular-nums;">${tkInline(p.due)}</td>
-        <td style="padding:9px 8px;border-bottom:1px solid #F1F5F9;text-align:center;font-size:11px;font-weight:500;
-                   color:${st.cls==='paid'?'#059669':'#D97706'};background:${st.cls==='paid'?'#D1FAE5':'#FEF3C7'};
-                   border-radius:6px;">${st.label}</td>
-      </tr>`;
-  }).join('');
-
-  const tp = projs.reduce((s,p) => s + num(p.payment), 0);
-  const td = projs.reduce((s,p) => s + num(p.due), 0);
-
-  const body = `
-    <table style="width:100%;border-collapse:collapse;font-size:13px;">
-      <thead>
-        <tr style="background:#F8FAFC;text-align:left;">
-          <th style="padding:12px 10px;font-size:11px;color:#64748B;font-weight:500;letter-spacing:.5px;">#</th>
-          <th style="padding:12px 10px;font-size:11px;color:#64748B;font-weight:500;letter-spacing:.5px;">PROJECT</th>
-          <th style="padding:12px 10px;font-size:11px;color:#64748B;font-weight:500;letter-spacing:.5px;">INFO</th>
-          <th style="padding:12px 10px;font-size:11px;color:#64748B;font-weight:500;letter-spacing:.5px;">DATE</th>
-          <th style="padding:12px 10px;font-size:11px;color:#64748B;font-weight:500;letter-spacing:.5px;text-align:right;">PAYMENT</th>
-          <th style="padding:12px 10px;font-size:11px;color:#64748B;font-weight:500;letter-spacing:.5px;text-align:right;">DUE</th>
-          <th style="padding:12px 10px;font-size:11px;color:#64748B;font-weight:500;letter-spacing:.5px;text-align:center;">STATUS</th>
-        </tr>
-      </thead>
-      <tbody>${rows || `<tr><td colspan="7" style="padding:28px;text-align:center;color:#94A3B8;font-weight:400;">No projects</td></tr>`}</tbody>
-      <tfoot>
-        <tr style="background:#F8FAFC;font-weight:500;">
-          <td colspan="4" style="padding:14px 10px;color:#0F172A;">TOTAL</td>
-          <td style="padding:14px 10px;text-align:right;color:#059669;font-variant-numeric:tabular-nums;">${tkInline(tp)}</td>
-          <td style="padding:14px 10px;text-align:right;color:${td>0?'#D97706':'#059669'};font-variant-numeric:tabular-nums;">${tkInline(td)}</td>
-          <td></td>
-        </tr>
-      </tfoot>
-    </table>`;
-
-  return reportShell(file.name, 'File Summary Report', body);
-}
-
-function projectReportNode(file, project, txs){
-  const rows = txs.map((t,i) => `
-    <tr>
-      <td style="padding:11px 10px;border-bottom:1px solid #F1F5F9;color:#64748B;font-size:12px;font-weight:400;">${i+1}</td>
-      <td style="padding:11px 10px;border-bottom:1px solid #F1F5F9;color:#64748B;font-size:12px;font-weight:400;">${esc(t.date || '—')}</td>
-      <td style="padding:11px 10px;border-bottom:1px solid #F1F5F9;color:#64748B;font-size:12px;font-weight:400;">${esc(t.note || 'Payment received')}</td>
-      <td style="padding:11px 10px;border-bottom:1px solid #F1F5F9;text-align:right;color:#059669;font-weight:500;font-variant-numeric:tabular-nums;">${tkInline(t.amount)}</td>
-    </tr>`).join('');
-
-  const totalTx = txs.reduce((s,t) => s + num(t.amount), 0);
-
-  const body = `
-    <div style="display:flex;gap:12px;margin-bottom:22px;">
-      <div style="flex:1;background:#F0FDF4;border:1px solid #D1FAE5;border-radius:12px;padding:14px 16px;">
-        <div style="font-size:11px;color:#64748B;font-weight:500;letter-spacing:.5px;">PAYMENT</div>
-        <div style="font-size:18px;font-weight:500;color:#059669;margin-top:4px;font-variant-numeric:tabular-nums;">${tkInline(project.payment)}</div>
-      </div>
-      <div style="flex:1;background:${num(project.due)>0?'#FFFBEB':'#F0FDF4'};border:1px solid ${num(project.due)>0?'#FEF3C7':'#D1FAE5'};border-radius:12px;padding:14px 16px;">
-        <div style="font-size:11px;color:#64748B;font-weight:500;letter-spacing:.5px;">DUE</div>
-        <div style="font-size:18px;font-weight:500;color:${num(project.due)>0?'#D97706':'#059669'};margin-top:4px;font-variant-numeric:tabular-nums;">${tkInline(project.due)}</div>
-      </div>
-      <div style="flex:1;background:#F8FAFC;border:1px solid #E2E8F0;border-radius:12px;padding:14px 16px;">
-        <div style="font-size:11px;color:#64748B;font-weight:500;letter-spacing:.5px;">DATE</div>
-        <div style="font-size:14px;font-weight:500;color:#0F172A;margin-top:6px;">${esc(project.date || '—')}</div>
-      </div>
-    </div>
-    ${project.info ? `<div style="background:#F8FAFC;border-left:4px solid #10B981;padding:12px 16px;border-radius:8px;font-size:13px;color:#334155;margin-bottom:22px;line-height:1.6;font-weight:400;">${esc(project.info)}</div>` : ''}
-    <table style="width:100%;border-collapse:collapse;font-size:13px;">
-      <thead>
-        <tr style="background:#F8FAFC;text-align:left;">
-          <th style="padding:12px 10px;font-size:11px;color:#64748B;font-weight:500;letter-spacing:.5px;">#</th>
-          <th style="padding:12px 10px;font-size:11px;color:#64748B;font-weight:500;letter-spacing:.5px;">DATE</th>
-          <th style="padding:12px 10px;font-size:11px;color:#64748B;font-weight:500;letter-spacing:.5px;">NOTE</th>
-          <th style="padding:12px 10px;font-size:11px;color:#64748B;font-weight:500;letter-spacing:.5px;text-align:right;">AMOUNT</th>
-        </tr>
-      </thead>
-      <tbody>${rows || `<tr><td colspan="4" style="padding:28px;text-align:center;color:#94A3B8;font-weight:400;">No transactions</td></tr>`}</tbody>
-      <tfoot>
-        <tr style="background:#F8FAFC;font-weight:500;">
-          <td colspan="3" style="padding:14px 10px;color:#0F172A;">TOTAL RECEIVED (${txs.length} payment${txs.length===1?'':'s'})</td>
-          <td style="padding:14px 10px;text-align:right;color:#059669;font-variant-numeric:tabular-nums;">${tkInline(totalTx)}</td>
-        </tr>
-      </tfoot>
-    </table>`;
-
-  return reportShell(project.name, 'Project Transaction History — ' + (file?.name || ''), body);
-}
-
 $('#downloadFileBtn').onclick = async () => {
   if (!activeFile) return;
   if (!projects.length) return toast('No projects to export', 'error');
   const btn = $('#downloadFileBtn');
   btn.disabled = true;
   try {
+    const c = reportTheme();
     const node = fileReportNode(activeFile, projects);
     const safe = (activeFile.name || 'file').replace(/[^\w\-]+/g, '_');
-    await downloadNodeAsJPG(node, `DueDesk_${safe}_summary.jpg`);
+    await downloadNodeAsJPG(node, `DueDesk_${safe}_summary.jpg`, c.bg);
     toast('Summary downloaded');
   } catch (err){ console.error(err); toast('Download failed', 'error'); }
   finally { btn.disabled = false; }
@@ -2740,15 +2815,15 @@ $('#downloadProjectBtn').onclick = async () => {
   const btn = $('#downloadProjectBtn');
   btn.disabled = true;
   try {
+    const c = reportTheme();
     const node = projectReportNode(activeFile, activeProject, transactions);
     const safe = (activeProject.name || 'project').replace(/[^\w\-]+/g, '_');
-    await downloadNodeAsJPG(node, `DueDesk_${safe}_history.jpg`);
+    await downloadNodeAsJPG(node, `DueDesk_${safe}_history.jpg`, c.bg);
     toast('History downloaded');
   } catch (err){ console.error(err); toast('Download failed', 'error'); }
   finally { btn.disabled = false; }
 };
 
-/* ================= FOOTER ================= */
 const siteFooter = $('#siteFooter');
 const footerToggle = $('#footerToggle');
 function closeFooter(){ siteFooter.classList.remove('open'); }
